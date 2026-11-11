@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { type RouterStateSnapshot, TitleStrategy } from '@angular/router';
@@ -8,7 +8,9 @@ import { TranslocoService } from '@jsverse/transloco';
 export class TranslatedTitleStrategy extends TitleStrategy {
   private readonly title = inject(Title);
   private readonly transloco = inject(TranslocoService);
-  private titleKey: string | undefined;
+  private readonly key = signal<string | undefined>(undefined);
+
+  readonly titleKey = this.key.asReadonly();
 
   constructor() {
     super();
@@ -16,13 +18,14 @@ export class TranslatedTitleStrategy extends TitleStrategy {
   }
 
   override updateTitle(snapshot: RouterStateSnapshot): void {
-    this.titleKey = this.buildTitle(snapshot);
+    this.key.set(this.buildTitle(snapshot));
     this.apply();
   }
 
   private apply(): void {
     const appName = this.transloco.translate('app.name');
-    const page = this.titleKey ? this.transloco.translate(this.titleKey) : '';
+    const titleKey = this.key();
+    const page = titleKey ? this.transloco.translate(titleKey) : '';
     this.title.setTitle(page ? `${page} · ${appName}` : appName);
   }
 }

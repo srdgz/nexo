@@ -1,0 +1,67 @@
+:host {
+  display: flex;
+  align-items: center;
+  gap: var(--nx-space-3);
+  min-height: 56px;
+}
+
+:host(.mobile) {
+  min-height: 48px;
+
+  .title {
+    font-size: var(--nx-text-xl);
+  }
+}
+
+.brand {
+  --nx-logo-size: 32px;
+
+  display: flex;
+  border-radius: var(--nx-radius-md);
+}
+
+.title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 1.875rem;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--nx-space-3);
+}
+
+.avatar-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px;
+  border-radius: var(--nx-radius-pill);
+  color: var(--nx-text-muted);
+
+  nx-avatar {
+    --size: 40px;
+  }
+
+  &:hover nx-avatar {
+    box-shadow: 0 0 0 3px var(--nx-sand-100);
+  }
+}
+
+.menu-user {
+  padding: 8px 12px 6px;
+}
+
+.menu-user-name {
+  font-weight: 600;
+}
+
+.menu-user-email {
+  color: var(--nx-text-muted);
+  font-size: var(--nx-text-sm);
+}

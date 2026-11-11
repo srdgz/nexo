@@ -1,0 +1,45 @@
+<nav class="bar" [attr.aria-label]="'nav.main' | transloco">
+  @for (item of before; track item.path) {
+    <a class="item" [routerLink]="item.path" routerLinkActive="active" ariaCurrentWhenActive="page">
+      <svg nx-icon [icon]="item.icon" size="22"></svg>
+      <span>{{ item.labelKey | transloco }}</span>
+    </a>
+  }
+  <button
+    type="button"
+    class="fab"
+    aria-haspopup="dialog"
+    [attr.aria-label]="'quickAdd.title' | transloco"
+    [attr.aria-expanded]="quickAddOpen()"
+    (click)="quickAddOpen.set(true)"
+  >
+    <svg nx-icon [icon]="plusIcon" size="24" strokeWidth="2.4"></svg>
+  </button>
+  @for (item of after; track item.path) {
+    <a class="item" [routerLink]="item.path" routerLinkActive="active" ariaCurrentWhenActive="page">
+      <svg nx-icon [icon]="item.icon" size="22"></svg>
+      <span>{{ item.labelKey | transloco }}</span>
+    </a>
+  }
+</nav>
+
+<nx-dialog presentation="sheet" [heading]="'quickAdd.title' | transloco" [(open)]="quickAddOpen">
+  <ul class="quick-add" role="list">
+    @for (item of quickAdd; track item.labelKey) {
+      <li>
+        <a
+          class="quick-item"
+          [routerLink]="item.path"
+          [queryParams]="item.queryParams"
+          (click)="quickAddOpen.set(false)"
+        >
+          <span class="quick-icon" aria-hidden="true">
+            <svg nx-icon [icon]="item.icon" size="20"></svg>
+          </span>
+          <span class="quick-label">{{ item.labelKey | transloco }}</span>
+          <span class="quick-hint">{{ item.descriptionKey | transloco }}</span>
+        </a>
+      </li>
+    }
+  </ul>
+</nx-dialog>

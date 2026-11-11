@@ -1,42 +1,45 @@
-<div class="shell">
-  <aside class="sidebar">
-    <a class="brand" routerLink="/app/dashboard" [attr.aria-label]="'app.home' | transloco">
-      <img src="favicon.svg" alt="" width="32" height="32" />
-      <span>nexo</span>
-    </a>
+<button type="button" class="skip-link" (click)="skipToContent()">
+  {{ 'layout.skipToContent' | transloco }}
+</button>
 
-    <nav [attr.aria-label]="'nav.main' | transloco">
-      @for (group of navigation; track $index) {
-        @if (group.labelKey) {
-          <p class="group">{{ group.labelKey | transloco }}</p>
-        }
-        <ul role="list">
-          @for (item of group.items; track item.path) {
-            <li>
-              <a [routerLink]="item.path" routerLinkActive="active" ariaCurrentWhenActive="page">
-                {{ item.labelKey | transloco }}
-              </a>
-            </li>
-          }
-        </ul>
+@if (mode() !== 'mobile') {
+  <div class="sidebar-slot">
+    <nx-sidebar
+      [collapsed]="mode() === 'tablet' && !railOpen()"
+      [user]="user()"
+      [class.floating]="railOpen()"
+      (navigated)="railOpen.set(false)"
+    />
+  </div>
+  @if (railOpen()) {
+    <button
+      type="button"
+      class="scrim"
+      tabindex="-1"
+      [attr.aria-label]="'layout.collapseMenu' | transloco"
+      (click)="railOpen.set(false)"
+    ></button>
+  }
+}
+
+<div class="column">
+  <nx-app-header [mode]="mode()" [railOpen]="railOpen()" (toggleRail)="railOpen.set(!railOpen())" />
+
+  @if (mode() === 'mobile' && section(); as section) {
+    <nx-tab-nav class="section-tabs" [label]="section.labelKey | transloco">
+      @for (item of section.items; track item.path) {
+        <a nx-tab [routerLink]="item.path" routerLinkActive ariaCurrentWhenActive="page">
+          {{ item.labelKey | transloco }}
+        </a>
       }
-    </nav>
+    </nx-tab-nav>
+  }
 
-    <div class="languages" role="group" [attr.aria-label]="'language.label' | transloco">
-      @for (lang of languages; track lang) {
-        <button
-          type="button"
-          [attr.aria-pressed]="language.current() === lang"
-          [attr.lang]="lang"
-          (click)="language.use(lang)"
-        >
-          {{ 'language.' + lang | transloco }}
-        </button>
-      }
-    </div>
-  </aside>
-
-  <main class="content">
+  <main #main id="main" class="content" tabindex="-1">
     <router-outlet />
   </main>
 </div>
+
+@if (mode() === 'mobile') {
+  <nx-bottom-nav />
+}

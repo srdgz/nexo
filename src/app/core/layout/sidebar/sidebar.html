@@ -1,0 +1,71 @@
+<a
+  class="brand"
+  [routerLink]="dashboard.path"
+  [attr.aria-label]="'app.home' | transloco"
+  (click)="navigated.emit()"
+>
+  <nx-logo [variant]="collapsed() ? 'mark' : 'full'" />
+</a>
+
+<nav class="nav" [attr.aria-label]="'nav.main' | transloco">
+  <ng-template #link let-item>
+    <a
+      class="item"
+      [routerLink]="item.path"
+      routerLinkActive="active"
+      ariaCurrentWhenActive="page"
+      [attr.title]="collapsed() ? (item.labelKey | transloco) : null"
+      (click)="navigated.emit()"
+    >
+      <svg nx-icon [icon]="item.icon" size="18"></svg>
+      <span class="label">{{ item.labelKey | transloco }}</span>
+    </a>
+  </ng-template>
+
+  <ul role="list">
+    <li>
+      <ng-container *ngTemplateOutlet="link; context: { $implicit: dashboard }" />
+    </li>
+  </ul>
+
+  @for (section of sections; track section.path) {
+    <h2 class="group">
+      <span class="label">{{ section.labelKey | transloco }}</span>
+    </h2>
+    <ul role="list">
+      @for (item of section.items; track item.path) {
+        <li>
+          <ng-container *ngTemplateOutlet="link; context: { $implicit: item }" />
+        </li>
+      }
+    </ul>
+  }
+</nav>
+
+<div class="footer">
+  @if (!collapsed()) {
+    <aside class="tip">
+      <span class="tip-icon" aria-hidden="true">
+        <svg nx-icon [icon]="tipIcon" size="16"></svg>
+      </span>
+      <p class="tip-title">{{ 'layout.tip.title' | transloco }}</p>
+      <p class="tip-text">{{ 'layout.tip.text' | transloco }}</p>
+    </aside>
+  }
+
+  <ul role="list">
+    <li>
+      <ng-container *ngTemplateOutlet="link; context: { $implicit: settings }" />
+    </li>
+  </ul>
+
+  @if (user(); as user) {
+    <div class="user">
+      <nx-avatar [name]="user.displayName" [src]="user.avatarUrl" />
+      <div class="user-text">
+        <p class="user-name">{{ user.displayName }}</p>
+        <p class="user-email">{{ user.email }}</p>
+      </div>
+    </div>
+  }
+</div>

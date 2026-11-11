@@ -1,93 +1,99 @@
 @use 'mixins' as *;
 
-.shell {
+:host {
   display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--nx-space-4);
   min-height: 100dvh;
+  padding: var(--nx-space-4);
+}
 
-  @include bp(desktop) {
-    grid-template-columns: var(--nx-sidebar-width) minmax(0, 1fr);
+:host(.mobile) {
+  display: block;
+  padding: 0 0 calc(var(--nx-bottom-nav-height) + env(safe-area-inset-bottom));
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 100;
+  top: var(--nx-space-2);
+  left: var(--nx-space-2);
+  padding: var(--nx-space-2) var(--nx-space-4);
+  border-radius: var(--nx-radius-pill);
+  background: var(--nx-navy-900);
+  color: var(--nx-text-inverse);
+  font-weight: 600;
+  transform: translateY(-200%);
+
+  &:focus-visible {
+    transform: none;
   }
 }
 
-.sidebar {
+.sidebar-slot {
+  position: sticky;
+  z-index: 30;
+  top: var(--nx-space-4);
+  width: var(--nx-sidebar-width);
+  height: calc(100dvh - var(--nx-space-8));
+}
+
+:host(.tablet) .sidebar-slot {
+  width: var(--nx-sidebar-rail);
+}
+
+nx-sidebar.floating {
+  position: absolute;
+  inset: 0 auto 0 0;
+  box-shadow: var(--nx-shadow-lg);
+}
+
+.scrim {
+  position: fixed;
+  z-index: 25;
+  inset: 0;
+  background: rgb(24 43 53 / 0.32);
+  cursor: default;
+  animation: fade 160ms var(--nx-ease);
+}
+
+.column {
   display: flex;
   flex-direction: column;
-  gap: var(--nx-space-2);
-  padding: var(--nx-space-5) var(--nx-space-4);
-  background: var(--nx-surface);
-  border-bottom: 1px solid var(--nx-border);
-
-  @include bp(desktop) {
-    border-bottom: 0;
-    border-right: 1px solid var(--nx-border);
-  }
+  gap: var(--nx-space-4);
+  min-width: 0;
+  padding: 6px 4px 0;
 }
 
-.brand {
-  display: flex;
-  align-items: center;
+:host(.mobile) .column {
   gap: var(--nx-space-3);
-  padding: 0 var(--nx-space-2) var(--nx-space-4);
-  font-family: var(--nx-font-heading);
-  font-size: var(--nx-text-xl);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  text-decoration: none;
-}
+  padding: 0;
 
-.group {
-  padding: var(--nx-space-4) var(--nx-space-3) var(--nx-space-1);
-  font-size: var(--nx-text-xs);
-  font-weight: 600;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--nx-text-muted);
-}
-
-nav ul {
-  display: grid;
-  gap: 2px;
-}
-
-nav a {
-  display: block;
-  padding: var(--nx-space-2) var(--nx-space-3);
-  border-radius: var(--nx-radius-pill);
-  font-weight: 500;
-  text-decoration: none;
-
-  &:hover {
-    background: var(--nx-surface-muted);
-  }
-
-  &.active {
-    background: var(--nx-navy-900);
-    color: var(--nx-text-inverse);
+  nx-app-header {
+    position: sticky;
+    z-index: 15;
+    top: 0;
+    padding: var(--nx-space-3) var(--nx-space-4) var(--nx-space-2);
+    background: var(--nx-ivory);
   }
 }
 
-.languages {
-  display: flex;
-  gap: var(--nx-space-1);
-  margin-top: auto;
-  padding-top: var(--nx-space-4);
-
-  button {
-    padding: var(--nx-space-1) var(--nx-space-3);
-    border-radius: var(--nx-radius-pill);
-    font-size: var(--nx-text-sm);
-
-    &[aria-pressed='true'] {
-      background: var(--nx-navy-900);
-      color: var(--nx-text-inverse);
-    }
-  }
+.section-tabs {
+  margin: 0 var(--nx-space-4);
 }
 
 .content {
-  padding: var(--nx-space-6) var(--nx-space-4);
+  flex: 1;
+  min-width: 0;
+  outline: none;
+}
 
-  @include bp(desktop) {
-    padding: var(--nx-space-8) var(--nx-space-10);
+:host(.mobile) .content {
+  padding: var(--nx-space-2) var(--nx-space-4) var(--nx-space-6);
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
   }
 }

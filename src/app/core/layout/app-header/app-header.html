@@ -1,0 +1,80 @@
+@if (mode() === 'tablet') {
+  <button
+    type="button"
+    nx-icon-button
+    variant="outline"
+    [label]="(railOpen() ? 'layout.collapseMenu' : 'layout.expandMenu') | transloco"
+    [attr.aria-expanded]="railOpen()"
+    (click)="toggleRail.emit()"
+  >
+    <svg nx-icon [icon]="railOpen() ? icons.collapse : icons.menu" size="20"></svg>
+  </button>
+}
+
+@if (mode() === 'mobile') {
+  <a class="brand" [routerLink]="dashboard.path" [attr.aria-label]="'app.home' | transloco">
+    <nx-logo variant="mark" />
+  </a>
+}
+
+<h1 class="title">
+  @if (titleKey(); as key) {
+    {{ key | transloco }}
+  }
+</h1>
+
+<div class="actions">
+  @if (mode() !== 'mobile') {
+    <button nx-button [nxMenuTrigger]="quickAddMenu">
+      <svg nx-icon [icon]="icons.plus" size="17" strokeWidth="2.2"></svg>
+      {{ 'quickAdd.new' | transloco }}
+    </button>
+    <nx-menu #quickAddMenu [label]="'quickAdd.title' | transloco">
+      @for (item of quickAdd; track item.labelKey) {
+        <a nx-menu-item [routerLink]="item.path" [queryParams]="item.queryParams">
+          <svg nx-icon [icon]="item.icon" size="18"></svg>
+          {{ item.labelKey | transloco }}
+        </a>
+      }
+    </nx-menu>
+  }
+
+  <button
+    class="avatar-button"
+    [nxMenuTrigger]="userMenu"
+    [attr.aria-label]="'layout.userMenu' | transloco"
+  >
+    <nx-avatar [name]="user()?.displayName ?? ''" [src]="user()?.avatarUrl ?? null" />
+    @if (mode() === 'desktop') {
+      <svg nx-icon [icon]="icons.chevron" size="16"></svg>
+    }
+  </button>
+  <nx-menu #userMenu [label]="'layout.userMenu' | transloco">
+    @if (user(); as user) {
+      <div class="menu-user">
+        <p class="menu-user-name">{{ user.displayName }}</p>
+        <p class="menu-user-email">{{ user.email }}</p>
+      </div>
+      <nx-menu-separator />
+    }
+    @for (item of settingsItems; track item.path) {
+      <a nx-menu-item [routerLink]="item.path">
+        <svg nx-icon [icon]="item.icon" size="18"></svg>
+        {{ item.labelKey | transloco }}
+      </a>
+    }
+    <nx-menu-separator />
+    <nx-menu-label>{{ 'language.label' | transloco }}</nx-menu-label>
+    @for (lang of languages; track lang) {
+      <button
+        type="button"
+        nx-menu-item
+        [checked]="language.current() === lang"
+        [attr.lang]="lang"
+        (click)="language.use(lang)"
+      >
+        {{ 'language.' + lang | transloco }}
+      </button>
+    }
+  </nx-menu>
+</div>
