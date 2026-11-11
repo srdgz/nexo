@@ -181,8 +181,6 @@
     },
     "showcase": {
       "label": "Funciones de NEXO",
-      "pause": "Pausar la presentación",
-      "play": "Reanudar la presentación",
       "balance": {
         "caption": "Tu mes, de un vistazo",
         "text": "Ingresos, gastos y ahorro al día con cada movimiento.",

@@ -137,7 +137,7 @@
   }
 </div>
 
-<div class="caption" [attr.aria-live]="running() ? 'off' : 'polite'">
+<div class="caption">
   <p class="caption-title">{{ 'auth.showcase.' + scene() + '.caption' | transloco }}</p>
   <p class="caption-text">{{ 'auth.showcase.' + scene() + '.text' | transloco }}</p>
 </div>
@@ -154,17 +154,11 @@
         (click)="show(index)"
       >
         @if (index === current()) {
-          <span class="progress"></span>
+          @for (run of [cycle()]; track run) {
+            <span class="progress"></span>
+          }
         }
       </button>
     }
   </div>
-  <button
-    type="button"
-    class="toggle"
-    [attr.aria-label]="(playing() ? 'auth.showcase.pause' : 'auth.showcase.play') | transloco"
-    (click)="togglePlaying()"
-  >
-    <svg nx-icon [icon]="playing() ? icons.pause : icons.play" size="16"></svg>
-  </button>
 </div>

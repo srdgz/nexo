@@ -12,9 +12,7 @@ import {
   ArrowDown,
   Car,
   Check,
-  Pause,
   PiggyBank,
-  Play,
   ShieldCheck,
   ShoppingCart,
   Stethoscope,
@@ -22,7 +20,6 @@ import {
   TrendingUp,
   Utensils,
 } from 'lucide';
-import { injectMediaQuery } from '@core/layout/media-query';
 import { NxIcon } from '@shared/ui/icon/icon';
 import { injectActiveLanguage, localeFor } from '@shared/util/active-language';
 import { formatMoney } from '@shared/util/money';
@@ -41,32 +38,21 @@ const DAY_MS = 24 * 60 * 60 * 1000;
   styleUrls: ['./auth-showcase.scss', './auth-showcase-scenes.scss'],
   host: {
     '[style.--scene-duration]': '`${duration}ms`',
-    '[class.paused]': '!running()',
-    '(mouseenter)': 'hovered.set(true)',
-    '(mouseleave)': 'hovered.set(false)',
-    '(focusin)': 'focused.set(true)',
-    '(focusout)': 'focused.set(false)',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NxAuthShowcase {
   private readonly language = injectActiveLanguage();
-  private readonly reducedMotion = injectMediaQuery('(prefers-reduced-motion: reduce)');
 
   protected readonly duration = SCENE_DURATION_MS;
   protected readonly scenes = SCENES;
   protected readonly current = signal(0);
-  protected readonly playing = signal(!this.reducedMotion());
-  protected readonly hovered = signal(false);
-  protected readonly focused = signal(false);
-  protected readonly running = computed(() => this.playing() && !this.hovered() && !this.focused());
+  protected readonly cycle = signal(0);
   protected readonly scene = computed<Scene>(() => SCENES[this.current()] ?? 'balance');
 
   protected readonly icons = {
     arrow: ArrowDown,
     check: Check,
-    pause: Pause,
-    play: Play,
     savings: PiggyBank,
     trend: TrendingUp,
   };
@@ -130,11 +116,9 @@ export class NxAuthShowcase {
   constructor() {
     let timer: ReturnType<typeof setTimeout> | undefined;
     effect(() => {
-      this.current();
+      this.cycle();
       clearTimeout(timer);
-      if (this.running()) {
-        timer = setTimeout(() => this.show(this.current() + 1), SCENE_DURATION_MS);
-      }
+      timer = setTimeout(() => this.show(this.current() + 1), SCENE_DURATION_MS);
     });
     inject(DestroyRef).onDestroy(() => clearTimeout(timer));
   }
@@ -145,9 +129,6 @@ export class NxAuthShowcase {
 
   protected show(index: number): void {
     this.current.set((index + SCENES.length) % SCENES.length);
-  }
-
-  protected togglePlaying(): void {
-    this.playing.update((playing) => !playing);
+    this.cycle.update((cycle) => cycle + 1);
   }
 }

@@ -181,8 +181,6 @@
     },
     "showcase": {
       "label": "NEXO features",
-      "pause": "Pause the slideshow",
-      "play": "Resume the slideshow",
       "balance": {
         "caption": "Your month at a glance",
         "text": "Income, expenses and savings, updated with every transaction.",

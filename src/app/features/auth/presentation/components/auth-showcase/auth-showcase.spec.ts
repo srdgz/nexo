@@ -37,7 +37,7 @@ describe('NxAuthShowcase', () => {
 
   it('keeps the visual scene away from screen readers', () => {
     expect(root.querySelector('.stage')?.getAttribute('aria-hidden')).toBe('true');
-    expect(root.querySelector('.caption')?.getAttribute('aria-live')).toBe('off');
+    expect(root.querySelector('.toggle')).toBeNull();
   });
 
   it('jumps to a scene from its dot', () => {
@@ -51,20 +51,25 @@ describe('NxAuthShowcase', () => {
     expect(dots[2]!.getAttribute('aria-label')).toBe('Tareas que mueven dinero');
   });
 
-  it('stops while hovered and when paused', () => {
-    root.dispatchEvent(new Event('mouseenter'));
-    advance(SCENE_DURATION_MS * 2);
-    expect(caption()).toBe('Tu mes, de un vistazo');
-
-    root.dispatchEvent(new Event('mouseleave'));
-    root.querySelector<HTMLButtonElement>('.toggle')!.click();
+  it('restarts the countdown after a dot is clicked', () => {
+    advance(SCENE_DURATION_MS - 1000);
+    root.querySelectorAll<HTMLButtonElement>('.dot')[3]!.click();
     TestBed.tick();
-    advance(SCENE_DURATION_MS * 2);
+    expect(caption()).toBe('Tu agenda, junto a tus cuentas');
 
+    advance(SCENE_DURATION_MS - 1000);
+    expect(caption()).toBe('Tu agenda, junto a tus cuentas');
+
+    advance(1000);
     expect(caption()).toBe('Tu mes, de un vistazo');
-    expect(root.querySelector('.toggle')?.getAttribute('aria-label')).toBe(
-      'Reanudar la presentación',
-    );
-    expect(root.querySelector('.caption')?.getAttribute('aria-live')).toBe('polite');
+  });
+
+  it('keeps rotating while the pointer is over it', () => {
+    root.dispatchEvent(new Event('mouseenter'));
+    root.querySelector<HTMLButtonElement>('.dot')!.focus();
+
+    advance(SCENE_DURATION_MS);
+
+    expect(caption()).toBe('Presupuestos que avisan');
   });
 });
