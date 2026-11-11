@@ -10,8 +10,9 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "pnpm lint && pnpm format:check && pnpm test:ci && pnpm build",
-    "prepare": "husky"
+    "check": "pnpm lint && pnpm format:check && pnpm test:ci && pnpm test:db && pnpm build",
+    "prepare": "husky",
+    "test:db": "node scripts/db-test.mjs"
   },
   "private": true,
   "packageManager": "pnpm@12.9.1",
@@ -25,6 +26,7 @@
     "@fontsource-variable/inter": "5.3.0",
     "@fontsource-variable/manrope": "5.3.0",
     "@jsverse/transloco": "8.4.0",
+    "@supabase/supabase-js": "2.119.0",
     "lucide": "1.72.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
@@ -35,6 +37,8 @@
     "@angular/compiler-cli": "^22.2.0",
     "@commitlint/cli": "21.2.4",
     "@commitlint/config-conventional": "21.2.4",
+    "@electric-sql/pglite": "0.5.16",
+    "@electric-sql/pglite-pgtap": "0.0.17",
     "@eslint/js": "^10.0.1",
     "angular-eslint": "22.6.0",
     "eslint": "^10.14.0",

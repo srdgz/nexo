@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   quality:
-    name: Format, lint, tests and build
+    name: Format, lint, tests, database tests and build
     runs-on: ubuntu-latest
     env:
       NG_CLI_ANALYTICS: 'false'
@@ -35,6 +35,9 @@ jobs:
 
       - name: Unit tests
         run: pnpm test:ci
+
+      - name: Database tests (pgTAP on PGlite)
+        run: pnpm test:db
 
       - name: Production build
         run: pnpm build

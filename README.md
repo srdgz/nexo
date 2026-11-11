@@ -39,6 +39,7 @@ The app runs at http://localhost:4200.
 | `pnpm start`   | Development server                               |
 | `pnpm test`    | Unit tests in watch mode (Vitest)                |
 | `pnpm test:ci` | Unit tests once                                  |
+| `pnpm test:db` | Database tests (pgTAP) on an in-memory Postgres  |
 | `pnpm lint`    | ESLint, including the architecture import rules  |
 | `pnpm format`  | Prettier                                         |
 | `pnpm build`   | Production build                                 |
@@ -59,6 +60,20 @@ src/app/
 ```
 
 ESLint enforces the dependency direction between layers.
+
+## Backend
+
+The database lives in `supabase/`: migrations, pgTAP tests and the `delete-account` Edge Function.
+
+- `pnpm test:db` runs the pgTAP tests on [PGlite](https://pglite.dev) (Postgres compiled to WebAssembly) with a small shim for the Supabase roles and `auth.uid()`, so row level security is tested in CI without Docker. The same files run unchanged with `supabase test db`.
+- Without Supabase credentials the app still works in demo mode; sign in shows that accounts are not enabled.
+
+To connect a Supabase project:
+
+1. Fill `supabaseUrl` and `supabasePublishableKey` in `src/environments/environment.ts`.
+2. Apply the schema: `supabase link --project-ref <ref>` and `supabase db push`.
+3. Deploy the function: `supabase functions deploy delete-account`.
+4. In Authentication → URL configuration, set the site URL and add `<site>/auth/callback` as a redirect URL.
 
 ## Documentation
 
