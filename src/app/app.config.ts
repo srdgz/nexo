@@ -6,6 +6,7 @@ import {
   withViewTransitions,
 } from '@angular/router';
 import { provideI18n } from '@core/i18n/provide-i18n';
+import { provideAuth } from '@features/auth/infrastructure/provide-auth';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
@@ -18,5 +19,6 @@ export const appConfig: ApplicationConfig = {
       withViewTransitions(),
     ),
     provideI18n(),
+    provideAuth(),
   ],
 };

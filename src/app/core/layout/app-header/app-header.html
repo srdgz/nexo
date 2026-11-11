@@ -76,5 +76,10 @@
         {{ 'language.' + lang | transloco }}
       </button>
     }
+    <nx-menu-separator />
+    <button type="button" nx-menu-item (click)="session.signOut()">
+      <svg nx-icon [icon]="icons.signOut" size="18"></svg>
+      {{ (session.mode === 'demo' ? 'demo.exit' : 'auth.signOut') | transloco }}
+    </button>
   </nx-menu>
 </div>

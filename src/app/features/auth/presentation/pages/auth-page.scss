@@ -1,0 +1,78 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nx-space-5);
+}
+
+.heading {
+  display: grid;
+  gap: var(--nx-space-2);
+}
+
+.subtitle {
+  color: var(--nx-text-muted);
+}
+
+.form {
+  display: grid;
+  gap: var(--nx-space-4);
+}
+
+.row-end {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: calc(var(--nx-space-2) * -1);
+}
+
+.link {
+  color: var(--nx-sage-700);
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--nx-space-3);
+  color: var(--nx-text-muted);
+  font-size: var(--nx-text-sm);
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--nx-border);
+  }
+}
+
+.footer {
+  color: var(--nx-text-muted);
+  text-align: center;
+}
+
+.centered {
+  align-items: center;
+  text-align: center;
+}
+
+.badge-icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: var(--nx-sand-100);
+  color: var(--nx-navy-900);
+}
+
+.inline-button {
+  padding: 0;
+  color: var(--nx-sage-700);
+  font-weight: 600;
+  text-decoration: underline;
+}

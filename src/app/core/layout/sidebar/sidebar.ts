@@ -5,7 +5,7 @@ import { Link2 } from 'lucide';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { NxAvatar } from '@shared/ui/avatar/avatar';
 import { NxLogo } from '@shared/ui/logo/logo';
-import type { CurrentUser } from '../../session/current-user';
+import type { CurrentUser } from '../../session/session';
 import { DASHBOARD, SETTINGS, SIDEBAR_SECTIONS } from '../navigation';
 import { NxIcon } from '@shared/ui/icon/icon';
 

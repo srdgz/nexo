@@ -97,7 +97,102 @@
       "maxLength": "Puede tener como máximo {{maxLength}} caracteres.",
       "min": "El valor mínimo es {{min}}.",
       "max": "El valor máximo es {{max}}.",
-      "pattern": "El formato no es válido."
+      "pattern": "El formato no es válido.",
+      "passwordPolicy": "Usa al menos 8 caracteres con letras y números.",
+      "mismatch": "Las contraseñas no coinciden."
     }
+  },
+  "auth": {
+    "signOut": "Cerrar sesión",
+    "sessionExpired": "Tu sesión ha caducado. Vuelve a iniciar sesión.",
+    "or": "o",
+    "demoCta": "Explorar la demo sin registrarte",
+    "brand": {
+      "subtitle": "Finanzas, tareas y calendario en un solo lugar.",
+      "finances": "Gastos, ingresos y presupuestos del mes",
+      "tasks": "Tareas con pago previsto",
+      "calendar": "Calendario y próximos eventos"
+    },
+    "fields": {
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "newPassword": "Nueva contraseña",
+      "confirmPassword": "Repite la contraseña"
+    },
+    "login": {
+      "title": "Inicia sesión",
+      "subtitle": "Accede a tu espacio personal.",
+      "forgot": "¿Olvidaste tu contraseña?",
+      "submit": "Entrar",
+      "noAccount": "¿No tienes cuenta?",
+      "register": "Regístrate"
+    },
+    "register": {
+      "title": "Crea tu cuenta",
+      "subtitle": "Empieza a organizar tu dinero y tu tiempo.",
+      "submit": "Crear cuenta",
+      "haveAccount": "¿Ya tienes cuenta?",
+      "login": "Inicia sesión"
+    },
+    "checks": {
+      "length": "Mínimo 8 caracteres",
+      "lettersAndDigits": "Letras y números",
+      "met": "(cumplido)",
+      "pending": "(pendiente)"
+    },
+    "verify": {
+      "title": "Revisa tu correo",
+      "text": "Hemos enviado un enlace de verificación a {{email}}. Ábrelo para activar tu cuenta.",
+      "textNoEmail": "Te hemos enviado un enlace de verificación. Ábrelo para activar tu cuenta.",
+      "resend": "Reenviar enlace",
+      "resendIn": "Reenviar enlace · {{seconds}} s",
+      "resent": "Te hemos enviado un nuevo enlace.",
+      "wrongEmail": "¿Email incorrecto?",
+      "backToRegister": "Vuelve al registro"
+    },
+    "forgot": {
+      "title": "¿Olvidaste tu contraseña?",
+      "subtitle": "Te enviaremos un enlace para crear una nueva.",
+      "submit": "Enviar enlace",
+      "sent": "Si existe una cuenta con ese email, recibirás un enlace en unos minutos.",
+      "back": "Volver a iniciar sesión"
+    },
+    "reset": {
+      "title": "Nueva contraseña",
+      "subtitle": "Elige una contraseña que no uses en otros sitios.",
+      "submit": "Guardar contraseña",
+      "done": "Contraseña actualizada",
+      "expiredTitle": "El enlace ha caducado",
+      "expiredText": "Los enlaces para cambiar la contraseña solo sirven una vez y durante un tiempo limitado.",
+      "requestAgain": "Solicitar un enlace nuevo"
+    },
+    "callback": {
+      "checking": "Comprobando el enlace…",
+      "errorTitle": "No hemos podido usar el enlace",
+      "backToLogin": "Ir a iniciar sesión",
+      "requestAgain": "¿Necesitas cambiar la contraseña? Pide un enlace nuevo"
+    },
+    "errors": {
+      "invalidCredentials": "Email o contraseña incorrectos.",
+      "emailNotConfirmed": "Aún no has confirmado tu email. Revisa tu correo.",
+      "emailTaken": "Ya existe una cuenta con este email. Inicia sesión.",
+      "weakPassword": "La contraseña es demasiado débil.",
+      "samePassword": "La nueva contraseña debe ser distinta de la actual.",
+      "linkExpired": "El enlace ha caducado o ya se ha usado.",
+      "rateLimited": "Demasiados intentos. Espera un momento y vuelve a probar.",
+      "network": "No hay conexión con el servidor. Inténtalo de nuevo.",
+      "unavailable": "Las cuentas todavía no están activas en esta instalación. Puedes explorar la demo.",
+      "unknown": "Algo ha fallado. Inténtalo de nuevo."
+    }
+  },
+  "demo": {
+    "title": "Estás viendo una demo con datos ficticios.",
+    "titleShort": "Modo demo",
+    "hint": "Los cambios se borran al cerrar la pestaña.",
+    "reset": "Restablecer datos",
+    "createAccount": "Crear cuenta",
+    "options": "Opciones",
+    "exit": "Salir de la demo"
   }
 }

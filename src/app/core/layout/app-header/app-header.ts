@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ChevronDown, Menu, PanelLeftClose, Plus } from 'lucide';
+import { ChevronDown, LogOut, Menu, PanelLeftClose, Plus } from 'lucide';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { NxAvatar } from '@shared/ui/avatar/avatar';
 import { NxButton } from '@shared/ui/button/button';
@@ -16,7 +16,7 @@ import {
 import { SUPPORTED_LANGUAGES } from '../../i18n/language';
 import { LanguageService } from '../../i18n/language.service';
 import { TranslatedTitleStrategy } from '../../i18n/translated-title.strategy';
-import { CurrentUserStore } from '../../session/current-user';
+import { Session } from '../../session/session';
 import type { LayoutMode } from '../layout-mode';
 import { DASHBOARD, QUICK_ADD, SETTINGS } from '../navigation';
 import { NxIcon } from '@shared/ui/icon/icon';
@@ -48,7 +48,8 @@ export class NxAppHeader {
   readonly toggleRail = output();
 
   protected readonly titleKey = inject(TranslatedTitleStrategy).titleKey;
-  protected readonly user = inject(CurrentUserStore).user;
+  protected readonly session = inject(Session);
+  protected readonly user = this.session.user;
   protected readonly language = inject(LanguageService);
   protected readonly languages = SUPPORTED_LANGUAGES;
   protected readonly dashboard = DASHBOARD;
@@ -59,5 +60,6 @@ export class NxAppHeader {
     collapse: PanelLeftClose,
     plus: Plus,
     chevron: ChevronDown,
+    signOut: LogOut,
   };
 }

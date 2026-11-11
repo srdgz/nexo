@@ -1,0 +1,40 @@
+<div class="heading">
+  <h1>{{ 'auth.register.title' | transloco }}</h1>
+  <p class="subtitle">{{ 'auth.register.subtitle' | transloco }}</p>
+</div>
+
+@if (!store.available()) {
+  <nx-alert>{{ 'auth.errors.unavailable' | transloco }}</nx-alert>
+}
+
+@if (error(); as code) {
+  <nx-alert tone="danger">{{ messageKey(code) | transloco }}</nx-alert>
+}
+
+<form class="form" novalidate (submit)="onSubmit($event)">
+  <nx-field [label]="'auth.fields.name' | transloco" [state]="account.fullName()">
+    <input nxInput type="text" autocomplete="name" [formField]="account.fullName" />
+  </nx-field>
+  <nx-field [label]="'auth.fields.email' | transloco" [state]="account.email()">
+    <input nxInput type="email" autocomplete="email" [formField]="account.email" />
+  </nx-field>
+  <nx-field [label]="'auth.fields.password' | transloco" [state]="account.password()">
+    <nx-password-input autocomplete="new-password" [formField]="account.password" />
+  </nx-field>
+  <nx-password-checks [password]="model().password" />
+  <button
+    type="submit"
+    nx-button
+    size="lg"
+    block
+    [loading]="account().submitting()"
+    [disabled]="!store.available()"
+  >
+    {{ 'auth.register.submit' | transloco }}
+  </button>
+</form>
+
+<p class="footer">
+  {{ 'auth.register.haveAccount' | transloco }}
+  <a class="link" routerLink="/auth/login">{{ 'auth.register.login' | transloco }}</a>
+</p>

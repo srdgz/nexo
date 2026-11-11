@@ -97,7 +97,102 @@
       "maxLength": "It can be at most {{maxLength}} characters long.",
       "min": "The minimum value is {{min}}.",
       "max": "The maximum value is {{max}}.",
-      "pattern": "The format is not valid."
+      "pattern": "The format is not valid.",
+      "passwordPolicy": "Use at least 8 characters with letters and numbers.",
+      "mismatch": "The passwords don’t match."
     }
+  },
+  "auth": {
+    "signOut": "Sign out",
+    "sessionExpired": "Your session has expired. Please sign in again.",
+    "or": "or",
+    "demoCta": "Explore the demo without signing up",
+    "brand": {
+      "subtitle": "Finances, tasks and calendar in one place.",
+      "finances": "Monthly expenses, income and budgets",
+      "tasks": "Tasks with planned payments",
+      "calendar": "Calendar and upcoming events"
+    },
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "newPassword": "New password",
+      "confirmPassword": "Repeat the password"
+    },
+    "login": {
+      "title": "Sign in",
+      "subtitle": "Access your personal space.",
+      "forgot": "Forgot your password?",
+      "submit": "Sign in",
+      "noAccount": "Don’t have an account?",
+      "register": "Sign up"
+    },
+    "register": {
+      "title": "Create your account",
+      "subtitle": "Start organizing your money and your time.",
+      "submit": "Create account",
+      "haveAccount": "Already have an account?",
+      "login": "Sign in"
+    },
+    "checks": {
+      "length": "At least 8 characters",
+      "lettersAndDigits": "Letters and numbers",
+      "met": "(met)",
+      "pending": "(pending)"
+    },
+    "verify": {
+      "title": "Check your email",
+      "text": "We sent a verification link to {{email}}. Open it to activate your account.",
+      "textNoEmail": "We sent you a verification link. Open it to activate your account.",
+      "resend": "Resend link",
+      "resendIn": "Resend link · {{seconds}} s",
+      "resent": "We sent you a new link.",
+      "wrongEmail": "Wrong email?",
+      "backToRegister": "Go back to sign up"
+    },
+    "forgot": {
+      "title": "Forgot your password?",
+      "subtitle": "We’ll send you a link to create a new one.",
+      "submit": "Send link",
+      "sent": "If an account exists for that email, you’ll get a link in a few minutes.",
+      "back": "Back to sign in"
+    },
+    "reset": {
+      "title": "New password",
+      "subtitle": "Choose a password you don’t use anywhere else.",
+      "submit": "Save password",
+      "done": "Password updated",
+      "expiredTitle": "The link has expired",
+      "expiredText": "Password links work only once and for a limited time.",
+      "requestAgain": "Request a new link"
+    },
+    "callback": {
+      "checking": "Checking the link…",
+      "errorTitle": "We couldn’t use the link",
+      "backToLogin": "Go to sign in",
+      "requestAgain": "Need to change your password? Request a new link"
+    },
+    "errors": {
+      "invalidCredentials": "Incorrect email or password.",
+      "emailNotConfirmed": "You haven’t confirmed your email yet. Check your inbox.",
+      "emailTaken": "An account with this email already exists. Sign in instead.",
+      "weakPassword": "The password is too weak.",
+      "samePassword": "The new password must be different from the current one.",
+      "linkExpired": "The link has expired or was already used.",
+      "rateLimited": "Too many attempts. Wait a moment and try again.",
+      "network": "Can’t reach the server. Please try again.",
+      "unavailable": "Accounts aren’t enabled on this installation yet. You can explore the demo.",
+      "unknown": "Something went wrong. Please try again."
+    }
+  },
+  "demo": {
+    "title": "You’re viewing a demo with fictional data.",
+    "titleShort": "Demo mode",
+    "hint": "Changes are cleared when you close the tab.",
+    "reset": "Reset data",
+    "createAccount": "Create account",
+    "options": "Options",
+    "exit": "Leave the demo"
   }
 }

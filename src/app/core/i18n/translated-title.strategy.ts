@@ -4,6 +4,8 @@ import { Title } from '@angular/platform-browser';
 import { type RouterStateSnapshot, TitleStrategy } from '@angular/router';
 import { TranslocoService } from '@jsverse/transloco';
 
+const APP_NAME = 'NEXO';
+
 @Injectable({ providedIn: 'root' })
 export class TranslatedTitleStrategy extends TitleStrategy {
   private readonly title = inject(Title);
@@ -23,9 +25,9 @@ export class TranslatedTitleStrategy extends TitleStrategy {
   }
 
   private apply(): void {
-    const appName = this.transloco.translate('app.name');
     const titleKey = this.key();
-    const page = titleKey ? this.transloco.translate(titleKey) : '';
-    this.title.setTitle(page ? `${page} · ${appName}` : appName);
+    const translated = titleKey ? this.transloco.translate(titleKey) : '';
+    const page = translated === titleKey ? '' : translated;
+    this.title.setTitle(page ? `${page} · ${APP_NAME}` : APP_NAME);
   }
 }

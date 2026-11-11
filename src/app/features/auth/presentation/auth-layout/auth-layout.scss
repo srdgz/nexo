@@ -1,0 +1,115 @@
+@use 'mixins' as *;
+
+.auth {
+  display: grid;
+  min-height: 100dvh;
+
+  @include bp(desktop) {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: var(--nx-space-4);
+    padding: var(--nx-space-4);
+  }
+}
+
+.brand {
+  display: none;
+
+  @include bp(desktop) {
+    --nx-logo-size: 38px;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--nx-space-10);
+    padding: var(--nx-space-10);
+    border-radius: var(--nx-radius-xl);
+    background:
+      radial-gradient(circle at 90% 8%, rgb(145 169 149 / 0.28), transparent 42%),
+      var(--nx-navy-900);
+    color: var(--nx-text-inverse);
+  }
+}
+
+.claim {
+  display: grid;
+  gap: var(--nx-space-3);
+  margin-top: auto;
+}
+
+.claim-title {
+  @include heading(var(--nx-text-3xl));
+}
+
+.claim-text {
+  max-width: 36ch;
+  color: #c3c8cb;
+  font-size: var(--nx-text-base);
+}
+
+.features {
+  display: grid;
+  gap: var(--nx-space-3);
+  margin-bottom: var(--nx-space-6);
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: var(--nx-space-3);
+    font-weight: 500;
+  }
+}
+
+.feature-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: var(--nx-navy-700);
+  color: var(--nx-sage-500);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--nx-space-3);
+  padding: var(--nx-space-4);
+
+  @include bp(desktop) {
+    justify-content: flex-end;
+    padding: var(--nx-space-2) var(--nx-space-4);
+  }
+}
+
+.mobile-logo {
+  --nx-logo-size: 32px;
+
+  display: flex;
+  border-radius: var(--nx-radius-md);
+  text-decoration: none;
+
+  @include bp(desktop) {
+    display: none;
+  }
+}
+
+.content {
+  display: grid;
+  flex: 1;
+  place-items: start center;
+  padding: var(--nx-space-6) var(--nx-space-4) var(--nx-space-10);
+
+  @include bp(tablet) {
+    place-items: center;
+  }
+}
+
+.card {
+  width: min(400px, 100%);
+}

@@ -1,0 +1,38 @@
+<div class="auth">
+  <aside class="brand">
+    <nx-logo variant="inverse" />
+    <div class="claim">
+      <p class="claim-title">{{ 'app.claim' | transloco }}</p>
+      <p class="claim-text">{{ 'auth.brand.subtitle' | transloco }}</p>
+    </div>
+    <ul class="features" role="list">
+      @for (feature of features; track feature.key) {
+        <li>
+          <span class="feature-icon" aria-hidden="true">
+            <svg nx-icon [icon]="feature.icon" size="18"></svg>
+          </span>
+          {{ feature.key | transloco }}
+        </li>
+      }
+    </ul>
+  </aside>
+
+  <div class="panel">
+    <header class="top">
+      <a class="mobile-logo" routerLink="/auth/login" [attr.aria-label]="'app.home' | transloco">
+        <nx-logo />
+      </a>
+      <nx-segmented
+        [label]="'language.label' | transloco"
+        [options]="languages"
+        [value]="language.current()"
+        (valueChange)="changeLanguage($event)"
+      />
+    </header>
+    <main class="content">
+      <div class="card">
+        <router-outlet />
+      </div>
+    </main>
+  </div>
+</div>

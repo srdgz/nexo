@@ -1,0 +1,56 @@
+<div class="heading">
+  <h1>{{ 'auth.login.title' | transloco }}</h1>
+  <p class="subtitle">{{ 'auth.login.subtitle' | transloco }}</p>
+</div>
+
+@if (!store.available()) {
+  <nx-alert>{{ 'auth.errors.unavailable' | transloco }}</nx-alert>
+}
+
+@if (error(); as code) {
+  <nx-alert tone="danger">
+    <span>{{ messageKey(code) | transloco }}</span>
+    @if (code === 'email_not_confirmed') {
+      @if (resent()) {
+        <span>{{ 'auth.verify.resent' | transloco }}</span>
+      } @else {
+        <button type="button" class="inline-button" (click)="resendVerification()">
+          {{ 'auth.verify.resend' | transloco }}
+        </button>
+      }
+    }
+  </nx-alert>
+}
+
+<form class="form" novalidate (submit)="onSubmit($event)">
+  <nx-field [label]="'auth.fields.email' | transloco" [state]="credentials.email()">
+    <input nxInput type="email" autocomplete="email" [formField]="credentials.email" />
+  </nx-field>
+  <nx-field [label]="'auth.fields.password' | transloco" [state]="credentials.password()">
+    <nx-password-input autocomplete="current-password" [formField]="credentials.password" />
+  </nx-field>
+  <div class="row-end">
+    <a class="link" routerLink="/auth/forgot-password">{{ 'auth.login.forgot' | transloco }}</a>
+  </div>
+  <button
+    type="submit"
+    nx-button
+    size="lg"
+    block
+    [loading]="credentials().submitting()"
+    [disabled]="!store.available()"
+  >
+    {{ 'auth.login.submit' | transloco }}
+  </button>
+</form>
+
+<p class="divider">{{ 'auth.or' | transloco }}</p>
+
+<a nx-button variant="secondary" size="lg" block routerLink="/demo">
+  {{ 'auth.demoCta' | transloco }}
+</a>
+
+<p class="footer">
+  {{ 'auth.login.noAccount' | transloco }}
+  <a class="link" routerLink="/auth/register">{{ 'auth.login.register' | transloco }}</a>
+</p>

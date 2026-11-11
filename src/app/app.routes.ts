@@ -1,5 +1,7 @@
 import { isDevMode } from '@angular/core';
 import type { Route, Routes } from '@angular/router';
+import { demoEntryGuard } from '@core/app-mode/demo-entry.guard';
+import { authGuard } from '@features/auth/presentation/auth.guards';
 
 const DEV_ROUTES: Route[] = isDevMode()
   ? [
@@ -13,6 +15,7 @@ const DEV_ROUTES: Route[] = isDevMode()
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'app/dashboard' },
+  { path: 'demo', canActivate: [demoEntryGuard], children: [] },
   {
     path: 'auth',
     loadChildren: () =>
@@ -20,6 +23,7 @@ export const routes: Routes = [
   },
   {
     path: 'app',
+    canActivate: [authGuard],
     loadComponent: () => import('@core/layout/app-shell/app-shell').then((m) => m.AppShell),
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },

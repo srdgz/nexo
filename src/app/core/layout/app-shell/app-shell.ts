@@ -14,7 +14,8 @@ import { TranslocoPipe } from '@jsverse/transloco';
 import { filter, map } from 'rxjs';
 import { HEADING_IN_SHELL } from '@shared/ui/pending-page/pending-page';
 import { NxTab, NxTabNav } from '@shared/ui/tab-nav/tab-nav';
-import { CurrentUserStore } from '../../session/current-user';
+import { Session } from '../../session/session';
+import { NxDemoBanner } from '../demo-banner/demo-banner';
 import { NxAppHeader } from '../app-header/app-header';
 import { NxBottomNav } from '../bottom-nav/bottom-nav';
 import type { LayoutMode } from '../layout-mode';
@@ -27,6 +28,7 @@ import { NxSidebar } from '../sidebar/sidebar';
   imports: [
     NxAppHeader,
     NxBottomNav,
+    NxDemoBanner,
     NxSidebar,
     NxTab,
     NxTabNav,
@@ -50,7 +52,8 @@ export class AppShell {
   private readonly isMobile = injectMediaQuery('(max-width: 767.98px)');
   private readonly main = viewChild.required<ElementRef<HTMLElement>>('main');
 
-  protected readonly user = inject(CurrentUserStore).user;
+  protected readonly session = inject(Session);
+  protected readonly user = this.session.user;
   protected readonly railOpen = signal(false);
 
   protected readonly mode = computed<LayoutMode>(() => {

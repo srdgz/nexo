@@ -25,6 +25,10 @@
 <div class="column">
   <nx-app-header [mode]="mode()" [railOpen]="railOpen()" (toggleRail)="railOpen.set(!railOpen())" />
 
+  @if (session.mode === 'demo') {
+    <nx-demo-banner [compact]="mode() === 'mobile'" />
+  }
+
   @if (mode() === 'mobile' && section(); as section) {
     <nx-tab-nav class="section-tabs" [label]="section.labelKey | transloco">
       @for (item of section.items; track item.path) {
