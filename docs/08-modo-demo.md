@@ -17,30 +17,30 @@ features/<feature>/
     └── demo/                   ← adaptadores en memoria con los mismos puertos
 ```
 
-| Alternativa | Motivo de descarte |
-|-------------|--------------------|
+| Alternativa                         | Motivo de descarte                                                                                                                                          |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Usuario demo compartido en Supabase | Cualquiera puede borrar o ensuciar los datos que ve el siguiente visitante; obliga a resetear con un cron; no funciona si el proyecto gratuito está pausado |
-| Usuarios anónimos de Supabase | Crea una fila en `auth.users` por visita, consume cuota y necesita limpieza |
-| Capturas o vídeo | No demuestra que la aplicación funciona |
+| Usuarios anónimos de Supabase       | Crea una fila en `auth.users` por visita, consume cuota y necesita limpieza                                                                                 |
+| Capturas o vídeo                    | No demuestra que la aplicación funciona                                                                                                                     |
 
 Ventajas: la demo es la mejor prueba de que los componentes no dependen de Supabase (los puertos se cumplen con dos implementaciones), arranca al instante y funciona aunque Supabase esté caído o pausado.
 
 ## Comportamiento
 
-| Aspecto | Comportamiento |
-|---------|----------------|
-| Entrada | Botón «Explorar la demo» en login y registro, y ruta directa `/demo` (enlazable desde el README y el portfolio) |
-| Arranque | `/demo` guarda `nexo.mode = demo` en `sessionStorage` y recarga en `/app/dashboard`; el arranque de la app elige los adaptadores según ese valor |
-| Sesión | Usuaria ficticia «Laura Martín»; el `authGuard` acepta la sesión demo |
-| Datos | Semilla en `demo-seed.ts` con fechas **relativas a hoy**: siempre hay movimientos del mes actual, tareas que vencen hoy y eventos próximos |
-| Escrituras | Funcionan todas (crear, editar, completar, eliminar) y respetan las mismas validaciones del dominio |
-| Persistencia | `sessionStorage`: sobrevive a recargar, se borra al cerrar la pestaña |
-| Aviso | Banda fija bajo el header: «Estás viendo una demo con datos ficticios. Los cambios se borran al cerrar la pestaña.» · «Restablecer datos» · «Crear cuenta» |
-| Idioma | Funciona igual; la semilla tiene nombres en ES y EN |
-| Limitaciones | En Perfil se desactivan cambiar email, cambiar contraseña y eliminar cuenta, con el motivo visible |
-| Salida | «Salir de la demo» (menú de usuario) borra el modo y los datos y vuelve a `/auth/login` |
-| Latencia | Los adaptadores demo añaden 150–300 ms aleatorios para que se vean los estados de carga |
-| Bundle | La semilla y los adaptadores demo se cargan con `import()` solo en modo demo; el cliente de Supabase solo en modo real |
+| Aspecto      | Comportamiento                                                                                                                                             |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Entrada      | Botón «Explorar la demo» en login y registro, y ruta directa `/demo` (enlazable desde el README y el portfolio)                                            |
+| Arranque     | `/demo` guarda `nexo.mode = demo` en `sessionStorage` y recarga en `/app/dashboard`; el arranque de la app elige los adaptadores según ese valor           |
+| Sesión       | Usuaria ficticia «Laura Martín»; el `authGuard` acepta la sesión demo                                                                                      |
+| Datos        | Semilla en `demo-seed.ts` con fechas **relativas a hoy**: siempre hay movimientos del mes actual, tareas que vencen hoy y eventos próximos                 |
+| Escrituras   | Funcionan todas (crear, editar, completar, eliminar) y respetan las mismas validaciones del dominio                                                        |
+| Persistencia | `sessionStorage`: sobrevive a recargar, se borra al cerrar la pestaña                                                                                      |
+| Aviso        | Banda fija bajo el header: «Estás viendo una demo con datos ficticios. Los cambios se borran al cerrar la pestaña.» · «Restablecer datos» · «Crear cuenta» |
+| Idioma       | Funciona igual; la semilla tiene nombres en ES y EN                                                                                                        |
+| Limitaciones | En Perfil se desactivan cambiar email, cambiar contraseña y eliminar cuenta, con el motivo visible                                                         |
+| Salida       | «Salir de la demo» (menú de usuario) borra el modo y los datos y vuelve a `/auth/login`                                                                    |
+| Latencia     | Los adaptadores demo añaden 150–300 ms aleatorios para que se vean los estados de carga                                                                    |
+| Bundle       | La semilla y los adaptadores demo se cargan con `import()` solo en modo demo; el cliente de Supabase solo en modo real                                     |
 
 ## Criterios de aceptación
 

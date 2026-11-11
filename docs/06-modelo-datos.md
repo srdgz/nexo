@@ -283,29 +283,29 @@ revoke all on all tables in schema public from anon;
 
 Para no descargar todos los movimientos del mes al navegador, el dashboard usa funciones `security invoker` (respetan RLS):
 
-| Función | Devuelve |
-|---------|----------|
-| `finance_summary(p_from date, p_to date)` | `income`, `expense`, `balance` (céntimos) |
+| Función                                        | Devuelve                                        |
+| ---------------------------------------------- | ----------------------------------------------- |
+| `finance_summary(p_from date, p_to date)`      | `income`, `expense`, `balance` (céntimos)       |
 | `expenses_by_category(p_from date, p_to date)` | `category_id`, `name`, `icon`, `color`, `total` |
-| `monthly_trend(p_months int default 6)` | `month`, `income`, `expense` |
-| `budget_progress(p_month date)` | `budget_id`, `category_id`, `amount`, `spent` |
+| `monthly_trend(p_months int default 6)`        | `month`, `income`, `expense`                    |
+| `budget_progress(p_month date)`                | `budget_id`, `category_id`, `amount`, `spent`   |
 
 La tasa de ahorro (`(ingresos − gastos) / ingresos × 100`) se calcula en el dominio TypeScript y devuelve `null` si los ingresos son 0.
 
 ## Pruebas pgTAP obligatorias
 
-| ID | Escenario |
-|----|-----------|
-| RLS-01 | A no ve movimientos, tareas, eventos, presupuestos ni categorías de B |
-| RLS-02 | A no puede actualizar ni eliminar filas de B (0 filas afectadas) |
-| RLS-03 | A no puede insertar con `user_id` de B |
+| ID     | Escenario                                                                        |
+| ------ | -------------------------------------------------------------------------------- |
+| RLS-01 | A no ve movimientos, tareas, eventos, presupuestos ni categorías de B            |
+| RLS-02 | A no puede actualizar ni eliminar filas de B (0 filas afectadas)                 |
+| RLS-03 | A no puede insertar con `user_id` de B                                           |
 | RLS-04 | A no puede usar una categoría de B en un movimiento o presupuesto (FK compuesta) |
-| RLS-05 | A no puede enlazar un movimiento a una tarea de B |
-| RLS-06 | `anon` no lee ninguna tabla |
-| DB-01 | Gasto con categoría de ingreso → error |
-| DB-02 | Presupuesto duplicado (categoría + mes) → error `23505` |
-| DB-03 | Presupuesto con `period_start` distinto de día 1 → error |
-| DB-04 | Evento con fin anterior al inicio → error |
-| DB-05 | Tarea completada sin `completed_at` → error |
-| DB-06 | Borrar una tarea deja `task_id = null` en sus movimientos |
-| DB-07 | Alta de usuario crea perfil y 12 categorías en su idioma |
+| RLS-05 | A no puede enlazar un movimiento a una tarea de B                                |
+| RLS-06 | `anon` no lee ninguna tabla                                                      |
+| DB-01  | Gasto con categoría de ingreso → error                                           |
+| DB-02  | Presupuesto duplicado (categoría + mes) → error `23505`                          |
+| DB-03  | Presupuesto con `period_start` distinto de día 1 → error                         |
+| DB-04  | Evento con fin anterior al inicio → error                                        |
+| DB-05  | Tarea completada sin `completed_at` → error                                      |
+| DB-06  | Borrar una tarea deja `task_id = null` en sus movimientos                        |
+| DB-07  | Alta de usuario crea perfil y 12 categorías en su idioma                         |

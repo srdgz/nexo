@@ -2,57 +2,57 @@
 
 ## Cerradas (indicadas por el usuario)
 
-| Tema | Decisión |
-|------|----------|
-| Moneda | Solo euros (`EUR`). La columna existe en `profiles` con `CHECK (currency = 'EUR')` para poder abrirla en el futuro sin migrar datos |
-| Idiomas | Español e inglés desde el primer día |
-| UI | Sistema de diseño con componentes propios en SCSS, sin librería de componentes |
-| Backend | Supabase (Auth + PostgreSQL + RLS) |
+| Tema         | Decisión                                                                                                                            |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Moneda       | Solo euros (`EUR`). La columna existe en `profiles` con `CHECK (currency = 'EUR')` para poder abrirla en el futuro sin migrar datos |
+| Idiomas      | Español e inglés desde el primer día                                                                                                |
+| UI           | Sistema de diseño con componentes propios en SCSS, sin librería de componentes                                                      |
+| Backend      | Supabase (Auth + PostgreSQL + RLS)                                                                                                  |
 | Arquitectura | Hexagonal por feature: `domain` → `application` (puertos y casos de uso) → `infrastructure` (adaptadores Supabase) → `presentation` |
 
 ## Propuestas (pendientes de tu aprobación)
 
-| # | Tema | Propuesta | Motivo |
-|---|------|-----------|--------|
-| D-01 | Versión | Última versión estable de Angular al iniciar la Fase 0, standalone, zoneless, TypeScript strict | Zoneless encaja con Signals y es el modo por defecto en proyectos nuevos |
-| D-02 | i18n | **Transloco** (runtime) en lugar del i18n nativo de Angular | El i18n nativo compila un bundle por idioma y no permite cambiar de idioma sin recargar ni tener un único deploy. Transloco permite cambiarlo desde Preferencias al instante |
-| D-03 | Rutas | Segmentos de URL en inglés (`/app/finances/transactions`), textos traducidos | Una sola tabla de rutas para los dos idiomas |
-| D-04 | Formato | Importes y fechas con `Intl` según el idioma del perfil (`1.842,30 €` / `€1,842.30`), con `useGrouping: 'always'` | Sin dependencias extra. `Intl` en `es-ES` no agrupa por defecto los números de 4 cifras (`1842,30 €`) |
-| D-05 | Idioma inicial | El del navegador (`es` si empieza por `es`, si no `en`); se guarda en `profiles.locale` al registrarse | Un usuario inglés no ve la app en español la primera vez |
-| D-06 | Gráficos | Componentes SVG propios (barras, lollipop, donut) | Bundle pequeño, control total del estilo y accesibilidad |
-| D-07 | Iconos | `lucide-angular` | Indicado en la especificación |
-| D-08 | Tema | Solo tema claro en el MVP; tokens preparados para oscuro | Reduce el trabajo de diseño inicial |
-| D-09 | Formularios | Páginas con ruta propia para movimientos, tareas y eventos (enlazables); diálogo para presupuestos y categorías (formularios de 2–3 campos) | Equilibrio entre deep-linking y rapidez |
-| D-10 | Móvil | Barra de navegación inferior con botón central «+» (alta rápida) | Patrón conocido y alcanzable con el pulgar |
-| D-11 | Categorías | Gestión en `/app/finances/categories`; se crean 12 categorías iniciales al registrarse | La especificación no tenía pantalla para gestionarlas |
-| D-12 | Nexo tarea ↔ dinero (US-037) | Una tarea puede tener **importe y categoría previstos**. Al completarla, NEXO propone registrar el gasto ya relleno y enlazado (`transactions.task_id`) | Es la diferenciación del producto; también alimenta «Próximos pagos» en el dashboard |
-| D-13 | Perfil | Nombre se pide en el registro; el perfil y las categorías se crean con un trigger en `auth.users` | Sin pantalla de onboarding extra en el MVP |
-| D-14 | Verificación de email | Activada | Criterio de US-001 |
-| D-15 | Contraseña | Mínimo 8 caracteres, con letras y números (frontend) + política equivalente en Supabase Auth | Política mínima de US-001 |
-| D-16 | Testing | Vitest (unit), Playwright (E2E, 3 anchos), pgTAP (RLS) | Especificación §11 |
-| D-17 | Deploy | Vercel | Mismo flujo que ApplyTrack |
-| D-18 | Gestor de paquetes | pnpm, Node 24 | Mismo entorno que el resto de proyectos |
+| #    | Tema                         | Propuesta                                                                                                                                               | Motivo                                                                                                                                                                       |
+| ---- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D-01 | Versión                      | Última versión estable de Angular al iniciar la Fase 0, standalone, zoneless, TypeScript strict                                                         | Zoneless encaja con Signals y es el modo por defecto en proyectos nuevos                                                                                                     |
+| D-02 | i18n                         | **Transloco** (runtime) en lugar del i18n nativo de Angular                                                                                             | El i18n nativo compila un bundle por idioma y no permite cambiar de idioma sin recargar ni tener un único deploy. Transloco permite cambiarlo desde Preferencias al instante |
+| D-03 | Rutas                        | Segmentos de URL en inglés (`/app/finances/transactions`), textos traducidos                                                                            | Una sola tabla de rutas para los dos idiomas                                                                                                                                 |
+| D-04 | Formato                      | Importes y fechas con `Intl` según el idioma del perfil (`1.842,30 €` / `€1,842.30`), con `useGrouping: 'always'`                                       | Sin dependencias extra. `Intl` en `es-ES` no agrupa por defecto los números de 4 cifras (`1842,30 €`)                                                                        |
+| D-05 | Idioma inicial               | El del navegador (`es` si empieza por `es`, si no `en`); se guarda en `profiles.locale` al registrarse                                                  | Un usuario inglés no ve la app en español la primera vez                                                                                                                     |
+| D-06 | Gráficos                     | Componentes SVG propios (barras, lollipop, donut)                                                                                                       | Bundle pequeño, control total del estilo y accesibilidad                                                                                                                     |
+| D-07 | Iconos                       | `lucide-angular`                                                                                                                                        | Indicado en la especificación                                                                                                                                                |
+| D-08 | Tema                         | Solo tema claro en el MVP; tokens preparados para oscuro                                                                                                | Reduce el trabajo de diseño inicial                                                                                                                                          |
+| D-09 | Formularios                  | Páginas con ruta propia para movimientos, tareas y eventos (enlazables); diálogo para presupuestos y categorías (formularios de 2–3 campos)             | Equilibrio entre deep-linking y rapidez                                                                                                                                      |
+| D-10 | Móvil                        | Barra de navegación inferior con botón central «+» (alta rápida)                                                                                        | Patrón conocido y alcanzable con el pulgar                                                                                                                                   |
+| D-11 | Categorías                   | Gestión en `/app/finances/categories`; se crean 12 categorías iniciales al registrarse                                                                  | La especificación no tenía pantalla para gestionarlas                                                                                                                        |
+| D-12 | Nexo tarea ↔ dinero (US-037) | Una tarea puede tener **importe y categoría previstos**. Al completarla, NEXO propone registrar el gasto ya relleno y enlazado (`transactions.task_id`) | Es la diferenciación del producto; también alimenta «Próximos pagos» en el dashboard                                                                                         |
+| D-13 | Perfil                       | Nombre se pide en el registro; el perfil y las categorías se crean con un trigger en `auth.users`                                                       | Sin pantalla de onboarding extra en el MVP                                                                                                                                   |
+| D-14 | Verificación de email        | Activada                                                                                                                                                | Criterio de US-001                                                                                                                                                           |
+| D-15 | Contraseña                   | Mínimo 8 caracteres, con letras y números (frontend) + política equivalente en Supabase Auth                                                            | Política mínima de US-001                                                                                                                                                    |
+| D-16 | Testing                      | Vitest (unit), Playwright (E2E, 3 anchos), pgTAP (RLS)                                                                                                  | Especificación §11                                                                                                                                                           |
+| D-17 | Deploy                       | Vercel                                                                                                                                                  | Mismo flujo que ApplyTrack                                                                                                                                                   |
+| D-18 | Gestor de paquetes           | pnpm, Node 24                                                                                                                                           | Mismo entorno que el resto de proyectos                                                                                                                                      |
 
 Las propuestas D-01 a D-18 quedaron **aprobadas** el 11/11/2026. Cualquier cambio se registrará aquí cuando surja.
 
 ## Añadidas tras la aprobación
 
-| # | Tema | Decisión | Motivo |
-|---|------|----------|--------|
-| D-19 | Modo demo | Adaptadores en memoria en el navegador, sin backend. Detalle en [08-modo-demo.md](08-modo-demo.md) | Probar la app sin registrarse, sin riesgo para los datos y sin depender de que Supabase esté activo |
-| D-20 | Backend | Seguimos con **Supabase (plan gratuito)**. Plan B: API en Node.js + PostgreSQL en Neon, desplegada en Vercel | Ver «Plan gratuito de Supabase» abajo |
-| D-21 | Eliminar cuenta | Edge Function `delete-account` que usa la clave `service_role` en el servidor y borra el usuario de `auth.users` (el resto cae en cascada) | La clave secreta nunca llega a Angular. Cierra la decisión que quedó pendiente en F-13 |
-| D-22 | Repositorio | Git desde el inicio, Conventional Commits en inglés, un commit por funcionalidad completada. Sin ninguna referencia a herramientas de IA en commits, autores, contributors ni archivos | Requisito del proyecto |
+| #    | Tema            | Decisión                                                                                                                                                                               | Motivo                                                                                              |
+| ---- | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| D-19 | Modo demo       | Adaptadores en memoria en el navegador, sin backend. Detalle en [08-modo-demo.md](08-modo-demo.md)                                                                                     | Probar la app sin registrarse, sin riesgo para los datos y sin depender de que Supabase esté activo |
+| D-20 | Backend         | Seguimos con **Supabase (plan gratuito)**. Plan B: API en Node.js + PostgreSQL en Neon, desplegada en Vercel                                                                           | Ver «Plan gratuito de Supabase» abajo                                                               |
+| D-21 | Eliminar cuenta | Edge Function `delete-account` que usa la clave `service_role` en el servidor y borra el usuario de `auth.users` (el resto cae en cascada)                                             | La clave secreta nunca llega a Angular. Cierra la decisión que quedó pendiente en F-13              |
+| D-22 | Repositorio     | Git desde el inicio, Conventional Commits en inglés, un commit por funcionalidad completada. Sin ninguna referencia a herramientas de IA en commits, autores, contributors ni archivos | Requisito del proyecto                                                                              |
 
 ### Plan gratuito de Supabase
 
-| Necesidad de NEXO | ¿Cubierta gratis? | Nota |
-|-------------------|-------------------|------|
-| Auth email + contraseña, verificación y recuperación | Sí | El SMTP por defecto de Supabase solo envía a los miembros del proyecto y con un límite muy bajo. Para usuarios reales se configura un **SMTP propio gratuito** (por ejemplo Resend) |
-| PostgreSQL, RLS, funciones, triggers | Sí | 500 MB de base de datos, de sobra para el MVP |
-| Edge Functions (eliminar cuenta) | Sí | |
-| pgTAP y `supabase test db` | Sí | Se ejecutan contra la base local en CI |
-| Disponibilidad continua | Con matices | Los proyectos gratuitos se **pausan tras 7 días sin actividad**. El modo demo no se ve afectado; para el modo real basta con usarlo o reactivarlo desde el panel |
+| Necesidad de NEXO                                    | ¿Cubierta gratis? | Nota                                                                                                                                                                                |
+| ---------------------------------------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Auth email + contraseña, verificación y recuperación | Sí                | El SMTP por defecto de Supabase solo envía a los miembros del proyecto y con un límite muy bajo. Para usuarios reales se configura un **SMTP propio gratuito** (por ejemplo Resend) |
+| PostgreSQL, RLS, funciones, triggers                 | Sí                | 500 MB de base de datos, de sobra para el MVP                                                                                                                                       |
+| Edge Functions (eliminar cuenta)                     | Sí                |                                                                                                                                                                                     |
+| pgTAP y `supabase test db`                           | Sí                | Se ejecutan contra la base local en CI                                                                                                                                              |
+| Disponibilidad continua                              | Con matices       | Los proyectos gratuitos se **pausan tras 7 días sin actividad**. El modo demo no se ve afectado; para el modo real basta con usarlo o reactivarlo desde el panel                    |
 
 Los límites exactos se comprobarán al crear el proyecto (Fase 2). Si algo imprescindible no entra en el plan gratuito, se aplica el plan B: gracias a la arquitectura hexagonal solo cambian los adaptadores de `infrastructure/`, no los componentes ni los casos de uso.
 

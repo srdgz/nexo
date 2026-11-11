@@ -44,14 +44,14 @@ Fases posteriores: `app/documents`, `app/goals`.
 
 ## Carga diferida
 
-| Ruta | Carga |
-|------|-------|
-| `auth` | `loadChildren` → `features/auth/auth.routes.ts` |
-| `app` | `loadComponent` del `AppShell` + `loadChildren` por feature |
-| `app/finances` | `features/finances/presentation/finances.routes.ts` |
+| Ruta               | Carga                                                       |
+| ------------------ | ----------------------------------------------------------- |
+| `auth`             | `loadChildren` → `features/auth/auth.routes.ts`             |
+| `app`              | `loadComponent` del `AppShell` + `loadChildren` por feature |
+| `app/finances`     | `features/finances/presentation/finances.routes.ts`         |
 | `app/organization` | `features/organization/presentation/organization.routes.ts` |
-| `app/settings` | `features/settings/presentation/settings.routes.ts` |
-| Gráficos | `@defer (on viewport)` dentro de cada página |
+| `app/settings`     | `features/settings/presentation/settings.routes.ts`         |
+| Gráficos           | `@defer (on viewport)` dentro de cada página                |
 
 Guards adicionales: `unsavedChangesGuard` (`canDeactivate`) en formularios con cambios sin guardar.
 
@@ -75,14 +75,14 @@ Guards adicionales: `unsavedChangesGuard` (`canDeactivate`) en formularios con c
 
 ## Títulos de página (i18n)
 
-| Ruta | ES | EN |
-|------|----|----|
-| dashboard | Inicio | Home |
-| finances/overview | Resumen | Overview |
-| finances/transactions | Movimientos | Transactions |
-| finances/budgets | Presupuestos | Budgets |
-| finances/categories | Categorías | Categories |
-| organization/tasks | Tareas | Tasks |
-| organization/calendar | Calendario | Calendar |
-| settings/profile | Perfil | Profile |
-| settings/preferences | Preferencias | Preferences |
+| Ruta                  | ES           | EN           |
+| --------------------- | ------------ | ------------ |
+| dashboard             | Inicio       | Home         |
+| finances/overview     | Resumen      | Overview     |
+| finances/transactions | Movimientos  | Transactions |
+| finances/budgets      | Presupuestos | Budgets      |
+| finances/categories   | Categorías   | Categories   |
+| organization/tasks    | Tareas       | Tasks        |
+| organization/calendar | Calendario   | Calendar     |
+| settings/profile      | Perfil       | Profile      |
+| settings/preferences  | Preferencias | Preferences  |
