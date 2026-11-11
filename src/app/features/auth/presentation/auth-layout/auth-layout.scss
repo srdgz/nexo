@@ -77,13 +77,10 @@
 .top {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--nx-space-3);
   padding: var(--nx-space-4);
 
   @include bp(desktop) {
-    justify-content: flex-end;
-    padding: var(--nx-space-2) var(--nx-space-4);
+    display: none;
   }
 }
 
@@ -93,10 +90,6 @@
   display: flex;
   border-radius: var(--nx-radius-md);
   text-decoration: none;
-
-  @include bp(desktop) {
-    display: none;
-  }
 }
 
 .content {

@@ -22,12 +22,6 @@
       <a class="mobile-logo" routerLink="/auth/login" [attr.aria-label]="'app.home' | transloco">
         <nx-logo />
       </a>
-      <nx-segmented
-        [label]="'language.label' | transloco"
-        [options]="languages"
-        [value]="language.current()"
-        (valueChange)="changeLanguage($event)"
-      />
     </header>
     <main class="content">
       <div class="card">
