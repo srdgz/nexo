@@ -26,7 +26,7 @@ module.exports = tseslint.config(
       ],
       '@angular-eslint/component-selector': [
         'error',
-        { type: 'element', prefix: 'nx', style: 'kebab-case' },
+        { type: ['element', 'attribute'], prefix: 'nx', style: 'kebab-case' },
       ],
       '@angular-eslint/prefer-on-push-component-change-detection': 'error',
       '@angular-eslint/prefer-signals': 'error',
@@ -39,14 +39,17 @@ module.exports = tseslint.config(
   {
     files: ['src/app/core/**/*.ts'],
     rules: restrict([
-      { group: ['@features/*', '**/features/**'], message: 'core no puede depender de features.' },
+      {
+        regex: '^(@features/|(\\.\\.?/)+(.*/)?features/)',
+        message: 'core no puede depender de features.',
+      },
     ]),
   },
   {
     files: ['src/app/shared/**/*.ts'],
     rules: restrict([
       {
-        group: ['@features/*', '**/features/**', '@core/*', '**/core/**'],
+        regex: '^(@features/|@core/|(\\.\\.?/)+(.*/)?(features|core)/)',
         message: 'shared no puede depender de core ni de features.',
       },
       { group: ['@supabase/*'], message: 'shared no conoce Supabase.' },

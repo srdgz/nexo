@@ -1,4 +1,15 @@
-import type { Routes } from '@angular/router';
+import { isDevMode } from '@angular/core';
+import type { Route, Routes } from '@angular/router';
+
+const DEV_ROUTES: Route[] = isDevMode()
+  ? [
+      {
+        path: 'ui',
+        title: 'pages.uiGallery',
+        loadComponent: () => import('./dev/ui-gallery/ui-gallery').then((m) => m.UiGallery),
+      },
+    ]
+  : [];
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'app/dashboard' },
@@ -36,6 +47,7 @@ export const routes: Routes = [
         loadChildren: () =>
           import('@features/settings/presentation/settings.routes').then((m) => m.SETTINGS_ROUTES),
       },
+      ...DEV_ROUTES,
     ],
   },
   {

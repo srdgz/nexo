@@ -1,0 +1,148 @@
+@use 'mixins' as *;
+
+:host {
+  display: contents;
+}
+
+dialog {
+  width: min(520px, calc(100vw - 32px));
+  max-width: none;
+  max-height: calc(100dvh - 48px);
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: var(--nx-radius-xl);
+  background: var(--nx-surface);
+  color: var(--nx-text);
+  box-shadow: var(--nx-shadow-lg);
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+  transition:
+    opacity 200ms var(--nx-ease),
+    transform 200ms var(--nx-ease),
+    overlay 200ms allow-discrete,
+    display 200ms allow-discrete;
+
+  &[open] {
+    opacity: 1;
+    transform: none;
+
+    @starting-style {
+      opacity: 0;
+      transform: translateY(8px) scale(0.98);
+    }
+  }
+
+  &::backdrop {
+    background: rgb(24 43 53 / 0);
+    transition:
+      background-color 200ms var(--nx-ease),
+      overlay 200ms allow-discrete,
+      display 200ms allow-discrete;
+  }
+
+  &[open]::backdrop {
+    background: rgb(24 43 53 / 0.42);
+
+    @starting-style {
+      background: rgb(24 43 53 / 0);
+    }
+  }
+
+  &.sm {
+    width: min(420px, calc(100vw - 32px));
+  }
+}
+
+@mixin as-sheet {
+  width: 100vw;
+  max-height: calc(100dvh - 24px);
+  margin: auto 0 0;
+  border-radius: var(--nx-radius-xl) var(--nx-radius-xl) 0 0;
+  transform: translateY(100%);
+
+  &[open] {
+    transform: none;
+
+    @starting-style {
+      transform: translateY(100%);
+    }
+  }
+
+  .grab {
+    display: block;
+  }
+
+  .panel {
+    padding-bottom: calc(var(--nx-space-6) + env(safe-area-inset-bottom));
+  }
+}
+
+dialog.sheet {
+  @include as-sheet;
+}
+
+@include below(tablet) {
+  dialog.auto {
+    @include as-sheet;
+  }
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nx-space-5);
+  max-height: inherit;
+  padding: var(--nx-space-6);
+  overflow-y: auto;
+}
+
+.grab {
+  display: none;
+  width: 40px;
+  height: 5px;
+  margin: calc(var(--nx-space-2) * -1) auto calc(var(--nx-space-2) * -1);
+  border-radius: 9px;
+  background: var(--nx-border-strong);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--nx-space-3);
+}
+
+.titles {
+  display: grid;
+  flex: 1;
+  gap: var(--nx-space-1);
+}
+
+.title {
+  font-size: var(--nx-text-lg);
+}
+
+.description {
+  color: var(--nx-text-muted);
+}
+
+.close {
+  margin: -4px -8px 0 0;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap-reverse;
+  justify-content: flex-end;
+  gap: var(--nx-space-2);
+
+  &:empty {
+    display: none;
+  }
+
+  @include below(tablet) {
+    > * {
+      flex: 1;
+    }
+  }
+}

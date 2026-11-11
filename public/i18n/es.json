@@ -42,7 +42,8 @@
     "editEvent": "Editar evento",
     "profile": "Perfil",
     "preferences": "Preferencias",
-    "notFound": "Página no encontrada"
+    "notFound": "Página no encontrada",
+    "uiGallery": "Sistema de diseño"
   },
   "language": {
     "label": "Idioma",
@@ -56,5 +57,47 @@
     "title": "No encontramos esta página",
     "description": "Puede que el enlace esté mal escrito o que el elemento se haya eliminado.",
     "home": "Ir al inicio"
+  },
+  "layout": {
+    "skipToContent": "Saltar al contenido",
+    "expandMenu": "Expandir el menú",
+    "collapseMenu": "Contraer el menú",
+    "userMenu": "Menú de usuario",
+    "tip": {
+      "title": "Une tareas y dinero",
+      "text": "Añade un pago previsto a una tarea y NEXO te propondrá registrarlo al completarla."
+    }
+  },
+  "quickAdd": {
+    "new": "Nuevo",
+    "title": "Añadir",
+    "expense": "Gasto",
+    "expenseHint": "Registra un pago",
+    "income": "Ingreso",
+    "incomeHint": "Nómina, ventas…",
+    "task": "Tarea",
+    "taskHint": "Con pago previsto opcional",
+    "event": "Evento",
+    "eventHint": "Cita o recordatorio"
+  },
+  "ui": {
+    "optional": "(opcional)",
+    "close": "Cerrar",
+    "retry": "Reintentar",
+    "showPassword": "Mostrar contraseña",
+    "hidePassword": "Ocultar contraseña",
+    "errorState": {
+      "title": "No hemos podido cargar los datos",
+      "description": "Comprueba tu conexión e inténtalo de nuevo."
+    },
+    "errors": {
+      "required": "Este campo es obligatorio.",
+      "email": "Introduce un correo válido.",
+      "minLength": "Debe tener al menos {{minLength}} caracteres.",
+      "maxLength": "Puede tener como máximo {{maxLength}} caracteres.",
+      "min": "El valor mínimo es {{min}}.",
+      "max": "El valor máximo es {{max}}.",
+      "pattern": "El formato no es válido."
+    }
   }
 }

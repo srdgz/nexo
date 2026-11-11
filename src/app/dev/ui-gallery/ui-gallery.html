@@ -1,0 +1,261 @@
+<div class="gallery">
+  <nx-card>
+    <nx-card-header heading="Logo" />
+    <div class="row">
+      <nx-logo />
+      <nx-logo variant="mark" />
+      <span class="inverse-box"><nx-logo variant="inverse" /></span>
+    </div>
+  </nx-card>
+
+  <nx-card>
+    <nx-card-header heading="Botones" />
+    <div class="row">
+      <button nx-button>
+        <svg nx-icon [icon]="icons.plus" size="17"></svg>
+        Nuevo
+      </button>
+      <button nx-button variant="secondary">Cancelar</button>
+      <button nx-button variant="ghost">Ver todo</button>
+      <button nx-button variant="danger">Eliminar</button>
+    </div>
+    <div class="row">
+      <button nx-button size="sm">Pequeño</button>
+      <button nx-button size="lg">Grande</button>
+      <button nx-button disabled>Deshabilitado</button>
+      <button nx-button [loading]="saving()" (click)="save()">Guardar</button>
+      <a nx-button variant="secondary" routerLink="/app/dashboard">Enlace</a>
+    </div>
+    <div class="row">
+      <button nx-icon-button label="Editar" tooltip>
+        <svg nx-icon [icon]="icons.pencil" size="18"></svg>
+      </button>
+      <button nx-icon-button variant="outline" label="Buscar">
+        <svg nx-icon [icon]="icons.search" size="18"></svg>
+      </button>
+      <button nx-icon-button variant="filled" label="Añadir">
+        <svg nx-icon [icon]="icons.plus" size="18"></svg>
+      </button>
+      <button nx-icon-button size="sm" label="Más acciones" [nxMenuTrigger]="actions">
+        <svg nx-icon [icon]="icons.more" size="18"></svg>
+      </button>
+      <nx-menu #actions label="Acciones del movimiento">
+        <button type="button" nx-menu-item>
+          <svg nx-icon [icon]="icons.pencil" size="18"></svg>
+          Editar
+        </button>
+        <button type="button" nx-menu-item>Duplicar</button>
+        <nx-menu-separator />
+        <button type="button" nx-menu-item danger (click)="confirmOpen.set(true)">
+          <svg nx-icon [icon]="icons.trash" size="18"></svg>
+          Eliminar
+        </button>
+      </nx-menu>
+    </div>
+  </nx-card>
+
+  <nx-card>
+    <nx-card-header heading="Badges, chips y segmentado" />
+    <div class="row">
+      <nx-badge>Neutro</nx-badge>
+      <nx-badge tone="success">Completada</nx-badge>
+      <nx-badge tone="warning">Vence hoy</nx-badge>
+      <nx-badge tone="danger">Atrasada</nx-badge>
+      <nx-badge tone="info">En curso</nx-badge>
+      <nx-badge tone="navy" appearance="solid">7</nx-badge>
+      <nx-badge tone="danger" appearance="dot">Alta</nx-badge>
+      <nx-badge appearance="outline">Borde</nx-badge>
+    </div>
+    <div class="row">
+      <button nx-chip [selected]="filter() === 'all'" (click)="filter.set('all')">Todas</button>
+      <button nx-chip [selected]="filter() === 'today'" [count]="2" (click)="filter.set('today')">
+        Hoy
+      </button>
+      <button nx-chip [selected]="filter() === 'high'" [count]="2" (click)="filter.set('high')">
+        Alta
+      </button>
+    </div>
+    <div class="row">
+      <nx-segmented label="Periodo" [options]="periods" [(value)]="period" />
+      <nx-segmented label="Periodo" size="md" [options]="periods" [(value)]="period" />
+      <span class="nx-muted">Valor: {{ period() }}</span>
+    </div>
+  </nx-card>
+
+  <nx-card>
+    <nx-card-header heading="Formulario (Signal Forms)" />
+    <form class="form" novalidate (submit)="$event.preventDefault()">
+      <nx-field
+        label="Correo electrónico"
+        hint="Te enviaremos un enlace de confirmación."
+        [state]="sample.email()"
+      >
+        <input nxInput type="email" autocomplete="email" [formField]="sample.email" />
+      </nx-field>
+      <nx-field label="Contraseña" [state]="sample.password()">
+        <nx-password-input autocomplete="new-password" [formField]="sample.password" />
+      </nx-field>
+      <nx-field label="Importe" [state]="sample.amount()">
+        <nx-money-input [formField]="sample.amount" />
+      </nx-field>
+      <nx-field label="Categoría">
+        <select nxInput [formField]="sample.category">
+          <option value="home">Hogar</option>
+          <option value="food">Alimentación</option>
+          <option value="transport">Transporte</option>
+        </select>
+      </nx-field>
+      <nx-field label="Fecha">
+        <input nxInput type="date" [formField]="sample.date" />
+      </nx-field>
+      <nx-field label="Buscar">
+        <input nxInput type="search" placeholder="Buscar movimientos" />
+      </nx-field>
+      <nx-field label="Notas" optional>
+        <textarea nxInput [formField]="sample.notes"></textarea>
+      </nx-field>
+      <nx-field label="Deshabilitado">
+        <input nxInput value="No editable" disabled />
+      </nx-field>
+      <label class="nx-choice">
+        <input type="checkbox" nxCheckbox [formField]="sample.remember" />
+        Recordarme
+      </label>
+      <label class="nx-choice">
+        <input type="checkbox" nxCheckbox shape="round" checked />
+        Tarea completada
+      </label>
+      <label class="nx-choice">
+        <input type="checkbox" nxCheckbox indeterminate />
+        Indeterminado
+      </label>
+      <label class="nx-choice">
+        <input
+          type="checkbox"
+          nxSwitch
+          [checked]="notifications()"
+          (change)="notifications.set(!notifications())"
+        />
+        Notificaciones
+      </label>
+      <pre class="value">{{ formValue() | json }}</pre>
+    </form>
+  </nx-card>
+
+  <div class="stats">
+    <nx-stat-card
+      label="Saldo del mes"
+      value="2.346,75 €"
+      variant="highlight"
+      [trend]="{ direction: 'up', text: '+12 % vs. octubre', tone: 'positive' }"
+    />
+    <nx-stat-card
+      label="Gastos"
+      value="1.608,40 €"
+      link="/app/finances/transactions"
+      linkLabel="Ver movimientos"
+      [trend]="{ direction: 'down', text: '−8 % vs. octubre', tone: 'positive' }"
+    />
+    <nx-stat-card label="Ahorro" />
+    <nx-stat-card label="Cargando" loading />
+  </div>
+
+  <nx-card>
+    <nx-card-header heading="Progreso y avatares" />
+    <div class="stack">
+      <nx-progress label="Alimentación" valueText="180 de 400 €" [value]="180" [max]="400" />
+      <nx-progress label="Ocio" valueText="330 de 400 €" [value]="330" [max]="400" />
+      <nx-progress
+        label="Transporte"
+        valueText="450 de 400 €"
+        size="md"
+        [value]="450"
+        [max]="400"
+      />
+    </div>
+    <div class="row">
+      <nx-avatar name="Laura Martín" size="sm" />
+      <nx-avatar name="Laura Martín" />
+      <nx-avatar name="Laura Martín" size="lg" />
+      <nx-avatar />
+    </div>
+  </nx-card>
+
+  <nx-card>
+    <nx-card-header heading="Esqueletos" />
+    <nx-skeleton variant="line" />
+    <nx-skeleton variant="list-row" />
+    <nx-skeleton variant="chart" />
+  </nx-card>
+
+  <nx-card>
+    <nx-empty-state
+      heading="Aún no hay movimientos"
+      description="Registra tu primer gasto o ingreso para ver tu resumen del mes."
+    >
+      <button nx-button>
+        <svg nx-icon [icon]="icons.plus" size="17"></svg>
+        Añadir movimiento
+      </button>
+    </nx-empty-state>
+  </nx-card>
+
+  <nx-card>
+    <nx-error-state variant="card" (retry)="showToast('info')" />
+  </nx-card>
+
+  <nx-card>
+    <nx-card-header heading="Diálogos, avisos y pestañas" />
+    <div class="row">
+      <button nx-button variant="secondary" (click)="dialogOpen.set(true)">Abrir diálogo</button>
+      <button nx-button variant="danger" (click)="confirmOpen.set(true)">Confirmar borrado</button>
+    </div>
+    <div class="row">
+      <button nx-button variant="ghost" (click)="showToast('success')">Aviso de éxito</button>
+      <button nx-button variant="ghost" (click)="showToast('error')">Aviso de error</button>
+      <button nx-button variant="ghost" (click)="showToast('info')">Aviso informativo</button>
+    </div>
+    <nx-tab-nav label="Finanzas">
+      <a nx-tab routerLink="/app/ui" routerLinkActive ariaCurrentWhenActive="page">Resumen</a>
+      <a nx-tab routerLink="/app/finances/transactions">Movimientos</a>
+      <a nx-tab routerLink="/app/finances/budgets">Presupuestos</a>
+    </nx-tab-nav>
+    <nx-tab-nav label="Vista" variant="pill">
+      <a nx-tab routerLink="/app/ui" routerLinkActive ariaCurrentWhenActive="page">Mes</a>
+      <a nx-tab routerLink="/app/organization/calendar">Agenda</a>
+    </nx-tab-nav>
+  </nx-card>
+</div>
+
+<nx-dialog
+  heading="Nuevo presupuesto"
+  description="Define un límite mensual para una categoría."
+  [(open)]="dialogOpen"
+>
+  <nx-field label="Límite mensual">
+    <nx-money-input />
+  </nx-field>
+  <button nx-button variant="secondary" dialog-actions (click)="dialogOpen.set(false)">
+    Cancelar
+  </button>
+  <button nx-button dialog-actions (click)="dialogOpen.set(false)">Guardar</button>
+</nx-dialog>
+
+<nx-dialog
+  size="sm"
+  heading="¿Eliminar el movimiento?"
+  description="Esta acción no se puede deshacer."
+  [(open)]="confirmOpen"
+>
+  <button nx-button variant="secondary" dialog-actions (click)="confirmOpen.set(false)">
+    Cancelar
+  </button>
+  <button
+    nx-button
+    variant="danger"
+    dialog-actions
+    (click)="confirmOpen.set(false); showToast('success')"
+  >
+    Eliminar
+  </button>
+</nx-dialog>

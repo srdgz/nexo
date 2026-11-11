@@ -1,0 +1,187 @@
+.nx-input {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--nx-border-strong);
+  border-radius: var(--nx-radius-md);
+  background: var(--nx-surface);
+  color: var(--nx-text);
+  font-size: var(--nx-text-md);
+  transition:
+    border-color var(--nx-duration) var(--nx-ease),
+    box-shadow var(--nx-duration) var(--nx-ease);
+
+  &::placeholder {
+    color: #8c9396;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: var(--nx-text-muted);
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: var(--nx-navy-900);
+    box-shadow: 0 0 0 3px var(--nx-navy-100);
+  }
+
+  &[aria-invalid='true'] {
+    border-color: var(--nx-danger);
+
+    &:focus-visible {
+      box-shadow: 0 0 0 3px var(--nx-danger-bg);
+    }
+  }
+
+  &:disabled {
+    background: var(--nx-surface-muted);
+    color: #9aa0a3;
+    cursor: not-allowed;
+  }
+}
+
+textarea.nx-input {
+  min-height: 96px;
+  padding-block: 10px;
+  resize: vertical;
+}
+
+select.nx-input {
+  appearance: none;
+  padding-right: 36px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235F6B70' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  cursor: pointer;
+}
+
+input[type='date'].nx-input,
+input[type='datetime-local'].nx-input,
+input[type='time'].nx-input {
+  font-variant-numeric: tabular-nums;
+}
+
+input[type='search'].nx-input {
+  padding-left: 38px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235F6B70' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 13px center;
+}
+
+.nx-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  > .nx-input {
+    padding-right: 44px;
+  }
+
+  > :not(.nx-input) {
+    position: absolute;
+    right: 12px;
+  }
+
+  > .suffix {
+    color: var(--nx-text-muted);
+    font-weight: 500;
+    pointer-events: none;
+  }
+}
+
+.nx-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--nx-space-3);
+  cursor: pointer;
+
+  &:has(:disabled) {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+}
+
+.nx-checkbox {
+  appearance: none;
+  display: grid;
+  place-content: center;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  border: 1.8px solid #b9b3a5;
+  border-radius: 6px;
+  background: var(--nx-surface);
+  cursor: inherit;
+  transition:
+    background-color var(--nx-duration) var(--nx-ease),
+    border-color var(--nx-duration) var(--nx-ease);
+
+  &::before {
+    content: '';
+    width: 11px;
+    height: 11px;
+    background: #fff;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    transform: scale(0);
+    transition: transform var(--nx-duration) var(--nx-ease);
+  }
+
+  &:checked,
+  &:indeterminate {
+    border-color: var(--nx-sage-700);
+    background: var(--nx-sage-700);
+  }
+
+  &:checked::before {
+    transform: scale(1);
+  }
+
+  &:indeterminate::before {
+    height: 2px;
+    clip-path: none;
+    transform: scale(1);
+  }
+
+  &.round {
+    border-radius: 50%;
+  }
+
+  &:hover:not(:disabled, :checked) {
+    border-color: var(--nx-sage-700);
+  }
+}
+
+.nx-switch {
+  appearance: none;
+  position: relative;
+  flex: none;
+  width: 40px;
+  height: 24px;
+  margin: 0;
+  border-radius: var(--nx-radius-pill);
+  background: #cfc9bc;
+  cursor: inherit;
+  transition: background-color var(--nx-duration) var(--nx-ease);
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 2px rgb(24 43 53 / 0.2);
+    transition: transform var(--nx-duration) var(--nx-ease);
+  }
+
+  &:checked {
+    background: var(--nx-sage-700);
+
+    &::after {
+      transform: translateX(16px);
+    }
+  }
+}

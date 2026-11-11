@@ -40,6 +40,15 @@ Vista previa de cada variante en [`design/nexo-diseno.html`](design/nexo-diseno.
 | `nx-month-picker`                     | ‹ Noviembre 2026 › + menú de meses                                                                                  |                                                      |                                                            |
 | `nx-logo`                             | `full`, `mark`, `mono`, `inverse`                                                                                   |                                                      | `aria-label="NEXO"`                                        |
 
+### Estado tras la Fase 1
+
+- Implementados en `shared/ui`: `nx-logo`, `nx-icon`, `nx-button`, `nx-icon-button`, `nx-field` + directiva `nxInput` (texto, email, búsqueda, select, fecha, textarea), `nx-password-input`, `nx-money-input`, `nxCheckbox`, `nxSwitch`, `nx-segmented`, `nx-badge`, `nx-chip`, `nx-card`, `nx-stat-card`, `nx-progress`, `nx-avatar`, `nx-skeleton`, `nx-empty-state`, `nx-error-state`, `nx-dialog`, `nx-menu`, `nx-tab-nav` y `nx-toast`.
+- Los controles propios implementan `FormValueControl` de Signal Forms; `nx-field` muestra los errores traducidos (`ui.errors.*`) cuando el control se ha tocado.
+- `nx-sheet` no es un componente aparte: es `nx-dialog` con `presentation="sheet"`. Con `presentation="auto"` el diálogo se muestra como hoja inferior por debajo de 768 px.
+- `nx-menu` usa la Popover API nativa (cierre al pulsar fuera y con Escape) y navegación con flechas, Inicio y Fin.
+- Se crean en la fase que los usa: `nx-priority-badge` y `nx-status-badge` (Fase 4), `nx-data-table`, `nx-pagination` y `nx-month-picker` (Fase 3) y los gráficos (Fases 3 y 5).
+- La galería `/app/ui` muestra todos los componentes; solo existe en desarrollo.
+
 ## Gráficos (`shared/charts`, SVG propio)
 
 | Componente          | Uso                                                        | Accesibilidad                        |

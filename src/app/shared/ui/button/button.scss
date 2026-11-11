@@ -1,0 +1,110 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--nx-space-2);
+  height: 40px;
+  padding: 0 18px;
+  border: 1px solid transparent;
+  border-radius: var(--nx-radius-pill);
+  font-size: var(--nx-text-md);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--nx-duration) var(--nx-ease),
+    border-color var(--nx-duration) var(--nx-ease),
+    transform var(--nx-duration) var(--nx-ease);
+
+  &:active:not([disabled], [aria-disabled='true']) {
+    transform: scale(0.98);
+  }
+
+  &[disabled],
+  &[aria-disabled='true'] {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+}
+
+:host(.loading) {
+  cursor: progress;
+
+  &[disabled] {
+    opacity: 0.85;
+  }
+}
+
+:host(.sm) {
+  height: 32px;
+  padding: 0 13px;
+  font-size: var(--nx-text-sm);
+}
+
+:host(.lg) {
+  height: 48px;
+  padding: 0 24px;
+  font-size: var(--nx-text-base);
+}
+
+:host(.block) {
+  display: flex;
+  width: 100%;
+}
+
+:host(.primary) {
+  background: var(--nx-navy-900);
+  color: var(--nx-text-inverse);
+
+  &:hover:not([disabled], [aria-disabled='true']) {
+    background: var(--nx-navy-700);
+  }
+}
+
+:host(.secondary) {
+  background: var(--nx-surface);
+  border-color: var(--nx-border-strong);
+  color: var(--nx-text);
+
+  &:hover:not([disabled], [aria-disabled='true']) {
+    background: var(--nx-surface-muted);
+  }
+}
+
+:host(.ghost) {
+  background: transparent;
+  color: var(--nx-text);
+
+  &:hover:not([disabled], [aria-disabled='true']) {
+    background: var(--nx-surface-muted);
+  }
+}
+
+:host(.danger) {
+  background: var(--nx-danger);
+  color: #fff;
+
+  &:hover:not([disabled], [aria-disabled='true']) {
+    background: color-mix(in srgb, var(--nx-danger) 86%, black);
+  }
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

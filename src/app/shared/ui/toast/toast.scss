@@ -1,0 +1,54 @@
+:host {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: min(420px, 100%);
+  padding: 10px 8px 10px 12px;
+  border-radius: 16px;
+  background: var(--nx-navy-900);
+  color: var(--nx-text-inverse);
+  box-shadow: 0 10px 24px rgb(24 43 53 / 0.2);
+  font-size: var(--nx-text-md);
+  pointer-events: auto;
+  animation: enter 220ms var(--nx-ease);
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--nx-navy-700);
+  color: var(--nx-text-inverse);
+}
+
+:host(.success) .icon {
+  background: var(--nx-sage-500);
+  color: var(--nx-navy-900);
+}
+
+:host(.error) .icon {
+  background: var(--nx-danger);
+  color: #fff;
+}
+
+.message {
+  flex: 1;
+}
+
+.dismiss {
+  color: var(--nx-text-inverse);
+
+  &:hover {
+    background: var(--nx-navy-700);
+  }
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}

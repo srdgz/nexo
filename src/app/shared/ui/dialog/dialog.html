@@ -1,0 +1,35 @@
+<dialog
+  #dialog
+  [class]="[size(), presentation()]"
+  [attr.aria-labelledby]="titleId"
+  [attr.aria-describedby]="description() ? descriptionId : null"
+  (close)="onClose()"
+>
+  <div class="panel">
+    <span class="grab" aria-hidden="true"></span>
+    <header class="header">
+      <div class="titles">
+        <h2 class="title" [id]="titleId">{{ heading() }}</h2>
+        @if (description()) {
+          <p class="description" [id]="descriptionId">{{ description() }}</p>
+        }
+      </div>
+      <button
+        type="button"
+        nx-icon-button
+        size="sm"
+        class="close"
+        [label]="'ui.close' | transloco"
+        (click)="close()"
+      >
+        <svg nx-icon [icon]="closeIcon" size="18"></svg>
+      </button>
+    </header>
+    <div class="body">
+      <ng-content />
+    </div>
+    <footer class="footer">
+      <ng-content select="[dialog-actions]" />
+    </footer>
+  </div>
+</dialog>

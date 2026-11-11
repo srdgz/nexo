@@ -42,7 +42,8 @@
     "editEvent": "Edit event",
     "profile": "Profile",
     "preferences": "Preferences",
-    "notFound": "Page not found"
+    "notFound": "Page not found",
+    "uiGallery": "Design system"
   },
   "language": {
     "label": "Language",
@@ -56,5 +57,47 @@
     "title": "We can't find this page",
     "description": "The link may be mistyped or the item may have been deleted.",
     "home": "Go to home"
+  },
+  "layout": {
+    "skipToContent": "Skip to content",
+    "expandMenu": "Expand the menu",
+    "collapseMenu": "Collapse the menu",
+    "userMenu": "User menu",
+    "tip": {
+      "title": "Link tasks and money",
+      "text": "Add a planned payment to a task and NEXO will offer to record it when you complete it."
+    }
+  },
+  "quickAdd": {
+    "new": "New",
+    "title": "Add",
+    "expense": "Expense",
+    "expenseHint": "Record a payment",
+    "income": "Income",
+    "incomeHint": "Salary, sales…",
+    "task": "Task",
+    "taskHint": "With an optional planned payment",
+    "event": "Event",
+    "eventHint": "Appointment or reminder"
+  },
+  "ui": {
+    "optional": "(optional)",
+    "close": "Close",
+    "retry": "Try again",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "errorState": {
+      "title": "We couldn’t load the data",
+      "description": "Check your connection and try again."
+    },
+    "errors": {
+      "required": "This field is required.",
+      "email": "Enter a valid email address.",
+      "minLength": "It must be at least {{minLength}} characters long.",
+      "maxLength": "It can be at most {{maxLength}} characters long.",
+      "min": "The minimum value is {{min}}.",
+      "max": "The maximum value is {{max}}.",
+      "pattern": "The format is not valid."
+    }
   }
 }

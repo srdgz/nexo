@@ -8,4 +8,4 @@ allowBuilds:
   msgpackr-extract: false
 
 minimumReleaseAgeExclude:
-  - '@lucide/angular@1.72.0'
+  - lucide@1.72.0
