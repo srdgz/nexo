@@ -107,12 +107,6 @@
     "sessionExpired": "Tu sesión ha caducado. Vuelve a iniciar sesión.",
     "or": "o",
     "demoCta": "Explorar la demo sin registrarte",
-    "brand": {
-      "subtitle": "Finanzas, tareas y calendario en un solo lugar.",
-      "finances": "Gastos, ingresos y presupuestos del mes",
-      "tasks": "Tareas con pago previsto",
-      "calendar": "Calendario y próximos eventos"
-    },
     "fields": {
       "name": "Nombre",
       "email": "Correo electrónico",
@@ -184,6 +178,45 @@
       "network": "No hay conexión con el servidor. Inténtalo de nuevo.",
       "unavailable": "Las cuentas todavía no están activas en esta instalación. Puedes explorar la demo.",
       "unknown": "Algo ha fallado. Inténtalo de nuevo."
+    },
+    "showcase": {
+      "label": "Funciones de NEXO",
+      "pause": "Pausar la presentación",
+      "play": "Reanudar la presentación",
+      "balance": {
+        "caption": "Tu mes, de un vistazo",
+        "text": "Ingresos, gastos y ahorro al día con cada movimiento.",
+        "label": "Balance de {{month}}",
+        "trend": "+12 % frente al mes pasado",
+        "income": "Ingresos",
+        "expense": "Gastos",
+        "savings": "Tasa de ahorro"
+      },
+      "budgets": {
+        "caption": "Presupuestos que avisan",
+        "text": "Ves cuánto te queda en cada categoría antes de pasarte.",
+        "title": "Presupuestos del mes",
+        "groceries": "Alimentación",
+        "leisure": "Ocio",
+        "transport": "Transporte",
+        "alert": "Transporte supera el límite"
+      },
+      "task": {
+        "caption": "Tareas que mueven dinero",
+        "text": "Completa «Pagar el seguro» y NEXO registra el gasto por ti.",
+        "title": "Pagar el seguro del coche",
+        "planned": "Pago previsto · {{amount}}",
+        "recorded": "Gasto registrado",
+        "category": "Seguros · hoy"
+      },
+      "agenda": {
+        "caption": "Tu agenda, junto a tus cuentas",
+        "text": "Citas, recordatorios y pagos previstos en el mismo calendario.",
+        "dentist": "Dentista",
+        "insurance": "Seguro del coche",
+        "dinner": "Cena con Marta",
+        "payment": "Pago previsto · {{amount}}"
+      }
     }
   },
   "demo": {

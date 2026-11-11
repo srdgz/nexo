@@ -1,0 +1,170 @@
+<svg class="backdrop" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <g class="drift">
+    <path d="M40 520 L150 380 L270 450 L360 300" />
+    <path d="M20 160 L130 90 L230 210 L380 120" />
+    <circle cx="150" cy="380" r="6" />
+    <circle cx="270" cy="450" r="4" />
+    <circle cx="360" cy="300" r="7" />
+    <circle cx="130" cy="90" r="5" />
+    <circle cx="230" cy="210" r="4" />
+  </g>
+</svg>
+
+<div class="stage" aria-hidden="true">
+  @switch (scene()) {
+    @case ('balance') {
+      <div class="scene" animate.enter="scene-enter">
+        <div class="card hero float">
+          <p class="label">{{ 'auth.showcase.balance.label' | transloco: { month: month() } }}</p>
+          <p class="amount">{{ money(234675) }}</p>
+          <p class="trend">
+            <svg nx-icon [icon]="icons.trend" size="16"></svg>
+            {{ 'auth.showcase.balance.trend' | transloco }}
+          </p>
+          <div class="chart">
+            @for (bar of bars; track $index) {
+              <span class="pair" [style.--delay]="$index * 70 + 'ms'">
+                <i class="income" [style.--h]="bar[0] + '%'"></i>
+                <i class="expense" [style.--h]="bar[1] + '%'"></i>
+              </span>
+            }
+          </div>
+          <p class="legend">
+            <span><i class="income"></i>{{ 'auth.showcase.balance.income' | transloco }}</span>
+            <span><i class="expense"></i>{{ 'auth.showcase.balance.expense' | transloco }}</span>
+          </p>
+        </div>
+        <div class="card pill float-late savings">
+          <span class="tile sage"><svg nx-icon [icon]="icons.savings" size="18"></svg></span>
+          <span>
+            <small>{{ 'auth.showcase.balance.savings' | transloco }}</small>
+            <b>18 %</b>
+          </span>
+        </div>
+      </div>
+    }
+    @case ('budgets') {
+      <div class="scene" animate.enter="scene-enter">
+        <div class="card float">
+          <p class="card-title">{{ 'auth.showcase.budgets.title' | transloco }}</p>
+          <ul class="budgets">
+            @for (budget of budgets; track budget.key) {
+              <li [style.--delay]="$index * 160 + 'ms'">
+                <span class="tile" [class]="budget.tone">
+                  <svg nx-icon [icon]="budget.icon" size="18"></svg>
+                </span>
+                <span class="budget-text">
+                  <span class="budget-row">
+                    <b>{{ 'auth.showcase.budgets.' + budget.key | transloco }}</b>
+                    <span class="muted">{{ money(budget.spent) }} / {{ money(budget.limit) }}</span>
+                  </span>
+                  <span class="track">
+                    <span
+                      class="fill"
+                      [class]="budget.status"
+                      [style.--w]="budget.percent + '%'"
+                    ></span>
+                  </span>
+                </span>
+              </li>
+            }
+          </ul>
+        </div>
+        <div class="card pill float-late alert">
+          {{ 'auth.showcase.budgets.alert' | transloco }}
+        </div>
+      </div>
+    }
+    @case ('task') {
+      <div class="scene" animate.enter="scene-enter">
+        <div class="card task float">
+          <span class="check"
+            ><svg nx-icon [icon]="icons.check" size="14" strokeWidth="3"></svg
+          ></span>
+          <span class="task-text">
+            <b>{{ 'auth.showcase.task.title' | transloco }}</b>
+            <span class="badge">{{
+              'auth.showcase.task.planned' | transloco: { amount: money(44990) }
+            }}</span>
+          </span>
+        </div>
+        <span class="connector"><svg nx-icon [icon]="icons.arrow" size="18"></svg></span>
+        <div class="card recorded float-late">
+          <span class="tile sage"><svg nx-icon [icon]="insuranceIcon" size="18"></svg></span>
+          <span class="task-text">
+            <b>{{ 'auth.showcase.task.recorded' | transloco }}</b>
+            <span class="muted">{{ 'auth.showcase.task.category' | transloco }}</span>
+          </span>
+          <span class="negative">−{{ money(44990) }}</span>
+        </div>
+      </div>
+    }
+    @case ('agenda') {
+      <div class="scene" animate.enter="scene-enter">
+        <div class="card float">
+          <div class="week">
+            @for (day of week(); track $index) {
+              <span class="day" [class.today]="day.today">
+                <small>{{ day.label }}</small>
+                <b>{{ day.day }}</b>
+                <i [class.busy]="day.busy"></i>
+              </span>
+            }
+          </div>
+          <ul class="agenda">
+            @for (item of agenda(); track item.key) {
+              <li [class.payment]="item.payment" [style.--delay]="$index * 160 + 'ms'">
+                <span class="date">
+                  <small>{{ item.weekday }}</small>
+                  <b>{{ item.day }}</b>
+                </span>
+                <span class="task-text">
+                  <b>{{ 'auth.showcase.agenda.' + item.key | transloco }}</b>
+                  <span class="muted">
+                    {{
+                      item.time ||
+                        ('auth.showcase.agenda.payment' | transloco: { amount: money(44990) })
+                    }}
+                  </span>
+                </span>
+                <svg nx-icon [icon]="item.icon" size="18"></svg>
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+    }
+  }
+</div>
+
+<div class="caption" [attr.aria-live]="running() ? 'off' : 'polite'">
+  <p class="caption-title">{{ 'auth.showcase.' + scene() + '.caption' | transloco }}</p>
+  <p class="caption-text">{{ 'auth.showcase.' + scene() + '.text' | transloco }}</p>
+</div>
+
+<div class="controls">
+  <div class="dots" role="group" [attr.aria-label]="'auth.showcase.label' | transloco">
+    @for (item of scenes; track item; let index = $index) {
+      <button
+        type="button"
+        class="dot"
+        [class.active]="index === current()"
+        [attr.aria-current]="index === current() ? 'true' : null"
+        [attr.aria-label]="'auth.showcase.' + item + '.caption' | transloco"
+        (click)="show(index)"
+      >
+        @if (index === current()) {
+          <span class="progress"></span>
+        }
+      </button>
+    }
+  </div>
+  <button
+    type="button"
+    class="toggle"
+    [attr.aria-label]="(playing() ? 'auth.showcase.pause' : 'auth.showcase.play') | transloco"
+    (click)="togglePlaying()"
+  >
+    <svg nx-icon [icon]="playing() ? icons.pause : icons.play" size="16"></svg>
+  </button>
+</div>

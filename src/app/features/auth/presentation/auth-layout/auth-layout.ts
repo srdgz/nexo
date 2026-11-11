@@ -1,21 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
-import { Calendar, ListChecks, Wallet } from 'lucide';
-import { NxIcon } from '@shared/ui/icon/icon';
 import { NxLogo } from '@shared/ui/logo/logo';
+import { NxAuthShowcase } from '../components/auth-showcase/auth-showcase';
 
 @Component({
   selector: 'nx-auth-layout',
-  imports: [NxIcon, NxLogo, RouterLink, RouterOutlet, TranslocoPipe],
+  imports: [NxAuthShowcase, NxLogo, RouterLink, RouterOutlet, TranslocoPipe],
   templateUrl: './auth-layout.html',
   styleUrl: './auth-layout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuthLayout {
-  protected readonly features = [
-    { icon: Wallet, key: 'auth.brand.finances' },
-    { icon: ListChecks, key: 'auth.brand.tasks' },
-    { icon: Calendar, key: 'auth.brand.calendar' },
-  ];
-}
+export class AuthLayout {}

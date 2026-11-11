@@ -1,0 +1,205 @@
+:host {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--nx-space-6);
+  min-height: 0;
+}
+
+.backdrop {
+  position: absolute;
+  inset: -40px;
+  width: calc(100% + 80px);
+  height: calc(100% + 80px);
+  pointer-events: none;
+
+  path {
+    fill: none;
+    stroke: rgb(145 169 149 / 0.22);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  circle {
+    fill: rgb(145 169 149 / 0.35);
+  }
+}
+
+.drift {
+  animation: drift 24s ease-in-out infinite alternate;
+}
+
+.stage {
+  position: relative;
+  display: grid;
+  flex: 1;
+  place-items: center;
+  min-height: 340px;
+}
+
+.scene {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nx-space-3);
+  width: min(400px, 100%);
+}
+
+.scene-enter {
+  animation: scene-in 600ms var(--nx-ease) both;
+}
+
+.caption {
+  position: relative;
+  display: grid;
+  gap: var(--nx-space-2);
+  min-height: 96px;
+}
+
+.caption-title {
+  font-family: var(--nx-font-heading);
+  font-size: var(--nx-text-2xl);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.caption-text {
+  max-width: 38ch;
+  color: #c3c8cb;
+  font-size: var(--nx-text-base);
+}
+
+.controls {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dots {
+  display: flex;
+  gap: var(--nx-space-2);
+}
+
+.dot {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  overflow: hidden;
+  border-radius: var(--nx-radius-pill);
+  background: rgb(247 246 242 / 0.25);
+  transition:
+    width 300ms var(--nx-ease),
+    background-color 300ms var(--nx-ease);
+
+  &:hover {
+    background: rgb(247 246 242 / 0.45);
+  }
+
+  &.active {
+    width: 40px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--nx-sage-500);
+    outline-offset: 3px;
+  }
+}
+
+.progress {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--nx-sage-500);
+  transform-origin: left;
+  animation: progress var(--scene-duration) linear both;
+}
+
+:host(.paused) .progress {
+  animation-play-state: paused;
+}
+
+.toggle {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgb(247 246 242 / 0.25);
+  border-radius: 50%;
+  color: var(--nx-text-inverse);
+
+  &:hover {
+    background: var(--nx-navy-700);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--nx-sage-500);
+    outline-offset: 2px;
+  }
+}
+
+@keyframes scene-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+}
+
+@keyframes float {
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.92);
+  }
+}
+
+@keyframes row-in {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+}
+
+@keyframes grow {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes fill {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes strike {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes check {
+  to {
+    border-color: var(--nx-sage-700);
+    background: var(--nx-sage-700);
+  }
+}
+
+@keyframes progress {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes drift {
+  to {
+    transform: translate(-24px, 18px) rotate(-2deg);
+  }
+}

@@ -107,12 +107,6 @@
     "sessionExpired": "Your session has expired. Please sign in again.",
     "or": "or",
     "demoCta": "Explore the demo without signing up",
-    "brand": {
-      "subtitle": "Finances, tasks and calendar in one place.",
-      "finances": "Monthly expenses, income and budgets",
-      "tasks": "Tasks with planned payments",
-      "calendar": "Calendar and upcoming events"
-    },
     "fields": {
       "name": "Name",
       "email": "Email",
@@ -184,6 +178,45 @@
       "network": "Can’t reach the server. Please try again.",
       "unavailable": "Accounts aren’t enabled on this installation yet. You can explore the demo.",
       "unknown": "Something went wrong. Please try again."
+    },
+    "showcase": {
+      "label": "NEXO features",
+      "pause": "Pause the slideshow",
+      "play": "Resume the slideshow",
+      "balance": {
+        "caption": "Your month at a glance",
+        "text": "Income, expenses and savings, updated with every transaction.",
+        "label": "{{month}} balance",
+        "trend": "+12% vs. last month",
+        "income": "Income",
+        "expense": "Expenses",
+        "savings": "Savings rate"
+      },
+      "budgets": {
+        "caption": "Budgets that warn you",
+        "text": "See what’s left in each category before you overspend.",
+        "title": "This month’s budgets",
+        "groceries": "Groceries",
+        "leisure": "Leisure",
+        "transport": "Transport",
+        "alert": "Transport is over the limit"
+      },
+      "task": {
+        "caption": "Tasks that move money",
+        "text": "Complete “Pay the insurance” and NEXO records the expense for you.",
+        "title": "Pay the car insurance",
+        "planned": "Planned payment · {{amount}}",
+        "recorded": "Expense recorded",
+        "category": "Insurance · today"
+      },
+      "agenda": {
+        "caption": "Your schedule, next to your money",
+        "text": "Appointments, reminders and planned payments in one calendar.",
+        "dentist": "Dentist",
+        "insurance": "Car insurance",
+        "dinner": "Dinner with Marta",
+        "payment": "Planned payment · {{amount}}"
+      }
     }
   },
   "demo": {

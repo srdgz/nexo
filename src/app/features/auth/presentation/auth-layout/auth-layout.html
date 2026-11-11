@@ -1,20 +1,7 @@
 <div class="auth">
   <aside class="brand">
     <nx-logo variant="inverse" />
-    <div class="claim">
-      <p class="claim-title">{{ 'app.claim' | transloco }}</p>
-      <p class="claim-text">{{ 'auth.brand.subtitle' | transloco }}</p>
-    </div>
-    <ul class="features" role="list">
-      @for (feature of features; track feature.key) {
-        <li>
-          <span class="feature-icon" aria-hidden="true">
-            <svg nx-icon [icon]="feature.icon" size="18"></svg>
-          </span>
-          {{ feature.key | transloco }}
-        </li>
-      }
-    </ul>
+    <nx-auth-showcase />
   </aside>
 
   <div class="panel">
