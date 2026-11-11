@@ -1,0 +1,36 @@
+@use 'mixins' as *;
+
+body {
+  font-family: var(--nx-font-body);
+  font-size: var(--nx-text-md);
+  color: var(--nx-text);
+  background: var(--nx-ivory);
+}
+
+h1 {
+  @include heading(var(--nx-text-2xl));
+}
+
+h2 {
+  @include heading(var(--nx-text-xl));
+}
+
+h3 {
+  @include heading(var(--nx-text-lg));
+}
+
+:focus-visible {
+  @include focus-ring;
+}
+
+.nx-num {
+  @include tabular;
+}
+
+.nx-muted {
+  color: var(--nx-text-muted);
+}
+
+.nx-visually-hidden {
+  @include visually-hidden;
+}

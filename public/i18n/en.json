@@ -1,0 +1,60 @@
+{
+  "app": {
+    "name": "NEXO",
+    "claim": "Organize your life. Control your priorities.",
+    "home": "Go to the NEXO home page"
+  },
+  "nav": {
+    "main": "Main navigation",
+    "dashboard": "Home",
+    "finances": "Finances",
+    "overview": "Overview",
+    "transactions": "Transactions",
+    "budgets": "Budgets",
+    "categories": "Categories",
+    "organization": "Organization",
+    "tasks": "Tasks",
+    "calendar": "Calendar",
+    "settings": "Settings",
+    "profile": "Profile",
+    "preferences": "Preferences",
+    "login": "Sign in"
+  },
+  "pages": {
+    "login": "Sign in",
+    "register": "Create your account",
+    "verifyEmail": "Check your email",
+    "forgotPassword": "Reset your password",
+    "resetPassword": "New password",
+    "authCallback": "Checking the link",
+    "dashboard": "Home",
+    "overview": "Financial overview",
+    "transactions": "Transactions",
+    "newTransaction": "New transaction",
+    "editTransaction": "Edit transaction",
+    "budgets": "Budgets",
+    "categories": "Categories",
+    "tasks": "Tasks",
+    "newTask": "New task",
+    "editTask": "Edit task",
+    "calendar": "Calendar",
+    "newEvent": "New event",
+    "editEvent": "Edit event",
+    "profile": "Profile",
+    "preferences": "Preferences",
+    "notFound": "Page not found"
+  },
+  "language": {
+    "label": "Language",
+    "es": "Español",
+    "en": "English"
+  },
+  "pending": {
+    "description": "This screen is under construction. Its design is already defined in the project documentation."
+  },
+  "notFound": {
+    "title": "We can't find this page",
+    "description": "The link may be mistyped or the item may have been deleted.",
+    "home": "Go to home"
+  }
+}

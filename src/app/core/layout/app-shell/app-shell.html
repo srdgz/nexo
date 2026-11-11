@@ -1,0 +1,42 @@
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" routerLink="/app/dashboard" [attr.aria-label]="'app.home' | transloco">
+      <img src="favicon.svg" alt="" width="32" height="32" />
+      <span>nexo</span>
+    </a>
+
+    <nav [attr.aria-label]="'nav.main' | transloco">
+      @for (group of navigation; track $index) {
+        @if (group.labelKey) {
+          <p class="group">{{ group.labelKey | transloco }}</p>
+        }
+        <ul role="list">
+          @for (item of group.items; track item.path) {
+            <li>
+              <a [routerLink]="item.path" routerLinkActive="active" ariaCurrentWhenActive="page">
+                {{ item.labelKey | transloco }}
+              </a>
+            </li>
+          }
+        </ul>
+      }
+    </nav>
+
+    <div class="languages" role="group" [attr.aria-label]="'language.label' | transloco">
+      @for (lang of languages; track lang) {
+        <button
+          type="button"
+          [attr.aria-pressed]="language.current() === lang"
+          [attr.lang]="lang"
+          (click)="language.use(lang)"
+        >
+          {{ 'language.' + lang | transloco }}
+        </button>
+      }
+    </div>
+  </aside>
+
+  <main class="content">
+    <router-outlet />
+  </main>
+</div>

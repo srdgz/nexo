@@ -1,0 +1,60 @@
+{
+  "app": {
+    "name": "NEXO",
+    "claim": "Organiza tu vida. Controla tus prioridades.",
+    "home": "Ir al inicio de NEXO"
+  },
+  "nav": {
+    "main": "Navegación principal",
+    "dashboard": "Inicio",
+    "finances": "Finanzas",
+    "overview": "Resumen",
+    "transactions": "Movimientos",
+    "budgets": "Presupuestos",
+    "categories": "Categorías",
+    "organization": "Organización",
+    "tasks": "Tareas",
+    "calendar": "Calendario",
+    "settings": "Ajustes",
+    "profile": "Perfil",
+    "preferences": "Preferencias",
+    "login": "Acceso"
+  },
+  "pages": {
+    "login": "Inicia sesión",
+    "register": "Crea tu cuenta",
+    "verifyEmail": "Revisa tu correo",
+    "forgotPassword": "Recuperar contraseña",
+    "resetPassword": "Nueva contraseña",
+    "authCallback": "Comprobando el enlace",
+    "dashboard": "Inicio",
+    "overview": "Resumen financiero",
+    "transactions": "Movimientos",
+    "newTransaction": "Nuevo movimiento",
+    "editTransaction": "Editar movimiento",
+    "budgets": "Presupuestos",
+    "categories": "Categorías",
+    "tasks": "Tareas",
+    "newTask": "Nueva tarea",
+    "editTask": "Editar tarea",
+    "calendar": "Calendario",
+    "newEvent": "Nuevo evento",
+    "editEvent": "Editar evento",
+    "profile": "Perfil",
+    "preferences": "Preferencias",
+    "notFound": "Página no encontrada"
+  },
+  "language": {
+    "label": "Idioma",
+    "es": "Español",
+    "en": "English"
+  },
+  "pending": {
+    "description": "Esta pantalla está en construcción. Su diseño ya está definido en la documentación del proyecto."
+  },
+  "notFound": {
+    "title": "No encontramos esta página",
+    "description": "Puede que el enlace esté mal escrito o que el elemento se haya eliminado.",
+    "home": "Ir al inicio"
+  }
+}

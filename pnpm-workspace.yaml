@@ -1,0 +1,11 @@
+packages:
+  - '.'
+
+allowBuilds:
+  '@parcel/watcher': false
+  esbuild: false
+  lmdb: false
+  msgpackr-extract: false
+
+minimumReleaseAgeExclude:
+  - '@lucide/angular@1.72.0'
