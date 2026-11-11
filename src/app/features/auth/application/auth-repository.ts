@@ -13,6 +13,7 @@ export interface AuthRepository {
   currentUser(): Promise<AuthUser | null>;
   watch(listener: (change: AuthChange, user: AuthUser | null) => void): () => void;
   signIn(email: string, password: string): Promise<AuthUser>;
+  signInWithGoogle(redirectTo: string): Promise<void>;
   signUp(data: SignUpData, redirectTo: string): Promise<void>;
   signOut(): Promise<void>;
   resendVerification(email: string, redirectTo: string): Promise<void>;

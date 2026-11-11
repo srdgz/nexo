@@ -128,6 +128,42 @@ describe('login page', () => {
   });
 });
 
+describe('Google sign in', () => {
+  it('starts the Google flow keeping the return url', async () => {
+    const { harness, root } = await open('/auth/login?returnUrl=%2Fapp%2Forganization%2Ftasks');
+
+    root.querySelector<HTMLButtonElement>('nx-google-button button')!.click();
+    await harness.fixture.whenStable();
+
+    expect(repository.calls[0]?.method).toBe('signInWithGoogle');
+    expect(repository.calls[0]?.args[0]).toContain('next=%2Fapp%2Forganization%2Ftasks');
+  });
+
+  it('shows the error when Google cannot start', async () => {
+    const { harness, root } = await open('/auth/register', null, 'network');
+
+    root.querySelector<HTMLButtonElement>('nx-google-button button')!.click();
+    await new Promise((resolve) => setTimeout(resolve));
+    await harness.fixture.whenStable();
+
+    expect(root.querySelector('nx-alert[role=alert]')?.textContent).toContain(
+      'No hay conexión con el servidor',
+    );
+    expect(root.querySelector<HTMLButtonElement>('nx-google-button button')!.disabled).toBe(false);
+  });
+
+  it('explains a cancelled Google sign in without offering a new link', async () => {
+    const { harness } = await open('/auth/callback?error=access_denied', null, 'cancelled');
+    await new Promise((resolve) => setTimeout(resolve));
+    await harness.fixture.whenStable();
+    const root = harness.routeNativeElement!;
+
+    expect(repository.calls[0]?.args[0]).toEqual({ code: null, errorCode: 'access_denied' });
+    expect(root.textContent).toContain('Has cancelado el acceso');
+    expect(root.querySelector('a[href="/auth/forgot-password"]')).toBeNull();
+  });
+});
+
 describe('register page', () => {
   it('creates the account in the current language and asks to check the email', async () => {
     const { harness, root } = await open('/auth/register');
@@ -228,6 +264,8 @@ describe('email link callback', () => {
     await new Promise((resolve) => setTimeout(resolve));
     await harness.fixture.whenStable();
 
-    expect(harness.routeNativeElement?.textContent).toContain('No hemos podido usar el enlace');
+    expect(harness.routeNativeElement?.textContent).toContain(
+      'El enlace ha caducado o ya se ha usado.',
+    );
   });
 });

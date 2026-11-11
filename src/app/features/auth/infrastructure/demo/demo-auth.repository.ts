@@ -17,6 +17,7 @@ export class DemoAuthRepository implements AuthRepository {
   currentUser = () => Promise.resolve(DEMO_USER);
   watch = () => () => undefined;
   signIn = () => Promise.resolve(DEMO_USER);
+  signInWithGoogle = notInDemo;
   signUp = notInDemo;
   signOut = () => Promise.resolve();
   resendVerification = notInDemo;

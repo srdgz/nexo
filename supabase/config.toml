@@ -2,12 +2,17 @@ project_id = "nexo"
 
 [auth]
 site_url = "http://localhost:4200"
-additional_redirect_urls = ["http://localhost:4200/auth/callback"]
+additional_redirect_urls = ["http://localhost:4200/**"]
 minimum_password_length = 8
 password_requirements = "letters_digits"
 
 [auth.email]
 enable_confirmations = true
+
+[auth.external.google]
+enabled = true
+client_id = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID)"
+secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET)"
 
 [functions.delete-account]
 verify_jwt = true

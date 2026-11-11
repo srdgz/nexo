@@ -19,6 +19,7 @@ import { AuthStore } from '../../application/auth-store';
 import { type AuthErrorCode, toAuthError } from '../../domain/auth-error';
 import { isValidPassword } from '../../domain/password-policy';
 import { authMessageKey } from '../auth-messages';
+import { NxGoogleButton } from '../components/google-button';
 import { NxPasswordChecks } from '../components/password-checks';
 import { savePendingEmail } from '../pending-email';
 
@@ -29,6 +30,7 @@ import { savePendingEmail } from '../pending-email';
     NxAlert,
     NxButton,
     NxField,
+    NxGoogleButton,
     NxInput,
     NxPasswordChecks,
     NxPasswordInput,

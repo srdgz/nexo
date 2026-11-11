@@ -22,6 +22,14 @@
   </nx-alert>
 }
 
+<nx-google-button
+  [returnUrl]="returnUrl()"
+  [disabled]="!store.available()"
+  (failed)="error.set($event)"
+/>
+
+<p class="divider">{{ 'auth.orEmail' | transloco }}</p>
+
 <form class="form" novalidate (submit)="onSubmit($event)">
   <nx-field [label]="'auth.fields.email' | transloco" [state]="credentials.email()">
     <input nxInput type="email" autocomplete="email" [formField]="credentials.email" />
@@ -44,9 +52,7 @@
   </button>
 </form>
 
-<p class="divider">{{ 'auth.or' | transloco }}</p>
-
-<a nx-button variant="secondary" size="lg" block routerLink="/demo">
+<a nx-button variant="ghost" size="lg" block class="demo" routerLink="/demo">
   {{ 'auth.demoCta' | transloco }}
 </a>
 

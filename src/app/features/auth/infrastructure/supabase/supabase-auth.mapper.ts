@@ -24,6 +24,7 @@ const CODE_MAP: Readonly<Record<string, AuthErrorCode>> = {
   flow_state_expired: 'link_expired',
   flow_state_not_found: 'link_expired',
   bad_code_verifier: 'link_expired',
+  access_denied: 'cancelled',
   over_request_rate_limit: 'rate_limited',
   over_email_send_rate_limit: 'rate_limited',
 };

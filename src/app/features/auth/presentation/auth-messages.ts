@@ -7,6 +7,7 @@ const MESSAGE_KEYS: Readonly<Record<AuthErrorCode, string>> = {
   weak_password: 'auth.errors.weakPassword',
   same_password: 'auth.errors.samePassword',
   link_expired: 'auth.errors.linkExpired',
+  cancelled: 'auth.errors.cancelled',
   rate_limited: 'auth.errors.rateLimited',
   network: 'auth.errors.network',
   unavailable: 'auth.errors.unavailable',

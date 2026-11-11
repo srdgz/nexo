@@ -6,6 +6,7 @@ import { type CurrentUser, Session } from '@core/session/session';
 import { ToastService } from '@shared/ui/toast/toast';
 import { AuthError } from '../domain/auth-error';
 import type { AuthUser, SignUpData } from '../domain/auth-user';
+import { safeReturnUrl } from '../domain/return-url';
 import {
   AUTH_REPOSITORY_LOADER,
   type AuthChange,
@@ -61,6 +62,10 @@ export class AuthStore extends Session {
 
   async signIn(email: string, password: string): Promise<void> {
     this.setUser(await this.repo().signIn(email.trim(), password));
+  }
+
+  signInWithGoogle(returnUrl: string): Promise<void> {
+    return this.repo().signInWithGoogle(this.linkUrl(safeReturnUrl(returnUrl)));
   }
 
   async signUp(data: SignUpData): Promise<void> {

@@ -105,7 +105,6 @@
   "auth": {
     "signOut": "Sign out",
     "sessionExpired": "Your session has expired. Please sign in again.",
-    "or": "or",
     "demoCta": "Explore the demo without signing up",
     "fields": {
       "name": "Name",
@@ -163,7 +162,7 @@
     },
     "callback": {
       "checking": "Checking the link…",
-      "errorTitle": "We couldn’t use the link",
+      "errorTitle": "We couldn’t complete the sign in",
       "backToLogin": "Go to sign in",
       "requestAgain": "Need to change your password? Request a new link"
     },
@@ -177,7 +176,8 @@
       "rateLimited": "Too many attempts. Wait a moment and try again.",
       "network": "Can’t reach the server. Please try again.",
       "unavailable": "Accounts aren’t enabled on this installation yet. You can explore the demo.",
-      "unknown": "Something went wrong. Please try again."
+      "unknown": "Something went wrong. Please try again.",
+      "cancelled": "You cancelled the sign in. You can try again whenever you like."
     },
     "showcase": {
       "label": "NEXO features",
@@ -215,7 +215,9 @@
         "dinner": "Dinner with Marta",
         "payment": "Planned payment · {{amount}}"
       }
-    }
+    },
+    "google": "Continue with Google",
+    "orEmail": "or with your email"
   },
   "demo": {
     "title": "You’re viewing a demo with fictional data.",

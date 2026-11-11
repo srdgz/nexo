@@ -11,6 +11,7 @@ import { AuthStore } from '../../application/auth-store';
 import { type AuthErrorCode, toAuthError } from '../../domain/auth-error';
 import { safeReturnUrl } from '../../domain/return-url';
 import { authMessageKey } from '../auth-messages';
+import { NxGoogleButton } from '../components/google-button';
 
 @Component({
   selector: 'nx-login-page',
@@ -19,6 +20,7 @@ import { authMessageKey } from '../auth-messages';
     NxAlert,
     NxButton,
     NxField,
+    NxGoogleButton,
     NxInput,
     NxPasswordInput,
     RouterLink,

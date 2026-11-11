@@ -47,6 +47,9 @@ export class FakeAuthRepository implements AuthRepository {
       return this.user;
     });
 
+  signInWithGoogle = (redirectTo: string) =>
+    this.run('signInWithGoogle', [redirectTo], () => undefined);
+
   signUp = (data: SignUpData, redirectTo: string) =>
     this.run('signUp', [data, redirectTo], () => undefined);
 

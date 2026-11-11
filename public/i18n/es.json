@@ -105,7 +105,6 @@
   "auth": {
     "signOut": "Cerrar sesión",
     "sessionExpired": "Tu sesión ha caducado. Vuelve a iniciar sesión.",
-    "or": "o",
     "demoCta": "Explorar la demo sin registrarte",
     "fields": {
       "name": "Nombre",
@@ -163,7 +162,7 @@
     },
     "callback": {
       "checking": "Comprobando el enlace…",
-      "errorTitle": "No hemos podido usar el enlace",
+      "errorTitle": "No hemos podido completar el acceso",
       "backToLogin": "Ir a iniciar sesión",
       "requestAgain": "¿Necesitas cambiar la contraseña? Pide un enlace nuevo"
     },
@@ -177,7 +176,8 @@
       "rateLimited": "Demasiados intentos. Espera un momento y vuelve a probar.",
       "network": "No hay conexión con el servidor. Inténtalo de nuevo.",
       "unavailable": "Las cuentas todavía no están activas en esta instalación. Puedes explorar la demo.",
-      "unknown": "Algo ha fallado. Inténtalo de nuevo."
+      "unknown": "Algo ha fallado. Inténtalo de nuevo.",
+      "cancelled": "Has cancelado el acceso. Puedes intentarlo de nuevo cuando quieras."
     },
     "showcase": {
       "label": "Funciones de NEXO",
@@ -215,7 +215,9 @@
         "dinner": "Cena con Marta",
         "payment": "Pago previsto · {{amount}}"
       }
-    }
+    },
+    "google": "Continuar con Google",
+    "orEmail": "o con tu email"
   },
   "demo": {
     "title": "Estás viendo una demo con datos ficticios.",

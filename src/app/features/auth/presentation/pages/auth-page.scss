@@ -76,3 +76,8 @@
   font-weight: 600;
   text-decoration: underline;
 }
+
+.demo {
+  margin-top: calc(var(--nx-space-2) * -1);
+  border: 1px dashed var(--nx-border-strong);
+}

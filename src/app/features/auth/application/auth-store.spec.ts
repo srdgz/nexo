@@ -63,6 +63,20 @@ describe('AuthStore', () => {
     );
   });
 
+  it('sends Google back to the callback with a safe return url', async () => {
+    setup(null);
+    await store.init();
+    const origin = TestBed.inject(DOCUMENT).location.origin;
+
+    await store.signInWithGoogle('/app/finances/budgets');
+    await store.signInWithGoogle('https://evil.example');
+
+    expect(repository.calls.map((call) => call.args[0])).toEqual([
+      `${origin}/auth/callback?next=%2Fapp%2Ffinances%2Fbudgets`,
+      `${origin}/auth/callback?next=%2Fapp%2Fdashboard`,
+    ]);
+  });
+
   it('signs out and goes to the login page', async () => {
     setup();
     await store.init();

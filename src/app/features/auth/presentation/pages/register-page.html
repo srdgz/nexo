@@ -11,6 +11,10 @@
   <nx-alert tone="danger">{{ messageKey(code) | transloco }}</nx-alert>
 }
 
+<nx-google-button [disabled]="!store.available()" (failed)="error.set($event)" />
+
+<p class="divider">{{ 'auth.orEmail' | transloco }}</p>
+
 <form class="form" novalidate (submit)="onSubmit($event)">
   <nx-field [label]="'auth.fields.name' | transloco" [state]="account.fullName()">
     <input nxInput type="text" autocomplete="name" [formField]="account.fullName" />

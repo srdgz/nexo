@@ -5,6 +5,7 @@ export type AuthErrorCode =
   | 'weak_password'
   | 'same_password'
   | 'link_expired'
+  | 'cancelled'
   | 'rate_limited'
   | 'network'
   | 'unavailable'

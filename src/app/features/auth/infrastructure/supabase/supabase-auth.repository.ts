@@ -44,6 +44,16 @@ export class SupabaseAuthRepository implements AuthRepository {
     return mapUser(data.user);
   }
 
+  async signInWithGoogle(redirectTo: string): Promise<void> {
+    const { error } = await this.client.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo },
+    });
+    if (error) {
+      throw mapAuthError(error);
+    }
+  }
+
   async signUp(data: SignUpData, redirectTo: string): Promise<void> {
     const { data: result, error } = await this.client.auth.signUp({
       email: data.email,

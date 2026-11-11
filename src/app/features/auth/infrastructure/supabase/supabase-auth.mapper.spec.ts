@@ -10,6 +10,7 @@ describe('mapAuthError', () => {
     [{ code: 'same_password', status: 422 }, 'same_password'],
     [{ code: 'otp_expired', status: 403 }, 'link_expired'],
     [{ code: 'flow_state_not_found', status: 404 }, 'link_expired'],
+    [{ code: 'access_denied' }, 'cancelled'],
     [{ code: 'over_email_send_rate_limit', status: 429 }, 'rate_limited'],
     [{ status: 429 }, 'rate_limited'],
     [{ name: 'AuthRetryableFetchError', status: 0 }, 'network'],

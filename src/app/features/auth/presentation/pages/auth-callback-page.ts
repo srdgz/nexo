@@ -25,11 +25,13 @@ import { authMessageKey } from '../auth-messages';
       <a nx-button size="lg" block routerLink="/auth/login">
         {{ 'auth.callback.backToLogin' | transloco }}
       </a>
-      <p class="footer">
-        <a class="link" routerLink="/auth/forgot-password">
-          {{ 'auth.callback.requestAgain' | transloco }}
-        </a>
-      </p>
+      @if (code === 'link_expired') {
+        <p class="footer">
+          <a class="link" routerLink="/auth/forgot-password">
+            {{ 'auth.callback.requestAgain' | transloco }}
+          </a>
+        </p>
+      }
     } @else {
       <div class="heading centered" role="status">
         <h1>{{ 'auth.callback.checking' | transloco }}</h1>
@@ -55,7 +57,11 @@ export class AuthCallbackPage implements OnInit {
     try {
       await this.store.completeEmailLink({
         code: query.get('code'),
-        errorCode: query.get('error_code') ?? hash.get('error_code') ?? hash.get('error'),
+        errorCode:
+          query.get('error_code') ??
+          query.get('error') ??
+          hash.get('error_code') ??
+          hash.get('error'),
       });
       await this.router.navigateByUrl(safeLinkTarget(query.get('next')), { replaceUrl: true });
     } catch (error) {

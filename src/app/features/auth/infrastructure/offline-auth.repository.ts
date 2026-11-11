@@ -9,6 +9,7 @@ export class OfflineAuthRepository implements AuthRepository {
   currentUser = () => Promise.resolve(null);
   watch = () => () => undefined;
   signIn = unavailable;
+  signInWithGoogle = unavailable;
   signUp = unavailable;
   signOut = () => Promise.resolve();
   resendVerification = unavailable;
