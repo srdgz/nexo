@@ -1,0 +1,897 @@
+<title>NEXO · Diseño del MVP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap">
+<style>
+:root{
+  --bg:#F2F1EC;--panel:#FFFFFF;--ink:#182B35;--mut:#5F6B70;--line:#E0DDD4;--acc:#5B7660;--chip:#E8E5DC;--chip-on:#182B35;--chip-on-ink:#F7F6F2;
+  --f-head:"Manrope",ui-sans-serif,system-ui,sans-serif;--f-body:"Inter",ui-sans-serif,system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10181D;--panel:#17222A;--ink:#E8ECE9;--mut:#9AA8AE;--line:#25343D;--acc:#A9C2AD;--chip:#22313A;--chip-on:#E8ECE9;--chip-on-ink:#10181D;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10181D;--panel:#17222A;--ink:#E8ECE9;--mut:#9AA8AE;--line:#25343D;--acc:#A9C2AD;--chip:#22313A;--chip-on:#E8ECE9;--chip-on-ink:#10181D;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--f-body);margin:0}
+.wrap{max-width:1320px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 80px}
+h1,h2,h3{font-family:var(--f-head);text-wrap:balance;margin:0}
+h1{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-.02em}
+h2{font-size:26px;font-weight:700;letter-spacing:-.01em}
+h3{font-size:17px;font-weight:700}
+p{margin:0;max-width:68ch}
+.mut{color:var(--mut)}
+.top{display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between;padding-bottom:20px;border-bottom:1px solid var(--line)}
+.top .brand{display:flex;gap:16px;align-items:center}
+.top .brand svg{width:52px;height:52px;flex:none}
+.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:6px;overflow-x:auto;padding-block:12px;margin-bottom:8px;scrollbar-width:none}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.toc a{flex:none;text-decoration:none;color:var(--ink);background:var(--chip);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:500}
+.toc a:hover{background:var(--chip-on);color:var(--chip-on-ink)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+section{padding-top:48px;display:flex;flex-direction:column;gap:20px;scroll-margin-top:60px}
+.sec-h{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
+.sec-h .n{font:600 13px var(--f-body);color:var(--acc);letter-spacing:.08em;text-transform:uppercase}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:20px;min-width:0}
+.cols{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.lbl{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);font-weight:600}
+code,.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12.5px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips button{font:500 13px var(--f-body);border:0;background:var(--chip);color:var(--ink);border-radius:999px;padding:7px 14px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--chip-on);color:var(--chip-on-ink)}
+.fit{position:relative;width:100%;overflow:hidden}
+.fit>.cv{position:absolute;top:0;left:0;transform-origin:0 0}
+.board{background:#F7F6F2;border-radius:16px;padding:18px;border:1px solid var(--line)}
+.scroller{overflow-x:auto}
+
+.logo-grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.logo-tile{border-radius:20px;min-height:170px;display:grid;place-items:center;padding:24px;border:1px solid var(--line)}
+.logo-tile svg{max-width:100%}
+.sw{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.sw div{border-radius:14px;padding:12px;min-height:92px;display:flex;flex-direction:column;justify-content:flex-end;font-size:12px;border:1px solid rgba(24,43,53,.08)}
+.sw b{font-family:var(--f-head);font-size:14px}
+.type-row{display:flex;gap:18px;align-items:baseline;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--line)}
+.type-row:last-child{border-bottom:0}
+
+.map{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.map ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.map li{display:flex;flex-direction:column;padding:8px 10px;border-radius:10px;background:var(--bg)}
+.map li code{color:var(--acc)}
+.map li span{font-size:13.5px}
+.guard{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--chip);margin-left:6px}
+
+.wf-fig{margin:0;display:flex;flex-direction:column;gap:12px;padding:20px;background:var(--panel);border:1px solid var(--line);border-radius:20px}
+.wf-fig figcaption{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+.wf-fig .route{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;color:var(--acc)}
+.wf-pair{display:grid;grid-template-columns:minmax(0,3.3fr) minmax(0,1fr);gap:20px;align-items:start}
+.wf-fig ul.notes{margin:0;padding-left:18px;font-size:13.5px;color:var(--mut);display:flex;flex-direction:column;gap:2px}
+@media (max-width:760px){.wf-pair{grid-template-columns:1fr}.wf-pair .fit.m{max-width:280px;justify-self:center}}
+#wf-list{display:flex;flex-direction:column;gap:20px}
+
+.wf{font:12px/1.35 Inter,ui-sans-serif,system-ui,sans-serif;color:#33383B;background:#fff;border:1px solid #D3D6D8;border-radius:12px;overflow:hidden;position:relative}
+.wf b{font-weight:600}
+.wf-d{display:grid;grid-template-columns:190px 1fr;height:680px;width:1100px}
+.wf-side{background:#F3F4F5;border-right:1px solid #E1E3E5;padding:16px 12px;display:flex;flex-direction:column;gap:3px}
+.wf-logo{display:flex;gap:8px;align-items:center;font-size:16px;margin:0 6px 12px}
+.wf-nav{padding:7px 10px;border-radius:999px;display:flex;gap:8px;align-items:center}
+.wf-nav.on{background:#33383B;color:#fff}
+.wf-nav.on .wf-ic{background:#7B8186}
+.wf-grp{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;color:#8A9094;margin:10px 10px 2px}
+.wf-user{display:flex;gap:8px;align-items:center;border-top:1px solid #E1E3E5;padding:12px 6px 0;margin-top:6px}
+.wf-main{display:flex;flex-direction:column;min-width:0}
+.wf-head{height:60px;border-bottom:1px solid #E1E3E5;display:flex;align-items:center;gap:10px;padding:0 22px;flex:none}
+.wf-body{padding:16px 22px;display:flex;flex-direction:column;gap:12px;overflow:hidden;flex:1;min-height:0}
+.wf-card{border:1px solid #D9DCDE;border-radius:12px;padding:12px;background:#fff;display:flex;flex-direction:column;gap:8px;min-width:0}
+.wf-card.fill{background:#F3F4F5;border-color:#E6E8E9}
+.wf-card.dark{background:#3A3F42;color:#fff;border-color:#3A3F42}
+.wf-card.dark .wf-mut{color:#C3C8CB}
+.wf-card.danger{border-color:#C9A49B}
+.wf-t{font-weight:600;font-size:12.5px}
+.wf-h1{font-weight:700;font-size:18px;font-family:Manrope,Inter,sans-serif}
+.wf-big{font-weight:600;font-size:26px;font-variant-numeric:tabular-nums}
+.wf-num{font-weight:600;font-size:17px;font-variant-numeric:tabular-nums}
+.wf-mut{color:#80878B;font-size:11px}
+.wf-link{text-decoration:underline;font-size:11px}
+.wf-ln{height:7px;border-radius:4px;background:#E4E6E8}
+.wf-row{display:flex;gap:8px;align-items:center;min-width:0}
+.wf-g{display:grid;gap:12px;min-width:0}
+.wf-btn{border:1px solid #9AA0A4;border-radius:999px;padding:6px 12px;font-size:11px;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:5px;background:#fff}
+.wf-btn.p{background:#33383B;color:#fff;border-color:#33383B}
+.wf-btn.blk{width:100%;padding:9px}
+.wf-btn.dng{color:#9C3B2A;border-color:#C9A49B}
+.wf-fld{display:flex;flex-direction:column;gap:4px;min-width:0}
+.wf-fld label{font-size:11px;font-weight:500}
+.wf-in{border:1px solid #C4C8CB;border-radius:9px;min-height:32px;padding:0 10px;display:flex;align-items:center;color:#8A9094;justify-content:space-between;gap:6px;background:#fff;white-space:nowrap}
+.wf-in.big{min-height:48px;font-size:22px;color:#33383B;font-weight:600}
+.wf-in.err{border-color:#B0402D}
+.wf-in.dis{background:#F3F4F5}
+.wf-in.area{min-height:60px;align-items:flex-start;padding-top:8px}
+.wf-err{color:#B0402D;font-size:10.5px}
+.wf-chip{border:1px solid #C4C8CB;border-radius:999px;padding:3px 9px;font-size:10.5px;white-space:nowrap;background:#fff}
+.wf-chip.on{background:#33383B;color:#fff;border-color:#33383B}
+.wf-seg{display:inline-flex;background:#ECEEEF;border-radius:999px;padding:3px;flex:none}
+.wf-seg span{padding:4px 12px;border-radius:999px;font-size:11px;white-space:nowrap}
+.wf-seg .on{background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.18);font-weight:600}
+.wf-ph{background:repeating-linear-gradient(45deg,#F2F3F4 0 8px,#E9EBEC 8px 16px);border-radius:9px;display:grid;place-items:center;color:#80878B;font-size:10.5px;text-align:center;padding:6px}
+.wf-ic{width:14px;height:14px;border-radius:4px;background:#CDD1D4;flex:none;display:inline-block}
+.wf-ic.c{border-radius:50%}
+.wf-ic.av{width:28px;height:28px;border-radius:50%}
+.wf-ic.lg{width:22px;height:22px;border-radius:7px;background:#33383B}
+.wf-ic.lg.w{background:#fff}
+.wf-ic.xl{width:52px;height:52px;border-radius:16px}
+.wf-ic.md{width:28px;height:28px;border-radius:9px}
+.wf-li{display:flex;gap:9px;align-items:center;padding:7px 0;border-bottom:1px solid #EEF0F1;min-width:0}
+.wf-li:last-child{border-bottom:0}
+.wf-li-tx{display:flex;flex-direction:column;gap:1px;flex:1;min-width:0}
+.wf-li-tx b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wf-li-r{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.wf-cb{width:15px;height:15px;border-radius:50%;border:1.5px solid #9AA0A4;flex:none}
+.wf-cb.on{background:#33383B;border-color:#33383B}
+.wf-pr{height:7px;border-radius:9px;background:#E7E9EA;overflow:hidden}
+.wf-pr i{display:block;height:100%;background:#7B8186;border-radius:9px}
+.wf-pr.warn i{background:#B88A3E}.wf-pr.over i{background:#B0402D}
+.wf-tabs{display:flex;gap:18px;border-bottom:1px solid #E1E3E5;flex:none}
+.wf-tabs span{padding:0 0 8px;font-size:12px;color:#80878B}
+.wf-tabs .on{color:#33383B;font-weight:600;box-shadow:inset 0 -2px #33383B}
+.wf-tbl{width:100%;border-collapse:collapse;font-size:11.5px}
+.wf-tbl th{text-align:left;font-weight:500;color:#80878B;padding:6px 8px;border-bottom:1px solid #E1E3E5;font-size:10.5px}
+.wf-tbl td{padding:8px;border-bottom:1px solid #F0F1F2;white-space:nowrap}
+.wf-tbl td:nth-last-child(2),.wf-tbl th:nth-last-child(2){text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.wf-sw{width:28px;height:16px;border-radius:999px;background:#33383B;position:relative;flex:none}
+.wf-sw::after{content:"";position:absolute;right:2px;top:2px;width:12px;height:12px;border-radius:50%;background:#fff}
+.wf-sw.off{background:#C4C8CB}.wf-sw.off::after{right:auto;left:2px}
+.wf-m{width:320px;height:660px;border-radius:30px;display:flex;flex-direction:column}
+.wf-mtop{padding:16px 16px 10px;display:flex;align-items:center;gap:8px;flex:none}
+.wf-mt{font-size:15px;font-family:Manrope,Inter,sans-serif}
+.wf-mmonth{padding:0 14px 6px;display:flex;flex:none}
+.wf-mbody{flex:1;padding:10px 14px;display:flex;flex-direction:column;gap:10px;overflow:hidden;min-height:0}
+.wf-mnav{height:60px;border-top:1px solid #E1E3E5;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;justify-items:center;font-size:9.5px;flex:none;color:#80878B}
+.wf-mnav>span{display:flex;flex-direction:column;align-items:center;gap:3px}
+.wf-mnav>span.on{color:#33383B;font-weight:600}
+.wf-mnav>span.on .wf-ic{background:#33383B}
+.wf-fab{width:42px;height:42px;border-radius:50%;background:#33383B;color:#fff;display:grid!important;place-items:center;font-size:20px}
+.wf-mfoot{padding:10px 14px 16px;border-top:1px solid #E1E3E5;display:flex;gap:8px;flex:none}
+.wf-auth{grid-template-columns:1fr 1fr}
+.wf-brand{background:#3A3F42;color:#fff;padding:28px;display:flex;flex-direction:column;justify-content:space-between;gap:20px}
+.wf-authf{position:relative;display:grid;place-items:center}
+.wf-lang{position:absolute;top:18px;right:18px}
+.wf-authc{width:340px;display:flex;flex-direction:column;gap:12px}
+.wf-ov{position:absolute;inset:0;background:rgba(40,44,47,.45);display:grid;place-items:center}
+.wf-ov.sheet{align-items:end}
+.wf-dlg{background:#fff;border-radius:16px;padding:18px;width:360px;display:flex;flex-direction:column;gap:12px;box-shadow:0 12px 30px rgba(0,0,0,.2)}
+.wf-ov.sheet .wf-dlg{width:100%;border-radius:22px 22px 0 0;padding-bottom:26px}
+.wf-cal{display:grid;grid-template-columns:repeat(7,1fr);border-top:1px solid #E6E8E9;border-left:1px solid #E6E8E9;flex:1}
+.wf-cal>div{border-right:1px solid #E6E8E9;border-bottom:1px solid #E6E8E9;padding:5px;min-height:64px;display:flex;flex-direction:column;gap:3px;font-size:10.5px}
+.wf-cal>.hd{min-height:0;color:#80878B;text-align:center;padding:5px}
+.wf-cal .o{color:#B5BABD}
+.wf-cal .sel{background:#F3F4F5}
+.wf-cal .td b{background:#33383B;color:#fff;border-radius:50%;width:18px;height:18px;display:grid;place-items:center;font-size:10px}
+.wf-ev{background:#E4E6E8;border-radius:4px;padding:1px 4px;font-size:9.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wf-ev.task{background:#fff;border:1px dashed #9AA0A4}
+.wf-mcal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;font-size:10.5px}
+.wf-mcal span{padding:5px 0;border-radius:8px;position:relative}
+.wf-mcal .hd{color:#80878B;font-size:9.5px}
+.wf-mcal .o{color:#B5BABD}
+.wf-mcal .dot::after{content:"";position:absolute;left:50%;bottom:1px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:#33383B}
+.wf-mcal .sel{background:#33383B;color:#fff}
+.wf-mcal .sel.dot::after{background:#fff}
+.wf-sb{display:flex;justify-content:space-between;font-size:10.5px;font-weight:600;padding:12px 22px 0;flex:none}
+
+.nx{--iv:#F7F6F2;--sf:#FFFFFF;--sm:#F1EFE9;--bd:#E6E2D8;--nv:#182B35;--nv7:#2A4250;--nv1:#E3E9EC;--sg:#91A995;--sg7:#5B7660;--sg1:#E5ECE6;--sd:#E8DDCB;--sd1:#F3EDE3;--tx:#182B35;--mu:#5F6B70;--ok:#3D7650;--okb:#E2EFE5;--wa:#9A6212;--wab:#FAEFD8;--da:#B0402D;--dab:#F8E2DC;--in:#2E6489;--inb:#E1EBF3;
+  --c-sage:#DCE6DD;--c-sand:#EFE6D6;--c-mist:#DCE6EC;--c-blush:#F3DAD3;--c-butter:#F4E9BE;--c-lav:#E0DCEE;--c-peach:#F6E0CC;--c-mint:#D7EBDD;
+  font:14px/1.45 Inter,ui-sans-serif,system-ui,sans-serif;color:var(--tx);background:var(--iv);font-feature-settings:"cv11"}
+.nx *{box-sizing:border-box}
+.nx .h{font-family:Manrope,Inter,sans-serif;font-weight:700;letter-spacing:-.01em}
+.nx .num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+.nx .mu{color:var(--mu)}
+.nx .sm{font-size:12.5px}
+.nx .xs{font-size:11.5px}
+.nx-desk{width:1280px;display:grid;grid-template-columns:236px 1fr;gap:16px;padding:16px;border-radius:22px;border:1px solid var(--bd)}
+.nx-side{background:var(--sf);border:1px solid var(--bd);border-radius:24px;padding:20px 14px;display:flex;flex-direction:column;gap:2px}
+.nx-side .lg{display:flex;align-items:center;gap:10px;padding:0 8px 18px}
+.nx-grp{font-size:10.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--mu);padding:14px 12px 6px}
+.nx-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:999px;color:var(--tx);font-weight:500;font-size:13.5px}
+.nx-item svg{color:var(--mu)}
+.nx-item.on{background:var(--nv);color:var(--iv)}
+.nx-item.on svg{color:var(--sg)}
+.nx-item.hov{background:var(--sm)}
+.nx-user{display:flex;align-items:center;gap:10px;margin-top:10px;padding:12px 8px 2px;border-top:1px solid var(--bd)}
+.nx-av{width:36px;height:36px;border-radius:50%;background:var(--sd);display:grid;place-items:center;font-weight:700;font-size:13px;color:var(--nv);flex:none;font-family:Manrope,Inter,sans-serif}
+.nx-main{display:flex;flex-direction:column;gap:16px;min-width:0}
+.nx-top{display:flex;align-items:center;gap:12px;padding:6px 4px 2px}
+.nx-top .sp{flex:1}
+.nx-pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:8px 14px;background:var(--sf);border:1px solid var(--bd);font-weight:500;font-size:13px;white-space:nowrap}
+.nx-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;padding:0 18px;height:40px;font:600 13.5px Inter,sans-serif;border:1px solid transparent;white-space:nowrap}
+.nx-btn.pri{background:var(--nv);color:var(--iv)}
+.nx-btn.sec{background:var(--sf);border-color:#D6D1C5;color:var(--tx)}
+.nx-btn.gho{background:transparent;color:var(--tx)}
+.nx-btn.dan{background:var(--da);color:#fff}
+.nx-btn.sm{height:32px;padding:0 13px;font-size:12.5px}
+.nx-btn.lg{height:48px;padding:0 24px;font-size:14.5px}
+.nx-btn.ic{width:40px;padding:0}
+.nx-btn.dis{opacity:.45}
+.nx-btn.hov.pri{background:var(--nv7)}
+.nx-btn.foc{outline:2px solid var(--nv);outline-offset:2px}
+.nx-spin{width:14px;height:14px;border-radius:50%;border:2px solid rgba(247,246,242,.35);border-top-color:var(--iv)}
+.nx-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}
+.nx-card{background:var(--sf);border:1px solid var(--bd);border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.nx-card.hero{background:var(--nv);border-color:var(--nv);color:var(--iv)}
+.nx-card .hd{display:flex;align-items:center;gap:10px}
+.nx-card .hd .t{font-family:Manrope,Inter,sans-serif;font-weight:700;font-size:16px}
+.nx-card .hd .sp{flex:1}
+.nx-link{font-size:12.5px;font-weight:600;color:var(--sg7);display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.nx-badge{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:3px 9px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.nx-badge.neu{background:var(--sm);color:var(--tx)}
+.nx-badge.ok{background:var(--okb);color:var(--ok)}
+.nx-badge.wa{background:var(--wab);color:var(--wa)}
+.nx-badge.da{background:var(--dab);color:var(--da)}
+.nx-badge.in{background:var(--inb);color:var(--in)}
+.nx-badge.nv{background:var(--nv);color:var(--iv)}
+.nx-badge.out{background:transparent;border:1px solid var(--bd)}
+.nx-tile{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;flex:none;color:var(--nv)}
+.nx-tile.sm{width:30px;height:30px;border-radius:10px}
+.nx-prog{height:8px;border-radius:99px;background:var(--sm);overflow:hidden}
+.nx-prog i{display:block;height:100%;border-radius:99px;background:var(--sg)}
+.nx-prog.wa i{background:#D9A441}.nx-prog.da i{background:var(--da)}
+.nx-prog.thick{height:12px}
+.nx-row{display:flex;align-items:center;gap:12px;min-width:0}
+.nx-row .tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.nx-row .tx b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nx-list{display:flex;flex-direction:column}
+.nx-list>.nx-row{padding:11px 0;border-bottom:1px solid var(--sm)}
+.nx-list>.nx-row:last-child{border-bottom:0;padding-bottom:0}
+.nx-list>.nx-row:first-child{padding-top:0}
+.nx-chk{width:20px;height:20px;border-radius:50%;border:1.8px solid #B9B3A5;flex:none;display:grid;place-items:center}
+.nx-chk.on{background:var(--sg7);border-color:var(--sg7);color:#fff}
+.nx-seg{display:inline-flex;padding:3px;background:var(--sm);border-radius:999px}
+.nx-seg span{padding:6px 14px;border-radius:999px;font-size:12.5px;font-weight:500;color:var(--mu)}
+.nx-seg .on{background:var(--sf);color:var(--tx);box-shadow:0 1px 3px rgba(24,43,53,.12);font-weight:600}
+.nx-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;border:1px solid var(--bd);font-size:12.5px;font-weight:500;background:var(--sf);white-space:nowrap}
+.nx-chip.on{background:var(--nv);border-color:var(--nv);color:var(--iv)}
+.nx-chip .c{font-size:11px;background:var(--sm);border-radius:99px;padding:0 6px;color:var(--tx)}
+.nx-chip.on .c{background:var(--nv7);color:var(--iv)}
+.nx-date{width:46px;flex:none;border-radius:14px;background:var(--sd1);text-align:center;padding:6px 0;line-height:1.1}
+.nx-date small{display:block;font-size:10px;font-weight:600;letter-spacing:.06em;color:var(--mu)}
+.nx-date b{font-family:Manrope,Inter,sans-serif;font-size:18px}
+.nx-mob{width:390px;height:844px;border-radius:44px;border:1px solid var(--bd);overflow:hidden;display:flex;flex-direction:column;position:relative}
+.nx-sbar{display:flex;justify-content:space-between;align-items:center;padding:16px 30px 6px;font-weight:600;font-size:14px;flex:none}
+.nx-mtop{display:flex;align-items:center;gap:12px;padding:8px 20px 12px;flex:none}
+.nx-mbody{flex:1;overflow:hidden;padding:0 16px;display:flex;flex-direction:column;gap:14px;min-height:0}
+.nx-mbody .nx-card{border-radius:24px;padding:18px}
+.nx-bnav{flex:none;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;justify-items:center;padding:10px 12px 26px;background:var(--sf);border-top:1px solid var(--bd);font-size:11px;font-weight:500;color:var(--mu)}
+.nx-bnav span{display:flex;flex-direction:column;align-items:center;gap:4px}
+.nx-bnav .on{color:var(--nv);font-weight:700}
+.nx-bnav .fab{width:52px;height:52px;border-radius:50%;background:var(--nv);color:var(--iv);display:grid;place-items:center;margin-top:-26px;box-shadow:0 8px 20px rgba(24,43,53,.28)}
+.nx-sheet-ov{position:absolute;inset:0;background:rgba(24,43,53,.42);display:flex;align-items:flex-end}
+.nx-sheet{background:var(--sf);width:100%;border-radius:28px 28px 0 0;padding:12px 20px 34px;display:flex;flex-direction:column;gap:16px}
+.nx-grab{width:40px;height:5px;border-radius:9px;background:#D6D1C5;align-self:center}
+.nx-qa{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.nx-qa div{border:1px solid var(--bd);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.nx-fld{display:flex;flex-direction:column;gap:6px;min-width:0}
+.nx-fld label{font-size:12.5px;font-weight:600}
+.nx-in{height:42px;border-radius:12px;border:1px solid #D6D1C5;background:var(--sf);display:flex;align-items:center;padding:0 12px;gap:8px;color:var(--tx);font-size:13.5px}
+.nx-in.ph{color:#8C9396}
+.nx-in.foc{border-color:var(--nv);box-shadow:0 0 0 3px var(--nv1)}
+.nx-in.err{border-color:var(--da);box-shadow:0 0 0 3px var(--dab)}
+.nx-in.dis{background:var(--sm);color:#9AA0A3}
+.nx-in .sp{flex:1}
+.nx-hint{font-size:11.5px;color:var(--mu)}
+.nx-err{font-size:11.5px;color:var(--da);font-weight:500;display:flex;gap:5px;align-items:center}
+.nx-toast{display:flex;align-items:center;gap:10px;background:var(--nv);color:var(--iv);border-radius:16px;padding:12px 14px;font-size:13px;box-shadow:0 10px 24px rgba(24,43,53,.2)}
+.nx-toast .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;flex:none}
+.nx-skel{background:linear-gradient(90deg,var(--sm),#F8F6F1,var(--sm));border-radius:8px}
+.nx-sw{width:40px;height:24px;border-radius:99px;background:var(--sg7);position:relative;flex:none}
+.nx-sw::after{content:"";position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:#fff}
+.nx-sw.off{background:#CFC9BC}.nx-sw.off::after{right:auto;left:3px}
+.nx-tabs{display:flex;gap:22px;border-bottom:1px solid var(--bd)}
+.nx-tabs span{padding-bottom:10px;font-weight:500;color:var(--mu);font-size:13.5px}
+.nx-tabs .on{color:var(--tx);font-weight:600;box-shadow:inset 0 -2px var(--nv)}
+.gal{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.gal .board{display:flex;flex-direction:column;gap:14px}
+.gal .board>.lbl{color:#5F6B70}
+.gal .ttl{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.gal .ttl b{font-family:Manrope,Inter,sans-serif;font-size:15px;color:#182B35}
+.gal .ttl code{color:#5B7660}
+.vr{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.cap{font-size:10.5px;color:#5F6B70;letter-spacing:.04em}
+.vcol{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+@media (max-width:420px){.gal{grid-template-columns:1fr}}
+.flows{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr))}
+.flows .panel{display:flex;flex-direction:column;gap:12px}
+.mermaid{margin:0;background:transparent}
+table.dm{border-collapse:collapse;width:100%;font-size:13.5px;min-width:640px}
+table.dm th,table.dm td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+table.dm th{font-size:11.5px;color:var(--mut);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="13" fill="#182B35"/><path d="M15 33V15l18 18V15" fill="none" stroke="#F7F6F2" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15" cy="33" r="5" fill="#91A995" stroke="#182B35" stroke-width="2.5"/><circle cx="33" cy="15" r="5" fill="#91A995" stroke="#182B35" stroke-width="2.5"/></svg>
+      <div>
+        <h1>NEXO · Diseño del MVP</h1>
+        <p class="mut">Organiza tu vida. Controla tus prioridades. · Angular + Supabase · versión 1.0 aprobada · 11 nov 2026</p>
+      </div>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="Secciones">
+    <a href="#identidad">Identidad</a>
+    <a href="#sitemap">1 · Sitemap</a>
+    <a href="#wireframes">2 · Wireframes</a>
+    <a href="#dashboard">3 · Dashboard</a>
+    <a href="#componentes">4 · Componentes</a>
+    <a href="#flujos">5 · Flujos</a>
+    <a href="#modelo">6 · Modelo de datos</a>
+  </nav>
+
+  <section id="identidad">
+    <div class="sec-h"><span class="n">Identidad</span><h2>Logo y lenguaje visual</h2></div>
+    <p class="mut">Nexo significa unión. La «N» es un camino que conecta dos nodos: lo que tienes pendiente y lo que se resuelve. Los nodos en verde salvia representan los módulos que NEXO une (dinero, tareas, agenda).</p>
+    <div class="logo-grid">
+      <div class="logo-tile" style="background:#F7F6F2"><svg viewBox="0 0 168 48" width="230" role="img" aria-label="Logotipo NEXO sobre marfil"><rect width="48" height="48" rx="13" fill="#182B35"/><path d="M15 33V15l18 18V15" fill="none" stroke="#F7F6F2" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15" cy="33" r="5" fill="#91A995" stroke="#182B35" stroke-width="2.5"/><circle cx="33" cy="15" r="5" fill="#91A995" stroke="#182B35" stroke-width="2.5"/><text x="60" y="34" font-family="Manrope, Inter, sans-serif" font-size="32" font-weight="700" letter-spacing="-0.6" fill="#182B35">nexo</text></svg></div>
+      <div class="logo-tile" style="background:#182B35"><svg viewBox="0 0 168 48" width="230" role="img" aria-label="Logotipo NEXO sobre azul marino"><rect width="48" height="48" rx="13" fill="#F7F6F2"/><path d="M15 33V15l18 18V15" fill="none" stroke="#182B35" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15" cy="33" r="5" fill="#91A995" stroke="#F7F6F2" stroke-width="2.5"/><circle cx="33" cy="15" r="5" fill="#91A995" stroke="#F7F6F2" stroke-width="2.5"/><text x="60" y="34" font-family="Manrope, Inter, sans-serif" font-size="32" font-weight="700" letter-spacing="-0.6" fill="#F7F6F2">nexo</text></svg></div>
+      <div class="logo-tile" style="background:#E8DDCB"><div style="display:flex;gap:18px;align-items:flex-end">
+        <svg viewBox="0 0 48 48" width="88" role="img" aria-label="Símbolo"><rect width="48" height="48" rx="13" fill="#182B35"/><path d="M15 33V15l18 18V15" fill="none" stroke="#F7F6F2" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15" cy="33" r="5" fill="#91A995" stroke="#182B35" stroke-width="2.5"/><circle cx="33" cy="15" r="5" fill="#91A995" stroke="#182B35" stroke-width="2.5"/></svg>
+        <svg viewBox="0 0 48 48" width="44" aria-hidden="true"><rect width="48" height="48" rx="13" fill="#182B35"/><path d="M15 33V15l18 18V15" fill="none" stroke="#F7F6F2" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15" cy="33" r="5" fill="#91A995" stroke="#182B35" stroke-width="2.5"/><circle cx="33" cy="15" r="5" fill="#91A995" stroke="#182B35" stroke-width="2.5"/></svg>
+        <svg viewBox="0 0 48 48" width="22" aria-hidden="true"><rect width="48" height="48" rx="13" fill="#182B35"/><path d="M15 33V15l18 18V15" fill="none" stroke="#F7F6F2" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15" cy="33" r="5.5" fill="#91A995" stroke="#182B35" stroke-width="2.5"/><circle cx="33" cy="15" r="5.5" fill="#91A995" stroke="#182B35" stroke-width="2.5"/></svg>
+      </div></div>
+      <div class="logo-tile" style="background:#FFFFFF"><svg viewBox="0 0 168 48" width="230" role="img" aria-label="Logotipo NEXO monocromo"><rect width="48" height="48" rx="13" fill="none" stroke="#182B35" stroke-width="3"/><path d="M15 33V15l18 18V15" fill="none" stroke="#182B35" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15" cy="33" r="4.5" fill="#182B35"/><circle cx="33" cy="15" r="4.5" fill="#182B35"/><text x="60" y="34" font-family="Manrope, Inter, sans-serif" font-size="32" font-weight="700" letter-spacing="-0.6" fill="#182B35">nexo</text></svg></div>
+    </div>
+    <p class="mut" style="font-size:13px">Principal · inverso · símbolo a 88 / 44 / 22 px (favicon con trazo más grueso) · monocromo para impresión. Archivos en <code>brand/</code>.</p>
+
+    <div class="cols">
+      <div class="panel" style="display:flex;flex-direction:column;gap:12px">
+        <span class="lbl">Paleta base</span>
+        <div class="sw">
+          <div style="background:#F7F6F2;color:#182B35"><b>Ivory</b>#F7F6F2 · fondo</div>
+          <div style="background:#182B35;color:#F7F6F2"><b>Navy</b>#182B35 · principal</div>
+          <div style="background:#91A995;color:#182B35"><b>Sage</b>#91A995 · secundario</div>
+          <div style="background:#E8DDCB;color:#182B35"><b>Sand</b>#E8DDCB · acento</div>
+          <div style="background:#5B7660;color:#fff"><b>Sage 700</b>#5B7660 · texto</div>
+          <div style="background:#FFFFFF;color:#182B35"><b>Surface</b>#FFFFFF · tarjetas</div>
+        </div>
+        <span class="lbl">Semánticos y pasteles de categoría</span>
+        <div class="sw" style="grid-template-columns:repeat(auto-fit,minmax(72px,1fr))">
+          <div style="background:#E2EFE5;color:#3D7650;min-height:56px"><b>OK</b></div>
+          <div style="background:#FAEFD8;color:#9A6212;min-height:56px"><b>Aviso</b></div>
+          <div style="background:#F8E2DC;color:#B0402D;min-height:56px"><b>Error</b></div>
+          <div style="background:#E1EBF3;color:#2E6489;min-height:56px"><b>Info</b></div>
+        </div>
+        <div class="sw" style="grid-template-columns:repeat(8,minmax(0,1fr))">
+          <div style="background:#DCE6DD;min-height:40px"></div><div style="background:#EFE6D6;min-height:40px"></div><div style="background:#DCE6EC;min-height:40px"></div><div style="background:#F3DAD3;min-height:40px"></div><div style="background:#F4E9BE;min-height:40px"></div><div style="background:#E0DCEE;min-height:40px"></div><div style="background:#F6E0CC;min-height:40px"></div><div style="background:#D7EBDD;min-height:40px"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <span class="lbl">Tipografía</span>
+        <div class="type-row"><span style="font:700 34px/1.1 Manrope,sans-serif;letter-spacing:-.02em">Buenos días, Laura</span><span class="mut mono">Manrope 700 · 36</span></div>
+        <div class="type-row"><span style="font:700 20px Manrope,sans-serif">Presupuestos de noviembre</span><span class="mut mono">Manrope 700 · 18–22</span></div>
+        <div class="type-row"><span style="font:400 15px Inter,sans-serif">Has usado el 87 % de Transporte.</span><span class="mut mono">Inter 400 · 14–16</span></div>
+        <div class="type-row"><span style="font:600 34px Inter,sans-serif;font-variant-numeric:tabular-nums;letter-spacing:-.02em">1.842,30 €</span><span class="mut mono">Inter 600 · cifras tabulares</span></div>
+        <div class="type-row"><span style="font:600 11px Inter,sans-serif;letter-spacing:.09em;text-transform:uppercase">Organización</span><span class="mut mono">Inter 600 · 11 · tracking 9 %</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sitemap">
+    <div class="sec-h"><span class="n">1</span><h2>Sitemap definitivo</h2></div>
+    <p class="mut">Rutas en inglés y textos traducidos (ES/EN). Todo lo que cuelga de <code>/app</code> pasa por <code>authGuard</code> y se carga bajo demanda por feature.</p>
+    <div class="map">
+      <div class="panel"><h3>Acceso <span class="guard">guestGuard</span></h3><ul>
+        <li><code>/auth/login</code><span>Inicio de sesión · <span class="mut">?returnUrl</span></span></li>
+        <li><code>/auth/register</code><span>Registro</span></li>
+        <li><code>/auth/verify-email</code><span>Revisa tu correo</span></li>
+        <li><code>/auth/forgot-password</code><span>Recuperar contraseña</span></li>
+        <li><code>/auth/reset-password</code><span>Nueva contraseña</span></li>
+        <li><code>/auth/callback</code><span class="mut">Sin interfaz: canjea el código</span></li>
+      </ul></div>
+      <div class="panel"><h3>Inicio y ajustes <span class="guard">authGuard</span></h3><ul>
+        <li><code>/demo</code><span>Modo demo sin registro <span class="mut">(sin interfaz)</span></span></li>
+        <li><code>/app/dashboard</code><span>Inicio · <span class="mut">?month</span></span></li>
+        <li><code>/app/settings/profile</code><span>Perfil</span></li>
+        <li><code>/app/settings/preferences</code><span>Preferencias</span></li>
+        <li><code>/**</code><span>Página no encontrada</span></li>
+      </ul></div>
+      <div class="panel"><h3>Finanzas</h3><ul>
+        <li><code>/app/finances/overview</code><span>Resumen y estadísticas</span></li>
+        <li><code>/app/finances/transactions</code><span>Movimientos · <span class="mut">?from&amp;to&amp;type&amp;category&amp;page</span></span></li>
+        <li><code>…/transactions/new</code><span>Alta · <span class="mut">?type&amp;task</span></span></li>
+        <li><code>…/transactions/:id/edit</code><span>Edición</span></li>
+        <li><code>/app/finances/budgets</code><span>Presupuestos (diálogo)</span></li>
+        <li><code>/app/finances/categories</code><span>Categorías (diálogo)</span></li>
+      </ul></div>
+      <div class="panel"><h3>Organización</h3><ul>
+        <li><code>/app/organization/tasks</code><span>Tareas · <span class="mut">?status&amp;priority&amp;sort</span></span></li>
+        <li><code>…/tasks/new</code> · <code>…/tasks/:id/edit</code><span>Alta y edición</span></li>
+        <li><code>/app/organization/calendar</code><span>Calendario · <span class="mut">?month&amp;day</span></span></li>
+        <li><code>…/calendar/events/new</code><span>Nuevo evento · <span class="mut">?date</span></span></li>
+        <li><code>…/calendar/events/:id/edit</code><span>Edición de evento</span></li>
+      </ul></div>
+    </div>
+    <div class="cols">
+      <div class="panel"><span class="lbl">Escritorio · ≥ 1024 px</span><p style="margin-top:8px">Sidebar fija con Inicio, Finanzas (Resumen, Movimientos, Presupuestos, Categorías) y Organización (Tareas, Calendario). Header con título, selector de mes, botón «Nuevo» y menú de usuario.</p></div>
+      <div class="panel"><span class="lbl">Tablet · 768–1023 px</span><p style="margin-top:8px">La sidebar se colapsa a un raíl de iconos con tooltips y se expande con el botón de menú.</p></div>
+      <div class="panel"><span class="lbl">Móvil · 360–767 px</span><p style="margin-top:8px">Barra inferior: Inicio · Finanzas · <b>＋</b> · Organización · Ajustes. El «＋» abre una hoja con Gasto, Ingreso, Tarea y Evento. Las subsecciones pasan a pestañas.</p></div>
+    </div>
+  </section>
+
+  <section id="wireframes">
+    <div class="sec-h"><span class="n">2</span><h2>Wireframes de todas las pantallas</h2></div>
+    <p class="mut">Baja fidelidad: estructura, jerarquía y contenido real. Cada pantalla en escritorio (1100 px) y móvil (320 px).</p>
+    <div class="chips" id="wf-filter" role="group" aria-label="Filtrar pantallas"></div>
+    <div id="wf-list"></div>
+  </section>
+
+  <section id="dashboard">
+    <div class="sec-h"><span class="n">3</span><h2>Dashboard en alta fidelidad</h2></div>
+    <p class="mut">Datos de ejemplo de una usuaria ficticia (Laura) a 11 de noviembre de 2026. Todas las cifras cuadran entre sí: ingresos 3.450,00 € − gastos 1.607,70 € = balance 1.842,30 €.</p>
+    <div class="panel" style="padding:16px"><div class="fit" data-w="1280"><div class="cv" id="hf-desk"></div></div></div>
+    <div class="panel" style="padding:16px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:20px;align-items:start">
+        <div class="vcol" style="align-items:stretch"><span class="lbl">Inicio · arriba</span><div class="fit" data-w="390"><div class="cv" id="hf-m1"></div></div></div>
+        <div class="vcol" style="align-items:stretch"><span class="lbl">Inicio · al desplazar</span><div class="fit" data-w="390"><div class="cv" id="hf-m2"></div></div></div>
+        <div class="vcol" style="align-items:stretch"><span class="lbl">Alta rápida «＋»</span><div class="fit" data-w="390"><div class="cv" id="hf-m3"></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="componentes">
+    <div class="sec-h"><span class="n">4</span><h2>Componentes reutilizables y variantes</h2></div>
+    <p class="mut">Selector <code>nx-*</code>, SCSS propio sobre los tokens. Los estados de foco, carga, error y deshabilitado son parte de cada componente, no un añadido.</p>
+    <div class="gal nx" id="gal" style="background:transparent"></div>
+  </section>
+
+  <section id="flujos">
+    <div class="sec-h"><span class="n">5</span><h2>Flujos de usuario</h2></div>
+    <p class="mut">Regla común: una operación fallida nunca se muestra como exitosa. En finanzas no hay actualizaciones optimistas.</p>
+    <div class="flows">
+      <div class="panel"><h3>F-01 · Registro y verificación</h3><pre class="mermaid">
+flowchart TD
+  A[auth/register] --> B{Formulario válido?}
+  B -- No --> B1[Errores bajo cada campo] --> A
+  B -- Sí --> C[signUp con nombre, email, contraseña e idioma]
+  C -- Email ya registrado --> C1[Ya existe una cuenta + enlace a login] --> A
+  C -- OK --> D[auth/verify-email]
+  D --> E[Abre el enlace del correo]
+  E --> F[auth/callback canjea el código]
+  F -- Enlace caducado --> F1[Error + Reenviar enlace] --> D
+  F -- OK --> G[Trigger crea perfil y 12 categorías]
+  G --> H[Dashboard con estado vacío guiado]
+</pre></div>
+      <div class="panel"><h3>F-02 · Login, ruta protegida y sesión caducada</h3><pre class="mermaid">
+flowchart TD
+  A[Abre app/finances/budgets] --> B{authGuard: sesión válida?}
+  B -- No --> C[auth/login con returnUrl]
+  C --> D[signInWithPassword]
+  D -- Credenciales incorrectas --> D1[Email o contraseña incorrectos] --> C
+  D -- Email sin verificar --> D2[Aviso + Reenviar enlace] --> C
+  D -- OK --> E[Vuelve a la ruta pedida]
+  B -- Sí --> E
+  E --> F[El refresh del token falla]
+  F --> G[Se limpian los stores + toast Tu sesión ha caducado] --> C
+</pre></div>
+      <div class="panel"><h3>F-03 · Recuperar contraseña</h3><pre class="mermaid">
+flowchart TD
+  A[auth/forgot-password] --> B[resetPasswordForEmail]
+  B --> C[Mensaje neutro: si existe la cuenta recibirás un correo]
+  C --> D[Abre el enlace]
+  D --> E{Sesión de recovery?}
+  E -- No --> F[El enlace ha caducado + pedir otro] --> A
+  E -- Sí --> G[auth/reset-password: nueva + repetir]
+  G --> H[Contraseña actualizada → dashboard]
+</pre></div>
+      <div class="panel"><h3>F-06 · Registrar un gasto</h3><pre class="mermaid">
+flowchart TD
+  A[Nuevo → Gasto · móvil: ＋ → Gasto] --> B[transactions/new?type=expense]
+  B --> C[Importe, categoría, fecha, descripción, tarea opcional]
+  C --> D{Válido?}
+  D -- No --> C
+  D -- Sí --> E[Guardar en estado de carga]
+  E -- Error --> E1[Toast de error, datos conservados] --> C
+  E -- OK --> F[El store recarga el periodo]
+  F --> G[Toast Gasto registrado + vuelta al origen]
+  G --> H{Supera 80 % o 100 % del presupuesto?}
+  H -- Sí --> I[El toast avisa: has usado el 92 % de Alimentación]
+</pre></div>
+      <div class="panel"><h3>F-08 · El nexo: tarea con pago previsto</h3><pre class="mermaid">
+flowchart TD
+  A[Nueva tarea: Pagar seguro del coche] --> B[Vence 20 nov · prioridad alta]
+  B --> C[Pago previsto: 350,00 € · Transporte]
+  C --> D[Aparece en Tareas y en Próximos pagos]
+  D --> E[Marca la tarea como completada]
+  E --> F{Pago previsto sin movimiento?}
+  F -- No --> G[Toast Tarea completada]
+  F -- Sí --> H[Diálogo: ¿Registrar el pago de 350,00 €?]
+  H -- Ahora no --> G
+  H -- Registrar --> I[Formulario de gasto relleno y enlazado]
+  I --> J[Guardar → balance y presupuesto actualizados]
+</pre></div>
+      <div class="panel"><h3>F-12 · Eliminar con confirmación</h3><pre class="mermaid">
+flowchart TD
+  A[Menú de fila → Eliminar] --> B[ConfirmDialog con nombre e importe]
+  B -- Cancelar --> Z[Sin cambios]
+  B -- Eliminar --> C[Botón en carga, diálogo bloqueado]
+  C -- Error --> D[Mensaje dentro del diálogo, el elemento sigue]
+  C -- OK --> E[Se quita de la lista + toast]
+  A2[Categoría con movimientos] --> F[Eliminar desactivado: se ofrece Archivar]
+</pre></div>
+    </div>
+    <div class="cols">
+      <div class="panel"><span class="lbl">F-07 · Presupuesto</span><p style="margin-top:8px">Presupuestos → «Nuevo presupuesto» → diálogo (móvil: hoja) con categorías de gasto sin presupuesto ese mes → guardar. Duplicado → error en el campo. Mes vacío → «Copiar de octubre».</p></div>
+      <div class="panel"><span class="lbl">F-09 · Completar y filtrar tareas</span><p style="margin-top:8px">El check muestra carga hasta la confirmación; si falla, vuelve atrás con un toast. Filtros por estado y prioridad guardados en la URL.</p></div>
+      <div class="panel"><span class="lbl">F-10 · Evento desde el calendario</span><p style="margin-top:8px">Clic en un día → evento con 09:00–10:00 por defecto → «el fin debe ser posterior al inicio» → vuelve al día seleccionado.</p></div>
+      <div class="panel"><span class="lbl">F-11 · Cambio de periodo</span><p style="margin-top:8px">El selector de mes cambia <code>?month</code>; cada tarjeta del dashboard carga y falla por separado, con «Reintentar» propio.</p></div>
+    </div>
+  </section>
+
+  <section id="modelo">
+    <div class="sec-h"><span class="n">6</span><h2>Modelo de datos definitivo</h2></div>
+    <p class="mut">Seis tablas, todas con RLS. La propiedad de los registros relacionados se garantiza con claves foráneas compuestas <code>(id, user_id)</code>: PostgreSQL rechaza usar la categoría o la tarea de otra persona sin necesidad de triggers. El SQL completo está en <code>docs/06-modelo-datos.md</code>.</p>
+    <div class="panel scroller"><pre class="mermaid">
+erDiagram
+  AUTH_USERS ||--|| PROFILES : tiene
+  PROFILES ||--o{ CATEGORIES : posee
+  PROFILES ||--o{ TRANSACTIONS : registra
+  PROFILES ||--o{ BUDGETS : define
+  PROFILES ||--o{ TASKS : gestiona
+  PROFILES ||--o{ EVENTS : agenda
+  CATEGORIES ||--o{ TRANSACTIONS : clasifica
+  CATEGORIES ||--o{ BUDGETS : limita
+  CATEGORIES |o--o{ TASKS : "pago previsto"
+  TASKS |o--o{ TRANSACTIONS : relaciona
+  TASKS |o--o{ EVENTS : relaciona
+  PROFILES {
+    uuid id PK
+    text full_name
+    text locale
+    char currency
+    smallint week_starts_on
+  }
+  CATEGORIES {
+    uuid id PK
+    uuid user_id FK
+    text name
+    text type
+    text icon
+    text color
+    boolean is_archived
+  }
+  TRANSACTIONS {
+    uuid id PK
+    uuid user_id FK
+    uuid category_id FK
+    uuid task_id FK
+    text type
+    numeric amount
+    date transaction_date
+  }
+  BUDGETS {
+    uuid id PK
+    uuid user_id FK
+    uuid category_id FK
+    numeric amount
+    date period_start
+  }
+  TASKS {
+    uuid id PK
+    uuid user_id FK
+    text title
+    text status
+    text priority
+    date due_date
+    numeric planned_amount
+    uuid planned_category_id FK
+  }
+  EVENTS {
+    uuid id PK
+    uuid user_id FK
+    uuid task_id FK
+    text title
+    timestamptz starts_at
+    timestamptz ends_at
+  }
+</pre></div>
+    <div class="panel scroller">
+      <table class="dm">
+        <thead><tr><th>Tabla</th><th>Restricciones clave</th><th>Relaciones y borrado</th></tr></thead>
+        <tbody>
+          <tr><td><code>profiles</code></td><td><code>id = auth.users.id</code> · nombre 1–80 · <code>locale ∈ {es, en}</code> · <code>currency = 'EUR'</code></td><td>Cascada desde <code>auth.users</code>. Creado por trigger con 12 categorías.</td></tr>
+          <tr><td><code>categories</code></td><td><code>type ∈ {income, expense}</code> · nombre único por usuario y tipo (sin mayúsculas) · color de una lista cerrada</td><td><code>RESTRICT</code> si tiene movimientos o presupuestos → se archiva</td></tr>
+          <tr><td><code>transactions</code></td><td><code>NUMERIC(12,2) &gt; 0</code> · fecha <code>DATE</code> obligatoria · descripción ≤ 200</td><td>FK <code>(category_id, user_id, type)</code>: la categoría es tuya y del mismo tipo. FK <code>(task_id, user_id)</code> <code>SET NULL</code></td></tr>
+          <tr><td><code>budgets</code></td><td>Importe &gt; 0 · <code>period_start</code> día 1 · único <code>(user_id, category_id, period_start)</code></td><td>Solo categorías de gasto (FK con <code>category_type = 'expense'</code>)</td></tr>
+          <tr><td><code>tasks</code></td><td>Título 1–120 · estado y prioridad cerrados · <code>completed_at</code> ⇔ completada · importe y categoría previstos van juntos</td><td>Pago previsto → categoría de gasto propia</td></tr>
+          <tr><td><code>events</code></td><td>Título 1–120 · <code>ends_at &gt; starts_at</code> · <code>TIMESTAMPTZ</code></td><td>Tarea opcional <code>SET NULL</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cols">
+      <div class="panel"><span class="lbl">RLS</span><p style="margin-top:8px">Una política por operación y tabla para <code>authenticated</code> con <code>(select auth.uid()) = user_id</code>; <code>anon</code> sin acceso. <code>user_id</code> toma por defecto <code>auth.uid()</code>, el frontend no lo envía.</p></div>
+      <div class="panel"><span class="lbl">Lecturas agregadas</span><p style="margin-top:8px"><code>finance_summary</code>, <code>expenses_by_category</code>, <code>monthly_trend</code> y <code>budget_progress</code> como funciones <code>security invoker</code>: el dashboard no descarga todos los movimientos.</p></div>
+      <div class="panel"><span class="lbl">Pruebas pgTAP</span><p style="margin-top:8px">6 escenarios de aislamiento entre usuarios (RLS-01…06) y 7 de integridad (DB-01…07), en CI con <code>supabase test db</code>.</p></div>
+    </div>
+  </section>
+</div>
+
+<script>
+const P={home:"M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z",wallet:"M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h14a2 2 0 0 1 2 2v3h-4a2 2 0 0 0 0 4h4v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5",list:"M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01",pie:"M21 12A9 9 0 1 1 12 3v9zM15 3.5A9 9 0 0 1 20.5 9H15z",tag:"M12.6 2.6A2 2 0 0 0 11.2 2H4a2 2 0 0 0-2 2v7.2a2 2 0 0 0 .6 1.4l8.7 8.7a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4zM7.5 7.5h.01",check:"M20 6 9 17l-5-5",tasks:"M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11",cal:"M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z",set:"M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6",plus:"M12 5v14M5 12h14",cl:"m15 18-6-6 6-6",cr:"m9 18 6-6-6-6",cd:"m6 9 6 6 6-6",car:"M5 17H3v-5l2.5-5h13L21 12v5h-2M7 17a2 2 0 1 0 4 0 2 2 0 1 0-4 0M13 17a2 2 0 1 0 4 0 2 2 0 1 0-4 0M3 12h18",cart:"M2 3h3l2.4 12.4a2 2 0 0 0 2 1.6h8.7a2 2 0 0 0 2-1.6L21 7H6M9 21h.01M18 21h.01",zap:"M13 2 3 14h9l-1 8 10-12h-9z",ut:"M3 2v7c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2V2M7 2v20M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7",ticket:"M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2zM13 5v2M13 17v2M13 11v2",rep:"m17 2 4 4-4 4M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v1a4 4 0 0 1-4 4H3",brief:"M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16M4 6h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z",more:"M5 12h.01M12 12h.01M19 12h.01",up:"M7 17 17 7M7 7h10v10",down:"M17 7 7 17M17 17H7V7",link:"M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7",clock:"M12 6v6l4 2M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z",alert:"M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z",mail:"M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM22 6l-10 7L2 6",pin:"M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0zM12 10h.01",x:"M18 6 6 18M6 6l12 12",info:"M12 16v-4M12 8h.01M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z",inbox:"M22 12h-6l-2 3h-4l-2-3H2M5.5 5.1 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.7 1.1z",trash:"M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2",refresh:"M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5",flag:"M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7",eye:"M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",user:"M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z",shield:"M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM9 12l2 2 4-4",house:"M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1zM9 21v-6h6v6",gift:"M20 12v10H4V12M2 7h20v5H2zM12 22V7M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z",dumb:"M6.5 6.5v11M17.5 6.5v11M3 9.5v5M21 9.5v5M6.5 12h11"};
+const I=(n,s=18,w=1.9)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${P[n]}"/></svg>`;
+const MARK=(s=34)=>`<svg width="${s}" height="${s}" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="13" fill="#182B35"/><path d="M15 33V15l18 18V15" fill="none" stroke="#F7F6F2" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15" cy="33" r="5" fill="#91A995" stroke="#182B35" stroke-width="2.5"/><circle cx="33" cy="15" r="5" fill="#91A995" stroke="#182B35" stroke-width="2.5"/></svg>`;
+const WORD=`<span class="h" style="font-size:22px;font-weight:700;letter-spacing:-.02em">nexo</span>`;
+
+const ic=(c='')=>`<i class="wf-ic ${c}"></i>`;
+const t=(s,c='wf-t',st='')=>`<div class="${c}" style="${st}">${s}</div>`;
+const card=(h,c='',st='')=>`<div class="wf-card ${c}" style="${st}">${h}</div>`;
+const row=(...a)=>`<div class="wf-row">${a.join('')}</div>`;
+const rowS=(st,...a)=>`<div class="wf-row" style="${st}">${a.join('')}</div>`;
+const grid=(cols,...a)=>`<div class="wf-g" style="grid-template-columns:${cols}">${a.join('')}</div>`;
+const btn=(s,p=0,c='')=>`<span class="wf-btn ${p?'p':''} ${c}">${s}</span>`;
+const fld=(l,v='',ex='',c='',err='')=>`<div class="wf-fld"><label>${l}</label><div class="wf-in ${c}"><span>${v}</span>${ex}</div>${err?`<span class="wf-err">${err}</span>`:''}</div>`;
+const chips=(a,on=0)=>`<div class="wf-row" style="flex-wrap:wrap;gap:6px">${a.map((c,i)=>`<span class="wf-chip ${i===on?'on':''}">${c}</span>`).join('')}</div>`;
+const seg=(a,on=0)=>`<div class="wf-seg">${a.map((c,i)=>`<span class="${i===on?'on':''}">${c}</span>`).join('')}</div>`;
+const ph=(l,h)=>`<div class="wf-ph" style="height:${h}px">${l}</div>`;
+const sp=`<span style="flex:1"></span>`;
+const stat=(l,v,c='')=>card(`<span class="wf-mut">${l}</span><span class="wf-num">${v}</span>`,c);
+const tbl=(h,r)=>`<table class="wf-tbl"><thead><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${r.map(x=>`<tr>${x.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+const li=(a,b,r='',lead=ic('md'))=>`<div class="wf-li">${lead}<div class="wf-li-tx"><b>${a}</b><span class="wf-mut">${b}</span></div>${r?`<span class="wf-li-r">${r}</span>`:''}</div>`;
+const prog=(p,c='')=>`<div class="wf-pr ${c}"><i style="width:${Math.min(p,100)}%"></i></div>`;
+const tabs=(a,on)=>`<div class="wf-tabs">${a.map((c,i)=>`<span class="${i===on?'on':''}">${c}</span>`).join('')}</div>`;
+const task=(a,b,p,m='',done=0)=>`<div class="wf-li"><i class="wf-cb ${done?'on':''}"></i><div class="wf-li-tx"><b>${a}</b><span class="wf-mut">${b}</span></div>${m?`<span class="wf-chip">${m}</span>`:''}<span class="wf-chip">${p}</span><span class="wf-mut">···</span></div>`;
+const sw=(on=1)=>`<i class="wf-sw ${on?'':'off'}"></i>`;
+const lines=(...w)=>w.map(x=>`<div class="wf-ln" style="width:${x}%"></div>`).join('');
+
+const NAV=[['Inicio','dashboard'],['g','Finanzas'],['Resumen','overview'],['Movimientos','transactions'],['Presupuestos','budgets'],['Categorías','categories'],['g','Organización'],['Tareas','tasks'],['Calendario','calendar']];
+function D(active,title,body,o={}){
+  const nav=NAV.map(n=>n[0]==='g'?`<div class="wf-grp">${n[1]}</div>`:`<div class="wf-nav ${n[1]===active?'on':''}">${ic()}${n[0]}</div>`).join('');
+  return `<div class="wf wf-d"><aside class="wf-side"><div class="wf-logo">${ic('lg')}<b>nexo</b></div>${nav}${sp}<div class="wf-nav ${active==='settings'?'on':''}">${ic()}Ajustes</div><div class="wf-user">${ic('c av')}<div><b>Laura Martín</b><div class="wf-mut">laura@ejemplo.com</div></div></div></aside><div class="wf-main"><div class="wf-head"><div><div class="wf-h1">${title}</div>${o.sub?`<div class="wf-mut">${o.sub}</div>`:''}</div>${sp}${o.month?btn('‹ &nbsp;Noviembre 2026&nbsp; ›'):''}${btn('+ Nuevo',1)}${ic('c av')}</div><div class="wf-body">${o.tabs?tabs(o.tabs[0],o.tabs[1]):''}${body}</div></div>${o.overlay||''}</div>`;
+}
+function M(title,body,tab,o={}){
+  const items=['Inicio','Finanzas','','Organiz.','Ajustes'];
+  const nav=o.nonav?'':`<div class="wf-mnav">${items.map((s,i)=>i===2?`<span class="wf-fab">+</span>`:`<span class="${i===tab?'on':''}">${ic()}${s}</span>`).join('')}</div>`;
+  return `<div class="wf wf-m"><div class="wf-sb"><span>9:41</span><span>▮▮▮</span></div><div class="wf-mtop">${o.back?`<span style="font-size:18px">‹</span>`:ic('lg')}<b class="wf-mt">${title}</b>${sp}${o.action!==undefined?o.action:ic('c av')}</div>${o.month?`<div class="wf-mmonth">${btn('‹ &nbsp;Noviembre 2026&nbsp; ›','','blk')}</div>`:''}${o.tabs?`<div style="padding:0 14px;flex:none">${tabs(o.tabs[0],o.tabs[1])}</div>`:''}<div class="wf-mbody">${body}</div>${o.footer||''}${nav}${o.overlay||''}</div>`;
+}
+const AD=b=>`<div class="wf wf-d wf-auth"><div class="wf-brand"><div class="wf-logo">${ic('lg w')}<b>nexo</b></div><div><div class="wf-h1" style="font-size:26px;line-height:1.2">Organiza tu vida.<br>Controla tus prioridades.</div><div style="color:#C3C8CB;margin-top:8px">Finanzas, tareas y calendario en un solo lugar.</div></div>${ph('Captura del dashboard',250)}</div><div class="wf-authf"><div class="wf-lang">${seg(['ES','EN'])}</div><div class="wf-authc">${b}</div></div></div>`;
+const AM=b=>`<div class="wf wf-m"><div class="wf-sb"><span>9:41</span><span>▮▮▮</span></div><div class="wf-mtop">${ic('lg')}<b class="wf-mt">nexo</b>${sp}${seg(['ES','EN'])}</div><div class="wf-mbody" style="padding-top:28px;gap:12px">${b}</div></div>`;
+const foot=(a,b)=>`<div class="wf-mfoot">${btn(a,0,'blk')}${btn(b,1,'blk')}</div>`;
+const ov=(h,sheet)=>`<div class="wf-ov ${sheet?'sheet':''}"><div class="wf-dlg">${h}</div></div>`;
+
+const loginF=`${t('Inicia sesión','wf-h1')}${t('Accede a tu espacio personal','wf-mut')}${fld('Email','laura@ejemplo.com')}${fld('Contraseña','••••••••',ic())}${row(sp,'<span class="wf-link">¿Olvidaste tu contraseña?</span>')}${btn('Entrar',1,'blk')}${row('<div class="wf-ln" style="flex:1;height:1px"></div>','<span class="wf-mut">o</span>','<div class="wf-ln" style="flex:1;height:1px"></div>')}${btn('Explorar la demo sin registrarte',0,'blk')}${t('¿No tienes cuenta? <span class="wf-link">Regístrate</span>','wf-mut','text-align:center')}`;
+const regF=(err)=>`${t('Crea tu cuenta','wf-h1')}${fld('Nombre','Laura Martín')}${fld('Email','laura@ejemplo.com','',err?'err':'',err?'Ya existe una cuenta con este email. <u>Inicia sesión</u>':'')}${fld('Contraseña','••••••••',ic())}${t('✓ Mínimo 8 caracteres &nbsp;· &nbsp;✓ Letras y números','wf-mut')}${row('<i class="wf-cb"></i>','<span class="wf-mut">Acepto la política de privacidad</span>')}${btn('Crear cuenta',1,'blk')}${t('¿Ya tienes cuenta? <span class="wf-link">Inicia sesión</span>','wf-mut','text-align:center')}`;
+const verF=`<div style="display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">${ic('xl')}${t('Revisa tu correo','wf-h1')}${t('Hemos enviado un enlace de verificación a <b>laura@ejemplo.com</b>. Ábrelo para activar tu cuenta.','wf-mut','font-size:12px')}${btn('Reenviar enlace · 0:45',0,'blk')}${t('¿Email incorrecto? <span class="wf-link">Vuelve al registro</span>','wf-mut')}</div>`;
+const forF=`${t('¿Olvidaste tu contraseña?','wf-h1')}${t('Te enviaremos un enlace para crear una nueva.','wf-mut')}${fld('Email','laura@ejemplo.com')}${btn('Enviar enlace',1,'blk')}${card(row(ic('c'),t('Si existe una cuenta con ese email, recibirás un enlace en unos minutos.','wf-mut')),'fill')}${t('<span class="wf-link">Volver a iniciar sesión</span>','wf-mut','text-align:center')}`;
+const resF=`${t('Nueva contraseña','wf-h1')}${t('Elige una contraseña que no uses en otros sitios.','wf-mut')}${fld('Nueva contraseña','••••••••',ic())}${fld('Repite la contraseña','••••••',ic(),'err','Las contraseñas no coinciden')}${t('✓ Mínimo 8 caracteres &nbsp;· &nbsp;✓ Letras y números','wf-mut')}${btn('Guardar contraseña',1,'blk')}`;
+
+const budRow=(n,a,b,p,c='')=>`<div style="display:flex;flex-direction:column;gap:5px">${row(ic(),`<b>${n}</b>`,sp,`<span class="wf-mut">${a} / ${b}</span>`)}${prog(p,c)}</div>`;
+const dashD=D('dashboard','Buenos días, Laura',
+  grid('5fr 7fr',
+    card(`<span class="wf-mut">Balance de noviembre</span><span class="wf-big">1.842,30 €</span>${grid('1fr 1fr',card(`<span class="wf-mut">Ingresos</span><b>3.450,00 €</b>`,'dark','background:#4A5054'),card(`<span class="wf-mut">Gastos</span><b>1.607,70 €</b>`,'dark','background:#4A5054'))}${row('<span class="wf-mut">Tasa de ahorro</span>',sp,'<b>53,4 %</b>')}<div class="wf-pr" style="background:#555B5F"><i style="width:53%;background:#C3C8CB"></i></div>`,'dark'),
+    card(`${row(t('Gasto diario'),sp,seg(['Mes','Semana']))}${grid('150px 1fr',`<div>${t('−8,0 %','wf-big')}${t('que en octubre a estas alturas','wf-mut')}</div>`,ph('Lollipop · gasto por día (1–30 nov)',160))}`))+
+  grid('1fr 1fr 1fr',
+    card(`${row(t('Presupuestos'),sp,'<span class="wf-link">Ver todos</span>')}${budRow('Alimentación','298','400',75)}${budRow('Transporte','156','180',87,'warn')}${budRow('Restaurantes','85','80',100,'over')}`),
+    card(`${row(t('Gastos por categoría'))}${grid('100px 1fr',ph('Donut',100),`<div style="display:flex;flex-direction:column;gap:8px">${lines(90,75,80,60,70)}</div>`)}`),
+    card(`${row(t('Próximos pagos'),sp,'<span class="wf-chip">449,90 €</span>')}${li('Seguro del coche','Tarea · 20 nov','350,00 €')}${li('Regalo de Marta','Tarea · 24 nov','60,00 €')}${li('Cuota del gimnasio','Tarea · 1 dic','39,90 €')}`))+
+  grid('7fr 5fr',
+    card(`${row(t('Tareas pendientes · 7'),sp,chips(['Todas','Hoy · 2','Alta'],0))}${task('Llamar al fontanero','Hoy','Alta')}${task('Renovar el DNI','Hoy','Media')}${task('Pagar seguro del coche','20 nov','Alta','350,00 €')}`),
+    card(`${row(t('Próximos eventos'),sp,'<span class="wf-link">Calendario</span>')}${li('Reunión de vecinos','Jue 12 · 19:00')}${li('Revisión ITV','Vie 13 · 09:30')}${li('Cena con Andrés y Paula','Sáb 14 · 21:00')}`))
+,{sub:'Miércoles, 11 de noviembre',month:1});
+const dashM=M('Hola, Laura',
+  card(`<span class="wf-mut">Balance de noviembre</span><span class="wf-big">1.842,30 €</span>${grid('1fr 1fr',`<div><div class="wf-mut">Ingresos</div><b>3.450,00 €</b></div>`,`<div><div class="wf-mut">Gastos</div><b>1.607,70 €</b></div>`)}<div class="wf-pr" style="background:#555B5F"><i style="width:53%;background:#C3C8CB"></i></div>`,'dark')+
+  card(`${row(t('Próximos pagos'),sp,'<span class="wf-chip">449,90 €</span>')}${li('Seguro del coche','20 nov','350,00 €')}${li('Regalo de Marta','24 nov','60,00 €')}`)+
+  card(`${row(t('Tareas pendientes · 7'))}${task('Llamar al fontanero','Hoy','Alta')}${task('Renovar el DNI','Hoy','Media')}`),0,{month:1});
+
+const overD=D('overview','Finanzas',
+  grid('repeat(4,1fr)',stat('Ingresos','3.450,00 €'),stat('Gastos','1.607,70 €'),stat('Balance','1.842,30 €'),stat('Tasa de ahorro','53,4 %'))+
+  grid('7fr 5fr',card(`${row(t('Ingresos y gastos · últimos 6 meses'),sp,seg(['6 m','12 m']))}${ph('Barras agrupadas jun–nov · tabla accesible equivalente',230)}`),
+    card(`${t('Gastos por categoría')}${grid('130px 1fr',ph('Donut',130),`<div>${li('Vivienda','52,9 %','850,00 €',ic())}${li('Alimentación','18,6 %','298,40 €',ic())}${li('Transporte','9,7 %','156,20 €',ic())}</div>`)}`))+
+  card(`${row(t('Mayores gastos del mes'),sp,'<span class="wf-link">Ver movimientos</span>')}${tbl(['Fecha','Descripción','Categoría','Importe',''],[['1 nov','Alquiler','Vivienda','−850,00 €',''],['11 nov','Mercadona','Alimentación','−86,40 €',''],['5 nov','Factura de la luz','Suministros','−112,45 €','']])}`)
+,{month:1,tabs:[['Resumen','Movimientos','Presupuestos','Categorías'],0]});
+const overM=M('Finanzas',grid('1fr 1fr',stat('Ingresos','3.450 €'),stat('Gastos','1.607,70 €'),stat('Balance','1.842,30 €'),stat('Ahorro','53,4 %'))+card(`${t('Ingresos y gastos')}${ph('Barras 6 meses',120)}`)+card(`${t('Por categoría')}${li('Vivienda','52,9 %','850,00 €',ic())}${li('Alimentación','18,6 %','298,40 €',ic())}`),1,{month:1,tabs:[['Resumen','Movimientos','Presup.','Categ.'],0]});
+
+const txRows=[['11 nov','Mercadona','Alimentación','—','−86,40 €','···'],['11 nov','Repsol','Transporte','—','−58,30 €','···'],['10 nov','Cine Yelmo','Ocio','—','−18,50 €','···'],['9 nov','Frutería Paqui','Alimentación','—','−42,10 €','···'],['5 nov','Factura de la luz','Suministros','Revisar factura de la luz','−112,45 €','···'],['1 nov','Nómina','Nómina','—','+3.200,00 €','···'],['1 nov','Alquiler','Vivienda','—','−850,00 €','···']];
+const txD=D('transactions','Finanzas',
+  row(seg(['Todos','Ingresos','Gastos']),`<div class="wf-in" style="width:170px"><span>Categoría: Todas</span>▾</div>`,`<div class="wf-in" style="width:170px"><span>1 – 30 nov 2026</span>▾</div>`,`<div class="wf-in" style="width:180px"><span>Buscar descripción</span></div>`,sp,btn('+ Nuevo movimiento',1))+
+  card(tbl(['Fecha','Descripción','Categoría','Tarea','Importe',''],txRows))+row('<span class="wf-mut">1–7 de 34 movimientos</span>',sp,btn('‹'),btn('1',1),btn('2'),btn('3'),btn('›'))
+,{tabs:[['Resumen','Movimientos','Presupuestos','Categorías'],1]});
+const txM=M('Finanzas',row(seg(['Todos','Ingresos','Gastos']),sp,btn('Filtros · 1'))+t('HOY','wf-mut','letter-spacing:.06em')+li('Mercadona','Alimentación','−86,40 €')+li('Repsol','Transporte','−58,30 €')+t('AYER','wf-mut','letter-spacing:.06em')+li('Cine Yelmo','Ocio','−18,50 €')+t('9 NOV','wf-mut','letter-spacing:.06em')+li('Frutería Paqui','Alimentación','−42,10 €')+li('Factura de la luz','Suministros · tarea','−112,45 €'),1,{tabs:[['Resumen','Movimientos','Presup.','Categ.'],1]});
+
+const txFormD=D('transactions','Nuevo gasto',grid('7fr 4fr',
+  card(`${seg(['Gasto','Ingreso'])}<div class="wf-fld"><label>Importe</label><div class="wf-in big"><span>58,30</span><span>€</span></div></div>${grid('1fr 1fr',fld('Categoría','Transporte','▾'),fld('Fecha','11/11/2026',ic()))}${fld('Descripción (opcional)','Repsol')}${fld('Tarea relacionada (opcional)','Ninguna','▾')}${row(sp,btn('Cancelar'),btn('Guardar gasto',1))}`),
+  `<div style="display:flex;flex-direction:column;gap:12px">${card(`${t('Impacto en tu presupuesto')}${row(ic('md'),'<b>Transporte</b>',sp,'<span class="wf-chip">87 %</span>')}${prog(87,'warn')}${t('Tras este gasto: 156,20 de 180,00 €. Te quedan 23,80 € hasta fin de mes.','wf-mut')}`)}${card(t('Consejo: enlaza el gasto a una tarea para verlo en su historial.','wf-mut'),'fill')}</div>`),{sub:'Finanzas › Movimientos'});
+const txFormM=M('Nuevo gasto',`${seg(['Gasto','Ingreso'])}<div class="wf-fld"><label>Importe</label><div class="wf-in big"><span>58,30</span><span>€</span></div></div>${fld('Categoría','Transporte','▾')}${fld('Fecha','11/11/2026')}${fld('Descripción (opcional)','Repsol')}${fld('Tarea relacionada (opcional)','Ninguna','▾')}`,-1,{back:1,nonav:1,action:'',footer:foot('Cancelar','Guardar')});
+
+const budCard=(n,a,b,p,c,badge)=>card(`${row(ic('md'),`<b>${n}</b>`,sp,`<span class="wf-chip">${badge}</span>`,'<span class="wf-mut">···</span>')}${prog(p,c)}${row(`<span class="wf-mut">${a} gastados</span>`,sp,`<span class="wf-mut">de ${b}</span>`)}`);
+const budBody=card(grid('repeat(3,1fr)',`<div><div class="wf-mut">Presupuestado</div><div class="wf-num">780,00 €</div></div>`,`<div><div class="wf-mut">Gastado</div><div class="wf-num">601,35 €</div></div>`,`<div><div class="wf-mut">Disponible</div><div class="wf-num">178,65 €</div></div>`)+prog(77),'fill')+
+  row(t('4 presupuestos'),sp,btn('Copiar de octubre'),btn('+ Nuevo presupuesto',1))+
+  grid('1fr 1fr',budCard('Alimentación','298,40 €','400,00 €',75,'','75 %'),budCard('Transporte','156,20 €','180,00 €',87,'warn','87 % · cerca'),budCard('Restaurantes','84,60 €','80,00 €',100,'over','106 % · superado'),budCard('Ocio','62,15 €','120,00 €',52,'','52 %'));
+const budD=D('budgets','Finanzas',budBody,{month:1,tabs:[['Resumen','Movimientos','Presupuestos','Categorías'],2]});
+const budM=M('Finanzas',card(row(`<div><div class="wf-mut">Disponible</div><div class="wf-num">178,65 €</div></div>`,sp,'<span class="wf-mut">601,35 de 780,00 €</span>')+prog(77),'fill')+budCard('Alimentación','298,40 €','400,00 €',75,'','75 %')+budCard('Transporte','156,20 €','180,00 €',87,'warn','87 %')+budCard('Restaurantes','84,60 €','80,00 €',100,'over','106 %'),1,{month:1,tabs:[['Resumen','Movimientos','Presup.','Categ.'],2]});
+const budDlg=`${row(t('Nuevo presupuesto','wf-h1'),sp,'<span>✕</span>')}${fld('Categoría de gasto','Suministros','▾')}${t('Solo aparecen categorías sin presupuesto en noviembre.','wf-mut')}<div class="wf-fld"><label>Importe mensual</label><div class="wf-in big"><span>150,00</span><span>€</span></div></div>${row(sp,btn('Cancelar'),btn('Crear presupuesto',1))}`;
+const budDlgD=D('budgets','Finanzas',budBody,{month:1,tabs:[['Resumen','Movimientos','Presupuestos','Categorías'],2],overlay:ov(budDlg)});
+const budDlgM=M('Finanzas',budCard('Alimentación','298,40 €','400,00 €',75,'','75 %')+budCard('Transporte','156,20 €','180,00 €',87,'warn','87 %'),1,{month:1,overlay:ov(budDlg,1)});
+
+const catRow=(n,s,arch)=>`<div class="wf-li">${ic('md')}<div class="wf-li-tx"><b>${n}</b><span class="wf-mut">${s}</span></div>${arch?'<span class="wf-chip">Archivar</span>':''}<span class="wf-mut">···</span></div>`;
+const catD=D('categories','Finanzas',row(seg(['Gastos · 10','Ingresos · 2']),sp,btn('+ Nueva categoría',1))+
+  grid('1fr 1fr',card(catRow('Vivienda','1 movimiento este mes')+catRow('Alimentación','14 movimientos')+catRow('Transporte','6 movimientos')+catRow('Suministros','2 movimientos')+catRow('Salud','Sin movimientos')),card(catRow('Ocio','4 movimientos')+catRow('Restaurantes','5 movimientos')+catRow('Suscripciones','3 movimientos')+catRow('Seguros','Sin movimientos')+catRow('Otros','Sin movimientos')))+
+  card(row(t('Archivadas · 0'),sp,'<span class="wf-mut">Las categorías con movimientos no se borran: se archivan.</span>'),'fill')
+,{tabs:[['Resumen','Movimientos','Presupuestos','Categorías'],3]});
+const catM=M('Finanzas',row(seg(['Gastos','Ingresos']),sp,btn('+ Nueva',1))+card(catRow('Vivienda','1 movimiento')+catRow('Alimentación','14 movimientos')+catRow('Transporte','6 movimientos')+catRow('Suministros','2 movimientos')+catRow('Salud','Sin movimientos')+catRow('Ocio','4 movimientos')),1,{tabs:[['Resumen','Movimientos','Presup.','Categ.'],3]});
+
+const taskD=D('tasks','Organización',
+  row(chips(['Pendientes · 6','En curso · 1','Completadas','Todas'],0),sp,'<span class="wf-mut">Prioridad</span>',chips(['Alta','Media','Baja'],-1),`<div class="wf-in" style="width:160px"><span>Orden: vencimiento</span>▾</div>`,btn('+ Nueva tarea',1))+
+  card(`${t('HOY · 2','wf-mut','letter-spacing:.06em')}${task('Llamar al fontanero','Hoy · fuga en el baño','Alta')}${task('Renovar el DNI','Hoy · cita a las 12:30','Media')}${t('ESTA SEMANA','wf-mut','letter-spacing:.06em;margin-top:6px')}${task('Revisar factura de la luz','13 nov · En curso','Media')}${t('MÁS ADELANTE','wf-mut','letter-spacing:.06em;margin-top:6px')}${task('Pagar seguro del coche','20 nov','Alta','350,00 €')}${task('Comprar regalo de Marta','24 nov','Baja','60,00 €')}${task('Pagar cuota del gimnasio','1 dic','Baja','39,90 €')}${t('SIN FECHA','wf-mut','letter-spacing:.06em;margin-top:6px')}${task('Pedir cita en el dentista','Sin fecha','Baja')}`)
+,{tabs:[['Tareas','Calendario'],0]});
+const taskM=M('Organización',row(chips(['Pendientes · 6','En curso','Todas'],0),sp,btn('Filtros'))+t('HOY · 2','wf-mut','letter-spacing:.06em')+task('Llamar al fontanero','Hoy','Alta')+task('Renovar el DNI','Hoy','Media')+t('ESTA SEMANA','wf-mut','letter-spacing:.06em')+task('Revisar factura de la luz','13 nov · En curso','Media')+t('MÁS ADELANTE','wf-mut','letter-spacing:.06em')+task('Pagar seguro del coche','20 nov','Alta','350 €')+task('Regalo de Marta','24 nov','Baja','60 €'),3,{tabs:[['Tareas','Calendario'],0]});
+
+const plannedBox=card(`${row(t('Pago previsto'),sp,sw(1))}${grid('1fr 1fr',`<div class="wf-fld"><label>Importe</label><div class="wf-in"><span style="color:#33383B">350,00</span>€</div></div>`,fld('Categoría','Transporte','▾'))}${row(ic('c'),t('Al completar la tarea te propondremos registrar este gasto. Superará tu presupuesto de Transporte (180,00 €).','wf-mut'))}`,'fill');
+const taskFD=D('tasks','Nueva tarea',grid('7fr 4fr',
+  card(`${fld('Título','Pagar seguro del coche')}<div class="wf-fld"><label>Descripción (opcional)</label><div class="wf-in area"><span>Póliza 4471-B, domiciliar en la cuenta nueva</span></div></div>${grid('1fr 1fr',`<div class="wf-fld"><label>Prioridad</label>${seg(['Baja','Media','Alta'],2)}</div>`,fld('Fecha límite','20/11/2026',ic()))}${plannedBox}${row(sp,btn('Cancelar'),btn('Crear tarea',1))}`),
+  card(`${t('Movimientos relacionados')}${ph('Aparecerán aquí los pagos enlazados a esta tarea',90)}${t('En edición: estado (Pendiente / En curso / Completada) y botón Eliminar.','wf-mut')}`)),{sub:'Organización › Tareas'});
+const taskFM=M('Nueva tarea',`${fld('Título','Pagar seguro del coche')}<div class="wf-fld"><label>Prioridad</label>${seg(['Baja','Media','Alta'],2)}</div>${fld('Fecha límite','20/11/2026')}${plannedBox}`,-1,{back:1,nonav:1,action:'',footer:foot('Cancelar','Crear tarea')});
+
+function calD(){
+  const hd=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].map(d=>`<div class="hd">${d}</div>`).join('');
+  const ev={12:['Reunión vecinos'],13:['Revisión ITV'],14:['Cena Andrés y Paula'],16:['Cliente · videollamada'],20:['t:Seguro del coche'],24:['t:Regalo de Marta'],27:['Concierto']};
+  let cells='';
+  for(let i=0;i<42;i++){const d=i-6;const out=d<1||d>30;const n=out?(d<1?26+i:d-30):d;
+    const e=(ev[d]||[]).map(x=>x.startsWith('t:')?`<span class="wf-ev task">☐ ${x.slice(2)}</span>`:`<span class="wf-ev">${x}</span>`).join('');
+    cells+=`<div class="${out?'o':''} ${d===13?'sel':''} ${d===11?'td':''}"><b>${n}</b>${out?'':e}</div>`;}
+  return `<div class="wf-cal" style="flex:none">${hd}${cells}</div>`;
+}
+function calM(){
+  const hd=['L','M','X','J','V','S','D'].map(d=>`<span class="hd">${d}</span>`).join('');let c='';
+  const dots=[12,13,14,16,20,24,27];
+  for(let i=0;i<42;i++){const d=i-6;const out=d<1||d>30;const n=out?(d<1?26+i:d-30):d;c+=`<span class="${out?'o':''} ${dots.includes(d)&&!out?'dot':''} ${d===13?'sel':''}">${n}</span>`;}
+  return `<div class="wf-mcal">${hd}${c}</div>`;
+}
+const calDD=D('calendar','Organización',grid('8fr 3fr',
+  card(`${row(btn('‹'),t('Noviembre 2026','wf-h1'),btn('›'),sp,btn('Hoy'),seg(['Mes','Agenda']),btn('+ Evento',1))}${calD()}${row('<span class="wf-ev">Evento</span>','<span class="wf-ev task">☐ Vencimiento de tarea</span>')}`,'','padding:12px'),
+  card(`${t('Viernes, 13 nov')}${li('Revisión ITV','09:30 – 10:30 · ITV Alcobendas')}${li('Revisar factura de la luz','Tarea · vence hoy','',`<i class="wf-cb"></i>`)}${btn('+ Añadir evento este día',0,'blk')}`)),{tabs:[['Tareas','Calendario'],1]});
+const calMM=M('Organización',`${row(btn('‹'),t('Noviembre 2026'),sp,btn('›'))}${calM()}${t('VIERNES, 13 NOV','wf-mut','letter-spacing:.06em')}${li('Revisión ITV','09:30 – 10:30')}${li('Revisar factura de la luz','Tarea · vence hoy','',`<i class="wf-cb"></i>`)}${btn('+ Evento este día',0,'blk')}`,3,{tabs:[['Tareas','Calendario'],1]});
+
+const evF=(m)=>`${fld('Título','Revisión ITV')}${row(sw(0),'<span>Todo el día</span>')}${grid(m?'1fr':'1fr 1fr',grid('3fr 2fr',fld('Inicio','13/11/2026'),fld('Hora','09:30')),grid('3fr 2fr',fld('Fin','13/11/2026'),fld('Hora','09:00','','err','El fin debe ser posterior al inicio')))}${fld('Ubicación (opcional)','ITV Alcobendas')}${m?'':`<div class="wf-fld"><label>Descripción (opcional)</label><div class="wf-in area"><span>Llevar ficha técnica y permiso de circulación</span></div></div>`}${fld('Tarea relacionada (opcional)','Ninguna','▾')}`;
+const evD=D('calendar','Nuevo evento',grid('7fr 4fr',card(`${evF(0)}${row(sp,btn('Cancelar'),btn('Guardar evento',1))}`),card(`${t('Ese día')}${li('Sin otros eventos','Viernes, 13 nov')}`,'fill')),{sub:'Organización › Calendario'});
+const evM=M('Nuevo evento',evF(1),-1,{back:1,nonav:1,action:'',footer:foot('Cancelar','Guardar')});
+
+const profD=D('settings','Ajustes',grid('1fr 1fr',
+  `<div style="display:flex;flex-direction:column;gap:12px">${card(row(ic('xl c'),`<div><div class="wf-h1">Laura Martín</div><div class="wf-mut">Cuenta creada el 2 de noviembre de 2026</div></div>`))}${card(`${t('Datos personales')}${fld('Nombre','Laura Martín')}${row(sp,btn('Guardar',1))}`)}${card(`${t('Email')}${fld('Email actual','laura@ejemplo.com','','dis')}${t('Te enviaremos un enlace al nuevo email para confirmarlo.','wf-mut')}${row(sp,btn('Cambiar email'))}`)}</div>`,
+  `<div style="display:flex;flex-direction:column;gap:12px">${card(`${t('Contraseña')}${fld('Contraseña actual','••••••••')}${fld('Nueva contraseña','')}${row(sp,btn('Actualizar contraseña'))}`)}${card(`${row(t('Cerrar sesión'),sp,btn('Cerrar sesión'))}`)}${card(`${t('Eliminar cuenta')}${t('Se borrarán tus movimientos, presupuestos, tareas y eventos. No se puede deshacer.','wf-mut')}${row(sp,btn('Eliminar cuenta',0,'dng'))}`,'danger')}</div>`)
+,{tabs:[['Perfil','Preferencias'],0]});
+const profM=M('Ajustes',card(row(ic('xl c'),`<div><b>Laura Martín</b><div class="wf-mut">laura@ejemplo.com</div></div>`))+card(`${fld('Nombre','Laura Martín')}${btn('Guardar',1,'blk')}`)+li('Cambiar email','laura@ejemplo.com','›',ic())+li('Cambiar contraseña','','›',ic())+li('Eliminar cuenta','','›',ic())+btn('Cerrar sesión',0,'blk'),4,{tabs:[['Perfil','Preferencias'],0]});
+
+const prefBody=(m)=>card(`${t('Idioma')}${seg(['Español','English'])}${t('Se aplica al instante y se guarda en tu perfil.','wf-mut')}`)+card(`${t('Primer día de la semana')}${seg(['Lunes','Domingo'])}`)+card(`${t('Moneda')}${fld('','Euro (€)','🔒','dis')}${t('En esta versión NEXO trabaja solo con euros.','wf-mut')}`)+card(`${t('Vista previa del formato')}${row('<b>1.842,30 €</b>',sp,'<span class="wf-mut">miércoles, 11 de noviembre de 2026</span>')}`,'fill');
+const prefD=D('settings','Ajustes',`<div style="display:flex;flex-direction:column;gap:12px;max-width:560px">${prefBody()}</div>`,{tabs:[['Perfil','Preferencias'],1]});
+const prefM=M('Ajustes',prefBody(1),4,{tabs:[['Perfil','Preferencias'],1]});
+
+const emptyD=D('dashboard','Hola, Laura',
+  card(`<div style="display:flex;gap:20px;align-items:center">${ic('xl')}<div style="flex:1">${t('Te damos la bienvenida a NEXO','wf-h1')}${t('Empieza con una de estas acciones. El resto del panel se irá llenando con tus datos.','wf-mut')}</div>${btn('Registrar ingreso')}${btn('Registrar gasto',1)}${btn('Crear tarea')}</div>`,'fill','padding:20px')+
+  grid('5fr 7fr',card(`<span class="wf-mut">Balance de noviembre</span><span class="wf-big">0,00 €</span>${t('Aún no hay movimientos este mes.','wf-mut')}`),card(`${t('Gasto diario · cargando')}${lines(100,85,92,70)}${ph('Skeleton del gráfico',110)}`))+
+  grid('1fr 1fr 1fr',card(`${t('Presupuestos')}${ph('Sin presupuestos · <u>Crear el primero</u>',90)}`),card(`${t('Tareas pendientes')}${ph('Nada pendiente · <u>Nueva tarea</u>',90)}`),card(`${t('Próximos eventos')}${row(ic('c'),t('No hemos podido cargar los eventos.','wf-mut'))}${btn('Reintentar')}`,'danger'))
+,{sub:'Primer acceso · estados vacío, carga y error',month:1});
+const emptyM=M('Hola, Laura',card(`${ic('xl')}${t('Te damos la bienvenida a NEXO','wf-h1')}${t('Registra tu primer movimiento o crea una tarea para empezar.','wf-mut')}${btn('Registrar gasto',1,'blk')}${btn('Crear tarea',0,'blk')}`,'fill')+card(`<span class="wf-mut">Balance de noviembre</span><span class="wf-big">0,00 €</span>`)+card(`${t('Próximos eventos')}${t('No hemos podido cargarlos.','wf-mut')}${btn('Reintentar')}`,'danger'),0,{month:1});
+
+const nfB=`<div style="display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">${t('404','wf-big','font-size:48px')}${t('No encontramos esta página','wf-h1')}${t('Puede que el enlace esté mal escrito o que el elemento se haya eliminado.','wf-mut')}${btn('Ir al inicio',1)}</div>`;
+const nfD=`<div class="wf wf-d" style="grid-template-columns:1fr;place-items:center"><div style="position:absolute;top:18px;left:22px" class="wf-logo">${ic('lg')}<b>nexo</b></div><div style="width:360px">${nfB}</div></div>`;
+const nfM=`<div class="wf wf-m"><div class="wf-sb"><span>9:41</span><span>▮▮▮</span></div><div class="wf-mtop">${ic('lg')}<b class="wf-mt">nexo</b></div><div class="wf-mbody" style="justify-content:center">${nfB}</div></div>`;
+
+const SCREENS=[
+  {g:'Acceso',r:'/auth/login',h:'Inicio de sesión',d:AD(loginF),m:AM(loginF),n:['Error de credenciales genérico, sin indicar si falla el email o la contraseña.','Selector de idioma visible antes de tener cuenta.','«Explorar la demo» abre la app con datos ficticios en el navegador, sin backend (también en /demo).']},
+  {g:'Inicio',r:'/demo → /app/dashboard',h:'Modo demo',d:D('dashboard','Buenos días, Laura',card(row(ic('c'),'<b>Estás viendo una demo con datos ficticios.</b>','<span class="wf-mut">Los cambios se borran al cerrar la pestaña.</span>',sp,btn('Restablecer datos'),btn('Crear cuenta',1)),'fill')+grid('5fr 7fr',card(`<span class="wf-mut">Balance de noviembre</span><span class="wf-big">1.842,30 €</span>`,'dark'),card(`${t('Gasto diario')}${ph('Gráfico',70)}`))+grid('1fr 1fr 1fr',card(`${t('Presupuestos')}${lines(90,70,80)}`),card(`${t('Gastos por categoría')}${lines(80,60,75)}`),card(`${t('Próximos pagos')}${lines(85,65,70)}`)),{sub:'Miércoles, 11 de noviembre',month:1}),m:M('Hola, Laura',card(`${row(ic('c'),'<b>Modo demo</b>',sp,'<span class="wf-link">Opciones</span>')}${t('Datos ficticios. Se borran al cerrar la pestaña.','wf-mut')}`,'fill')+card(`<span class="wf-mut">Balance de noviembre</span><span class="wf-big">1.842,30 €</span>`,'dark')+card(`${t('Próximos pagos')}${lines(85,65,70)}`),0,{month:1}),n:['Adaptadores en memoria con los mismos puertos que Supabase; semilla con fechas relativas a hoy.','Banda siempre visible; «Salir de la demo» en el menú de usuario.','En Perfil se desactivan email, contraseña y eliminar cuenta.']},
+  {g:'Acceso',r:'/auth/register',h:'Registro (con error de email duplicado)',d:AD(regF(1)),m:AM(regF(0)),n:['Reglas de contraseña que se marcan en vivo.','El idioma elegido se envía como metadato y queda en el perfil.']},
+  {g:'Acceso',r:'/auth/verify-email',h:'Verificación de email',d:AD(verF),m:AM(verF),n:['Reenvío con cuenta atrás de 60 s para evitar el límite de Supabase.']},
+  {g:'Acceso',r:'/auth/forgot-password',h:'Recuperar contraseña',d:AD(forF),m:AM(forF),n:['Mensaje neutro tras enviar: no revela si el email existe.']},
+  {g:'Acceso',r:'/auth/reset-password',h:'Nueva contraseña',d:AD(resF),m:AM(resF),n:['Solo accesible con la sesión de recuperación del enlace.']},
+  {g:'Inicio',r:'/app/dashboard',h:'Dashboard',d:dashD,m:dashM,n:['Cada tarjeta enlaza a su módulo con el filtro aplicado (US-014).','Versión en alta fidelidad en la sección 3.']},
+  {g:'Inicio',r:'/app/dashboard',h:'Primer acceso: vacío, carga y error',d:emptyD,m:emptyM,n:['Cada tarjeta gestiona su propio estado: un error en eventos no oculta las finanzas.']},
+  {g:'Finanzas',r:'/app/finances/overview',h:'Resumen y estadísticas',d:overD,m:overM,n:['Los gráficos llevan tabla equivalente para lectores de pantalla.','Tasa de ahorro «No disponible» si no hay ingresos.']},
+  {g:'Finanzas',r:'/app/finances/transactions',h:'Movimientos',d:txD,m:txM,n:['Filtros en la URL; paginación de 20 en servidor.','En móvil la tabla pasa a lista agrupada por día.']},
+  {g:'Finanzas',r:'/app/finances/transactions/new',h:'Alta y edición de movimiento',d:txFormD,m:txFormM,n:['La categoría solo lista las del tipo elegido (gasto o ingreso).','Panel de impacto en el presupuesto antes de guardar.']},
+  {g:'Finanzas',r:'/app/finances/budgets',h:'Presupuestos',d:budD,m:budM,n:['Estado por texto y color: «cerca» desde el 80 %, «superado» por encima del 100 %.']},
+  {g:'Finanzas',r:'/app/finances/budgets',h:'Diálogo de presupuesto',d:budDlgD,m:budDlgM,n:['Diálogo en escritorio, hoja inferior en móvil, mismo componente.']},
+  {g:'Finanzas',r:'/app/finances/categories',h:'Categorías',d:catD,m:catM,n:['Nombre, icono y color pastel: el color nunca va solo.','El tipo no se puede cambiar si la categoría ya tiene movimientos.']},
+  {g:'Organización',r:'/app/organization/tasks',h:'Tareas',d:taskD,m:taskM,n:['Agrupadas por vencimiento; las vencidas aparecen arriba en rojo.','La etiqueta de importe marca las tareas con pago previsto.']},
+  {g:'Organización',r:'/app/organization/tasks/new',h:'Alta y edición de tarea',d:taskFD,m:taskFM,n:['Bloque «Pago previsto»: es el nexo entre tareas y finanzas (US-037).']},
+  {g:'Organización',r:'/app/organization/calendar',h:'Calendario',d:calDD,m:calMM,n:['Las tareas con fecha aparecen con borde discontinuo, distintas de los eventos.','Respeta el primer día de la semana de Preferencias.']},
+  {g:'Organización',r:'/app/organization/calendar/events/new',h:'Alta y edición de evento',d:evD,m:evM,n:['Ejemplo de error de validación entre campos (fin anterior al inicio).']},
+  {g:'Ajustes',r:'/app/settings/profile',h:'Perfil',d:profD,m:profM,n:['Eliminar cuenta pide escribir «ELIMINAR» y llama a la Edge Function delete-account.']},
+  {g:'Ajustes',r:'/app/settings/preferences',h:'Preferencias',d:prefD,m:prefM,n:['Vista previa del formato de importes y fechas según el idioma.']},
+  {g:'Ajustes',r:'/**',h:'Página no encontrada',d:nfD,m:nfM,n:['Sin sidebar: sirve tanto con sesión como sin ella.']}
+];
+
+const list=document.getElementById('wf-list');
+list.innerHTML=SCREENS.map((s,i)=>`<figure class="wf-fig" data-g="${s.g}"><figcaption><h3>${s.h}</h3><span class="route">${s.r}</span></figcaption><div class="wf-pair"><div class="fit" data-w="1100"><div class="cv">${s.d}</div></div><div class="fit m" data-w="320"><div class="cv">${s.m}</div></div></div><ul class="notes">${s.n.map(x=>`<li>${x}</li>`).join('')}</ul></figure>`).join('');
+const groups=['Todas',...new Set(SCREENS.map(s=>s.g))];
+const filt=document.getElementById('wf-filter');
+filt.innerHTML=groups.map((g,i)=>`<button type="button" aria-pressed="${i===0}" data-g="${g}">${g} · ${g==='Todas'?SCREENS.length:SCREENS.filter(s=>s.g===g).length}</button>`).join('');
+filt.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;filt.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));list.querySelectorAll('.wf-fig').forEach(f=>f.hidden=!(b.dataset.g==='Todas'||f.dataset.g===b.dataset.g));});
+
+const daily=[850,64.30,23.90,112.45,38.20,74.60,129.85,46.10,42.10,18.50,207.70];
+function lolli(W=560,H=210,compact=false){
+  const L=compact?8:44,R=10,T=compact?28:22,B=26,pw=W-L-R,ph=H-T-B,step=pw/30,x=i=>L+(i-.5)*step,y=v=>T+ph*(1-v/900);
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Gasto diario de noviembre: máximo 850 € el día 1 por el alquiler; hoy, día 11, 207,70 €"><title>Gasto diario de noviembre</title>`;
+  if(!compact)[0,300,600,900].forEach(v=>{s+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="#ECE8DF" stroke-dasharray="${v?'3 4':''}"/><text x="${L-8}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="#5F6B70" font-family="Inter">${v?v+' €':'0'}</text>`;});
+  for(let d=1;d<=30;d++){
+    const v=daily[d-1];
+    if(v===undefined){s+=`<circle cx="${x(d)}" cy="${y(0)}" r="2.2" fill="#D9D4C8"/>`;continue;}
+    const today=d===11;const col=today?'#182B35':'#91A995';
+    s+=`<line x1="${x(d)}" x2="${x(d)}" y1="${y(0)}" y2="${y(v)}" stroke="${today?'#182B35':'#C9D5CB'}" stroke-width="${compact?2:2.5}" stroke-linecap="round"/><circle cx="${x(d)}" cy="${y(v)}" r="${today?6:4.5}" fill="${col}" stroke="#fff" stroke-width="2"/>`;
+  }
+  if(!compact){
+    s+=`<text x="${x(1)+12}" y="${y(850)+4}" font-size="11.5" fill="#5F6B70" font-family="Inter">Alquiler · 850,00 €</text>`;
+    const tx=x(11),ty=y(207.7)-40;
+    s+=`<rect x="${tx-58}" y="${ty}" width="116" height="26" rx="13" fill="#182B35"/><text x="${tx}" y="${ty+17}" text-anchor="middle" font-size="12" font-weight="600" fill="#F7F6F2" font-family="Inter">11 nov · 207,70 €</text>`;
+    [1,5,11,15,20,25,30].forEach(d=>{s+=`<text x="${x(d)}" y="${H-6}" text-anchor="middle" font-size="11" fill="${d===11?'#182B35':'#5F6B70'}" font-weight="${d===11?700:400}" font-family="Inter">${d}</text>`;});
+  }
+  return s+'</svg>';
+}
+const cats=[['Vivienda',850,'#182B35','house','--c-sand'],['Alimentación',298.40,'#91A995','cart','--c-butter'],['Transporte',156.20,'#C7B28C','car','--c-mist'],['Suministros',112.45,'#7E9CB0','zap','--c-peach'],['Restaurantes',84.60,'#D49A86','ut','--c-blush'],['Otras 2',106.05,'#D3CEC3','more','--c-sage']];
+function donut(size=150){
+  const r=size/2-14,C=2*Math.PI*r,tot=1607.70;let off=0,s=`<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img" aria-label="Reparto de gastos de noviembre"><g transform="rotate(-90 ${size/2} ${size/2})">`;
+  cats.forEach(c=>{const len=c[1]/tot*C;s+=`<circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${c[2]}" stroke-width="18" stroke-dasharray="${Math.max(len-2.5,0.5)} ${C}" stroke-dashoffset="${-off}"/>`;off+=len;});
+  return s+`</g><text x="50%" y="47%" text-anchor="middle" font-family="Inter" font-size="15" font-weight="600" fill="#182B35">1.607,70 €</text><text x="50%" y="60%" text-anchor="middle" font-family="Inter" font-size="11" fill="#5F6B70">gastado</text></svg>`;
+}
+const fmtPct=v=>(v/1607.70*100).toFixed(1).replace('.',',')+' %';
+const eur=v=>v.toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2,useGrouping:'always'})+' €';
+
+const bud=(n,ic,bg,sp,tot,cls,label)=>{const p=sp/tot*100;return `<div style="display:flex;flex-direction:column;gap:8px"><div class="nx-row"><span class="nx-tile sm" style="background:var(${bg})">${I(ic,16)}</span><div class="tx"><b>${n}</b><span class="xs mu num">${eur(sp)} de ${eur(tot)}</span></div>${label}</div><div class="nx-prog ${cls}" role="progressbar" aria-valuenow="${Math.round(p)}" aria-valuemin="0" aria-valuemax="100" aria-label="${n}"><i style="width:${Math.min(p,100)}%"></i></div></div>`;};
+const BUDGETS=bud('Alimentación','cart','--c-butter',298.40,400,'','<span class="nx-badge neu num">75 %</span>')+bud('Transporte','car','--c-mist',156.20,180,'wa','<span class="nx-badge wa num">87 % · cerca</span>')+bud('Restaurantes','ut','--c-blush',84.60,80,'da','<span class="nx-badge da num">106 % · superado</span>')+bud('Ocio','ticket','--c-lav',62.15,120,'','<span class="nx-badge neu num">52 %</span>');
+const prio={Alta:'da',Media:'wa',Baja:'neu'};
+const trow=(a,b,p,m='',bIcon='clock',bCls='')=>`<div class="nx-row"><span class="nx-chk" role="checkbox" aria-checked="false"></span><div class="tx"><b>${a}</b><span class="xs mu" style="display:flex;gap:5px;align-items:center;${bCls}">${I(bIcon,13)}${b}</span></div>${m?`<span class="nx-badge out num">${I('link',12)}${m}</span>`:''}<span class="nx-badge ${prio[p]}">${I('flag',12)}${p}</span></div>`;
+const TASKS=trow('Llamar al fontanero','Hoy','Alta','','clock','color:var(--da);font-weight:600')+trow('Renovar el DNI','Hoy · 12:30','Media','','clock','color:var(--da);font-weight:600')+trow('Revisar factura de la luz','13 nov · En curso','Media')+trow('Pagar seguro del coche','20 nov','Alta','350,00 €')+trow('Comprar regalo de Marta','24 nov','Baja','60,00 €');
+const pay=(n,d,a,icn,bg,warn)=>`<div class="nx-row"><span class="nx-tile" style="background:var(${bg})">${I(icn,17)}</span><div class="tx"><b>${n}</b><span class="xs mu">${d}</span>${warn?`<span class="nx-badge wa" style="align-self:flex-start;margin-top:4px">${I('alert',12)}${warn}</span>`:''}</div><b class="num">${a}</b></div>`;
+const PAYS=pay('Seguro del coche','Tarea · vence 20 nov · Transporte','350,00 €','shield','--c-mist','Superará el presupuesto')+pay('Regalo de Marta','Tarea · vence 24 nov · Ocio','60,00 €','gift','--c-lav')+pay('Cuota del gimnasio','Tarea · vence 1 dic · Ocio','39,90 €','dumb','--c-mint');
+const evr=(w,d,n,h,loc)=>`<div class="nx-row"><div class="nx-date"><small>${w}</small><b>${d}</b></div><div class="tx"><b>${n}</b><span class="xs mu" style="display:flex;gap:5px;align-items:center">${I('clock',13)}${h}${loc?` · ${loc}`:''}</span></div></div>`;
+const EVENTS=evr('JUE','12','Reunión de vecinos','19:00','Portal')+evr('VIE','13','Revisión ITV','09:30','ITV Alcobendas')+evr('SÁB','14','Cena con Andrés y Paula','21:00','La Tagliatella')+evr('LUN','16','Cliente · videollamada','10:00');
+const HERO=(m)=>`<div class="nx-card hero" style="${m?'gap:16px':'gap:18px;padding:24px'}"><div class="nx-row"><span class="sm" style="opacity:.8">Balance de noviembre</span><span style="flex:1"></span><span class="nx-badge" style="background:#2A4250;color:#E5ECE6">En curso · quedan 19 días</span></div><div class="num" style="font-size:${m?40:50}px;font-weight:600;letter-spacing:-.03em;line-height:1">1.842,30 €</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${[['Ingresos','3.450,00 €','down','#91A995'],['Gastos','1.607,70 €','up','#E8DDCB']].map(x=>`<div style="background:#22394A;border-radius:18px;padding:12px 14px;display:flex;gap:10px;align-items:center"><span style="width:30px;height:30px;border-radius:50%;background:${x[3]};color:#182B35;display:grid;place-items:center;flex:none">${I(x[2],15,2.2)}</span><div><div class="xs" style="opacity:.75">${x[0]}</div><b class="num" style="font-size:${m?15:16}px">${x[1]}</b></div></div>`).join('')}</div><div style="display:flex;flex-direction:column;gap:8px"><div class="nx-row sm"><span style="opacity:.8">Tasa de ahorro</span><span style="flex:1"></span><b class="num">53,4 %</b></div><div class="nx-prog thick" style="background:#2A4250"><i style="width:53.4%;background:#91A995"></i></div></div></div>`;
+const legend=cats.map(c=>`<div class="nx-row" style="gap:10px"><span class="nx-tile sm" style="background:var(${c[4]});width:26px;height:26px;border-radius:8px">${I(c[3],14)}</span><span class="sm" style="flex:1;white-space:nowrap">${c[0]}</span><span class="xs mu num" style="width:44px;text-align:right">${fmtPct(c[1])}</span><b class="sm num" style="width:78px;text-align:right">${eur(c[1])}</b></div>`).join('');
+
+const sideItem=(n,icn,on)=>`<div class="nx-item ${on?'on':''}">${I(icn,18)}${n}</div>`;
+document.getElementById('hf-desk').innerHTML=`<div class="nx nx-desk">
+<aside class="nx-side"><div class="lg">${MARK(34)}${WORD}</div>
+${sideItem('Inicio','home',1)}<div class="nx-grp">Finanzas</div>${sideItem('Resumen','pie')}${sideItem('Movimientos','list')}${sideItem('Presupuestos','wallet')}${sideItem('Categorías','tag')}<div class="nx-grp">Organización</div>${sideItem('Tareas','tasks')}${sideItem('Calendario','cal')}
+<div style="flex:1"></div>
+<div class="nx-card" style="background:var(--sd1);border:0;padding:16px;gap:8px;border-radius:20px"><span class="nx-tile sm" style="background:var(--sf)">${I('link',16)}</span><b class="sm">Une tareas y dinero</b><span class="xs mu">Añade un pago previsto a una tarea y NEXO te propondrá registrarlo al completarla.</span></div>
+${sideItem('Ajustes','set')}
+<div class="nx-user"><span class="nx-av">LM</span><div style="min-width:0"><b class="sm" style="display:block">Laura Martín</b><span class="xs mu">laura@ejemplo.com</span></div></div></aside>
+<main class="nx-main">
+<div class="nx-top"><div><div class="h" style="font-size:30px;line-height:1.15">Buenos días, Laura</div><div class="mu sm">Miércoles, 11 de noviembre · tienes 2 tareas para hoy</div></div><span class="sp"></span>
+<span class="nx-pill">${I('cl',16)}<span>Noviembre 2026</span>${I('cr',16)}</span><span class="nx-btn pri">${I('plus',17,2.2)}Nuevo</span><span class="nx-av" style="width:40px;height:40px">LM</span></div>
+<div class="nx-grid">
+<div style="grid-column:span 5;display:flex">${HERO(0)}</div>
+<div class="nx-card" style="grid-column:span 7"><div class="hd"><span class="t">Gasto diario</span><span class="sp"></span><span class="nx-seg"><span class="on">Mes</span><span>Semana</span></span></div>
+<div style="display:flex;gap:16px;align-items:flex-end"><div style="width:130px;flex:none;padding-bottom:30px"><div class="num" style="font-size:36px;font-weight:600;letter-spacing:-.02em;color:var(--ok)">−8,0 %</div><div class="sm mu">menos que en octubre a estas alturas (1.748,20 €)</div></div>${lolli(392,230)}</div></div>
+<div class="nx-card" style="grid-column:span 4"><div class="hd"><span class="t">Presupuestos</span><span class="sp"></span><span class="nx-link">Ver todos ${I('cr',14)}</span></div>${BUDGETS}</div>
+<div class="nx-card" style="grid-column:span 4"><div class="hd"><span class="t">Gastos por categoría</span></div><div style="display:flex;justify-content:center">${donut(150)}</div><div style="display:flex;flex-direction:column;gap:8px">${legend}</div></div>
+<div class="nx-card" style="grid-column:span 4"><div class="hd"><span class="t">Próximos pagos</span><span class="sp"></span><span class="nx-badge neu num">449,90 €</span></div><div class="nx-list">${PAYS}</div><div class="nx-row xs mu" style="background:var(--sd1);border-radius:14px;padding:10px 12px;gap:8px">${I('link',15)}<span>Salen de tus tareas con pago previsto. Al completarlas te propondremos registrar el gasto.</span></div></div>
+<div class="nx-card" style="grid-column:span 7"><div class="hd"><span class="t">Tareas pendientes</span><span class="nx-badge nv num">7</span><span class="sp"></span><span class="nx-chip on">Todas</span><span class="nx-chip">Hoy <span class="c">2</span></span><span class="nx-chip">Alta <span class="c">2</span></span></div><div class="nx-list">${TASKS}</div><span class="nx-link">Ver las 7 tareas ${I('cr',14)}</span></div>
+<div class="nx-card" style="grid-column:span 5"><div class="hd"><span class="t">Próximos eventos</span><span class="sp"></span><span class="nx-link">Calendario ${I('cr',14)}</span></div><div class="nx-list">${EVENTS}</div></div>
+</div></main></div>`;
+
+const SBAR=`<div class="nx-sbar"><span>9:41</span><span style="display:flex;gap:6px;align-items:center"><svg width="18" height="11" viewBox="0 0 18 11" aria-hidden="true"><rect x="0" y="7" width="3" height="4" rx="1" fill="#182B35"/><rect x="5" y="5" width="3" height="6" rx="1" fill="#182B35"/><rect x="10" y="2.5" width="3" height="8.5" rx="1" fill="#182B35"/><rect x="15" y="0" width="3" height="11" rx="1" fill="#182B35"/></svg><svg width="25" height="12" viewBox="0 0 25 12" aria-hidden="true"><rect x=".5" y=".5" width="21" height="11" rx="3.5" fill="none" stroke="#182B35" opacity=".4"/><rect x="2" y="2" width="15" height="8" rx="2" fill="#182B35"/><rect x="23" y="4" width="1.5" height="4" rx=".75" fill="#182B35" opacity=".4"/></svg></span></div>`;
+const BNAV=`<div class="nx-bnav"><span class="on">${I('home',22)}Inicio</span><span>${I('wallet',22)}Finanzas</span><span class="fab">${I('plus',24,2.4)}</span><span>${I('tasks',22)}Organización</span><span>${I('set',22)}Ajustes</span></div>`;
+const MTOP=`<div class="nx-mtop">${MARK(36)}<div style="flex:1"><div class="h" style="font-size:19px;line-height:1.2">Hola, Laura</div><div class="xs mu">Miércoles, 11 de noviembre</div></div><span class="nx-av">LM</span></div>`;
+const mob=(body,extra='')=>`<div class="nx nx-mob">${SBAR}${MTOP}<div class="nx-mbody">${body}</div>${BNAV}${extra}</div>`;
+const mPick=`<div style="display:flex;justify-content:space-between;align-items:center" class="nx-pill">${I('cl',18)}<b class="sm">Noviembre 2026</b>${I('cr',18)}</div>`;
+document.getElementById('hf-m1').innerHTML=mob(`${mPick}${HERO(1)}<div class="nx-card"><div class="hd"><span class="t">Gasto diario</span><span class="sp"></span><b class="num sm" style="color:var(--ok)">−8,0 %</b></div>${lolli(320,120,true).replace('<svg ','<svg style="width:100%;height:auto" ')}</div><div class="nx-card"><div class="hd"><span class="t">Próximos pagos</span><span class="sp"></span><span class="nx-badge neu num">449,90 €</span></div><div class="nx-list">${PAYS}</div></div>`);
+document.getElementById('hf-m2').innerHTML=mob(`<div class="nx-card"><div class="hd"><span class="t">Tareas pendientes</span><span class="nx-badge nv">7</span><span class="sp"></span><span class="nx-link">Ver todas</span></div><div class="nx-list">${trow('Llamar al fontanero','Hoy','Alta','','clock','color:var(--da);font-weight:600')+trow('Renovar el DNI','Hoy · 12:30','Media','','clock','color:var(--da);font-weight:600')+trow('Pagar seguro del coche','20 nov','Alta','350 €')}</div></div><div class="nx-card"><div class="hd"><span class="t">Presupuestos</span><span class="sp"></span><span class="nx-link">Ver todos</span></div>${bud('Transporte','car','--c-mist',156.20,180,'wa','<span class="nx-badge wa num">87 %</span>')+bud('Restaurantes','ut','--c-blush',84.60,80,'da','<span class="nx-badge da num">106 %</span>')}</div><div class="nx-card"><div class="hd"><span class="t">Próximos eventos</span></div><div class="nx-list">${evr('JUE','12','Reunión de vecinos','19:00')+evr('VIE','13','Revisión ITV','09:30')}</div></div>`);
+const qa=(n,d,icn,bg)=>`<div><span class="nx-tile" style="background:var(${bg})">${I(icn,18)}</span><b>${n}</b><span class="xs mu">${d}</span></div>`;
+document.getElementById('hf-m3').innerHTML=mob(`${mPick}${HERO(1)}<div class="nx-card"><div class="hd"><span class="t">Próximos pagos</span></div><div class="nx-list">${PAYS}</div></div>`,`<div class="nx-sheet-ov"><div class="nx-sheet"><span class="nx-grab"></span><div class="nx-row"><span class="h" style="font-size:20px;flex:1">Añadir</span><span class="nx-btn sec ic sm" style="width:32px">${I('x',16)}</span></div><div class="nx-qa">${qa('Gasto','Compra, factura, recibo','up','--c-blush')}${qa('Ingreso','Nómina, venta, extra','down','--c-sage')}${qa('Tarea','Con pago previsto opcional','tasks','--c-sand')}${qa('Evento','Cita o compromiso','cal','--c-mist')}</div><div class="nx-toast">${'<span class="ic" style="background:#91A995;color:#182B35">'+I('check',15,2.6)+'</span>'}<span style="flex:1">Gasto registrado · Transporte al 87 %</span><b style="color:#C9D9CC">Ver</b></div></div></div>`);
+
+const G=(name,sel,body,note='')=>`<div class="board"><div class="ttl"><b>${name}</b><code class="mono">${sel}</code></div>${body}${note?`<span class="cap">${note}</span>`:''}</div>`;
+const V=(cap,h)=>`<div class="vcol">${h}<span class="cap">${cap}</span></div>`;
+document.getElementById('gal').innerHTML=[
+ G('Botón','nx-button',`<div class="vr">${V('primary',`<span class="nx-btn pri">Guardar</span>`)}${V('hover',`<span class="nx-btn pri hov">Guardar</span>`)}${V('focus',`<span class="nx-btn pri foc">Guardar</span>`)}${V('loading',`<span class="nx-btn pri"><span class="nx-spin"></span>Guardando</span>`)}${V('disabled',`<span class="nx-btn pri dis">Guardar</span>`)}</div><div class="vr">${V('secondary',`<span class="nx-btn sec">Cancelar</span>`)}${V('ghost',`<span class="nx-btn gho">Ver todo</span>`)}${V('danger',`<span class="nx-btn dan">${I('trash',16)}Eliminar</span>`)}${V('icon',`<span class="nx-btn sec ic" aria-label="Más">${I('more',18)}</span>`)}</div><div class="vr">${V('sm 32',`<span class="nx-btn pri sm">${I('plus',15,2.2)}Nuevo</span>`)}${V('md 40',`<span class="nx-btn pri">${I('plus',16,2.2)}Nuevo</span>`)}${V('lg 48',`<span class="nx-btn pri lg">${I('plus',17,2.2)}Nuevo</span>`)}</div>`,'Forma de píldora, como la navegación de Dentora. Icon-only exige aria-label.'),
+ G('Campo de formulario','nx-field · nx-input · nx-money-input',`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">${V('default',`<div class="nx-fld" style="width:100%"><label>Email</label><div class="nx-in ph">laura@ejemplo.com</div></div>`)}${V('focus',`<div class="nx-fld" style="width:100%"><label>Email</label><div class="nx-in foc">laura@ejem|</div></div>`)}${V('error',`<div class="nx-fld" style="width:100%"><label>Importe</label><div class="nx-in err num"><span class="sp">0,00</span>€</div><span class="nx-err">${I('alert',13)}Debe ser mayor que 0</span></div>`)}${V('disabled',`<div class="nx-fld" style="width:100%"><label>Moneda</label><div class="nx-in dis">Euro (€)</div></div>`)}${V('password',`<div class="nx-fld" style="width:100%"><label>Contraseña</label><div class="nx-in"><span class="sp">••••••••</span>${I('eye',17)}</div><span class="nx-hint">Mínimo 8, con letras y números</span></div>`)}${V('select',`<div class="nx-fld" style="width:100%"><label>Categoría</label><div class="nx-in"><span class="nx-tile sm" style="background:var(--c-mist);width:24px;height:24px;border-radius:7px">${I('car',13)}</span><span class="sp">Transporte</span>${I('cd',16)}</div></div>`)}</div>`,'Label siempre visible, error con icono y texto, aria-describedby automático.'),
+ G('Selección','nx-segmented · nx-checkbox · nx-switch · nx-chip',`<div class="vr">${V('segmented',`<span class="nx-seg"><span class="on">Gasto</span><span>Ingreso</span></span>`)}${V('segmented 3',`<span class="nx-seg"><span>Baja</span><span>Media</span><span class="on">Alta</span></span>`)}</div><div class="vr">${V('check off',`<span class="nx-chk"></span>`)}${V('check on',`<span class="nx-chk on">${I('check',12,3)}</span>`)}${V('switch on',`<span class="nx-sw"></span>`)}${V('switch off',`<span class="nx-sw off"></span>`)}</div><div class="vr">${V('chip',`<span class="nx-chip">Media</span>`)}${V('chip activo',`<span class="nx-chip on">Pendientes <span class="c">6</span></span>`)}${V('chip con contador',`<span class="nx-chip">Hoy <span class="c">2</span></span>`)}</div>`),
+ G('Badges','nx-badge · nx-priority-badge · nx-status-badge',`<div class="vr">${V('neutral',`<span class="nx-badge neu">75 %</span>`)}${V('success',`<span class="nx-badge ok">${I('check',12,2.6)}Completada</span>`)}${V('warning',`<span class="nx-badge wa">87 % · cerca</span>`)}${V('danger',`<span class="nx-badge da">Superado</span>`)}${V('info',`<span class="nx-badge in">En curso</span>`)}${V('navy',`<span class="nx-badge nv">7</span>`)}</div><div class="vr">${V('prioridad alta',`<span class="nx-badge da">${I('flag',12)}Alta</span>`)}${V('media',`<span class="nx-badge wa">${I('flag',12)}Media</span>`)}${V('baja',`<span class="nx-badge neu">${I('flag',12)}Baja</span>`)}${V('pago previsto',`<span class="nx-badge out">${I('link',12)}350,00 €</span>`)}</div>`,'El color nunca va solo: siempre texto y, si aplica, icono.'),
+ G('Stat card','nx-stat-card',`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${V('default',`<div class="nx-card" style="padding:14px;gap:4px;width:100%"><span class="xs mu">Gastos</span><b class="num" style="font-size:22px">1.607,70 €</b><span class="xs" style="color:var(--ok);display:flex;gap:4px;align-items:center">${I('down',13)}8,0 % vs. octubre</span></div>`)}${V('highlight',`<div class="nx-card hero" style="padding:14px;gap:4px;width:100%"><span class="xs" style="opacity:.75">Balance</span><b class="num" style="font-size:22px">1.842,30 €</b><span class="xs" style="opacity:.75">Ahorro 53,4 %</span></div>`)}${V('loading',`<div class="nx-card" style="padding:14px;gap:8px;width:100%" aria-busy="true"><span class="nx-skel" style="height:10px;width:50%"></span><span class="nx-skel" style="height:20px;width:80%"></span><span class="nx-skel" style="height:10px;width:60%"></span></div>`)}${V('sin datos',`<div class="nx-card" style="padding:14px;gap:4px;width:100%"><span class="xs mu">Tasa de ahorro</span><b class="num" style="font-size:22px">—</b><span class="xs mu">No disponible sin ingresos</span></div>`)}</div>`),
+ G('Progreso de presupuesto','nx-progress · budget-card',`<div style="display:flex;flex-direction:column;gap:14px">${bud('Ocio','ticket','--c-lav',62.15,120,'','<span class="nx-badge neu num">52 %</span>')}${bud('Transporte','car','--c-mist',156.20,180,'wa','<span class="nx-badge wa num">87 % · cerca</span>')}${bud('Restaurantes','ut','--c-blush',84.60,80,'da','<span class="nx-badge da num">106 % · superado</span>')}</div>`,'ok < 80 % ≤ warning ≤ 100 % < over. role="progressbar" con texto equivalente.'),
+ G('Filas de lista','transaction-row · task-row · event-row',`<div class="nx-card" style="padding:16px"><div class="nx-list"><div class="nx-row"><span class="nx-tile" style="background:var(--c-butter)">${I('cart',17)}</span><div class="tx"><b>Mercadona</b><span class="xs mu">Alimentación · 11 nov</span></div><b class="num">−86,40 €</b></div><div class="nx-row"><span class="nx-tile" style="background:var(--c-sage)">${I('brief',17)}</span><div class="tx"><b>Nómina</b><span class="xs mu">Nómina · 1 nov</span></div><b class="num" style="color:var(--ok)">+3.200,00 €</b></div>${trow('Pagar seguro del coche','20 nov','Alta','350,00 €')}${evr('VIE','13','Revisión ITV','09:30','ITV Alcobendas')}</div></div>`,'Ingresos con signo + y color; gastos con signo −. El signo es la información, el color la refuerza.'),
+ G('Diálogo de confirmación','nx-dialog · variant danger',`<div style="background:rgba(24,43,53,.38);border-radius:16px;padding:22px;display:grid;place-items:center"><div class="nx-card" style="width:100%;max-width:340px;box-shadow:0 18px 40px rgba(24,43,53,.25)"><span class="nx-tile" style="background:var(--dab);color:var(--da)">${I('trash',18)}</span><div class="h" style="font-size:18px">¿Eliminar este movimiento?</div><span class="sm mu">«Mercadona», −86,40 € del 11 de noviembre. No se puede deshacer.</span><div class="nx-row" style="justify-content:flex-end;gap:8px"><span class="nx-btn sec sm">Cancelar</span><span class="nx-btn dan sm">Eliminar</span></div></div></div>`,'<dialog> nativo, foco en «Cancelar» por defecto. En móvil se presenta como hoja inferior.'),
+ G('Toasts','nx-toast',`<div style="display:flex;flex-direction:column;gap:8px"><div class="nx-toast"><span class="ic" style="background:#91A995;color:#182B35">${I('check',14,2.6)}</span><span style="flex:1">Gasto registrado</span></div><div class="nx-toast" style="background:#B0402D"><span class="ic" style="background:#F8E2DC;color:#B0402D">${I('alert',14,2.4)}</span><span style="flex:1">No se ha podido guardar. Revisa tu conexión.</span><b>Reintentar</b></div><div class="nx-toast" style="background:#fff;color:#182B35;border:1px solid var(--bd)"><span class="ic" style="background:var(--inb);color:var(--in)">${I('info',14,2.2)}</span><span style="flex:1">Has usado el 92 % de Alimentación</span></div></div>`,'success: role="status" · error: role="alert". Se apilan abajo a la derecha (escritorio) o arriba (móvil).'),
+ G('Estados de pantalla','nx-empty-state · nx-skeleton · nx-error-state',`<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">${V('vacío',`<div class="nx-card" style="padding:14px;align-items:center;text-align:center;gap:8px;width:100%"><span class="nx-tile" style="background:var(--sd1)">${I('inbox',18)}</span><b class="sm">Sin movimientos</b><span class="xs mu">Registra el primero</span><span class="nx-btn pri sm">Nuevo</span></div>`)}${V('cargando',`<div class="nx-card" style="padding:14px;gap:10px;width:100%" aria-busy="true">${[1,2,3].map(()=>`<div class="nx-row" style="gap:8px"><span class="nx-skel" style="width:26px;height:26px;border-radius:8px"></span><span class="nx-skel" style="height:10px;flex:1"></span></div>`).join('')}</div>`)}${V('error',`<div class="nx-card" style="padding:14px;align-items:center;text-align:center;gap:8px;width:100%"><span class="nx-tile" style="background:var(--dab);color:var(--da)">${I('alert',18)}</span><b class="sm">No se han cargado</b><span class="nx-btn sec sm">${I('refresh',14)}Reintentar</span></div>`)}</div>`,'ViewState explícito: loading · success · empty · error. Nunca arrays vacíos para indicar un error.'),
+ G('Navegación','nx-sidebar · nx-bottom-nav · nx-tabs · nx-month-picker',`<div style="display:flex;flex-direction:column;gap:6px;max-width:220px">${V('activo',`<div class="nx-item on">${I('home',18)}Inicio</div>`)}${V('hover',`<div class="nx-item hov">${I('list',18)}Movimientos</div>`)}${V('reposo',`<div class="nx-item">${I('cal',18)}Calendario</div>`)}</div><div class="nx-tabs"><span class="on">Resumen</span><span>Movimientos</span><span>Presupuestos</span></div><span class="nx-pill" style="align-self:flex-start">${I('cl',16)}<span>Noviembre 2026</span>${I('cr',16)}</span><div class="nx-bnav" style="border-radius:20px;border:1px solid var(--bd);padding-bottom:10px"><span class="on">${I('home',20)}Inicio</span><span>${I('wallet',20)}Finanzas</span><span class="fab" style="margin-top:0;width:44px;height:44px">${I('plus',22,2.4)}</span><span>${I('tasks',20)}Organiz.</span><span>${I('set',20)}Ajustes</span></div>`),
+ G('Logo','nx-logo',`<div class="vr">${V('full',`<span style="display:flex;gap:10px;align-items:center">${MARK(32)}${WORD}</span>`)}${V('mark',MARK(32))}${V('inverse',`<span style="display:flex;gap:10px;align-items:center;background:#182B35;padding:8px 12px;border-radius:12px"><svg width="28" height="28" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="13" fill="#F7F6F2"/><path d="M15 33V15l18 18V15" fill="none" stroke="#182B35" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15" cy="33" r="5" fill="#91A995" stroke="#F7F6F2" stroke-width="2.5"/><circle cx="33" cy="15" r="5" fill="#91A995" stroke="#F7F6F2" stroke-width="2.5"/></svg><span class="h" style="color:#F7F6F2;font-size:19px">nexo</span></span>`)}</div>`)
+].join('');
+
+function fit(el){const cv=el.firstElementChild;const w=+el.dataset.w;if(!el.clientWidth)return;const s=Math.min(1,el.clientWidth/w);cv.style.width=w+'px';cv.style.transform=`scale(${s})`;cv.style.left=Math.max(0,(el.clientWidth-w*s)/2)+'px';const h=Math.ceil(cv.offsetHeight*s)+'px';if(el.style.height!==h)el.style.height=h;}
+const ro=new ResizeObserver(es=>es.forEach(e=>fit(e.target)));
+document.querySelectorAll('.fit').forEach(el=>{fit(el);ro.observe(el);});
+document.fonts&&document.fonts.ready.then(()=>document.querySelectorAll('.fit').forEach(fit));
+</script>
