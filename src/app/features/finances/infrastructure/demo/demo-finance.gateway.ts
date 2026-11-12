@@ -200,6 +200,14 @@ class DemoTransactions implements TransactionRepository {
       return counts;
     });
   }
+
+  byTask(taskId: string): Promise<Transaction[]> {
+    return this.db.run((data) =>
+      data.transactions
+        .filter((transaction) => transaction.taskId === taskId)
+        .sort(compareByDateDesc),
+    );
+  }
 }
 
 class DemoBudgets implements BudgetRepository {

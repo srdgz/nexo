@@ -165,6 +165,17 @@ class SupabaseTransactions implements TransactionRepository {
     }
     return counts;
   }
+
+  async byTask(taskId: string): Promise<Transaction[]> {
+    const rows = await run<TransactionRow[]>(
+      this.client
+        .from('transactions')
+        .select(TRANSACTION_COLUMNS)
+        .eq('task_id', taskId)
+        .order('transaction_date', { ascending: false }),
+    );
+    return rows.map(mapTransaction);
+  }
 }
 
 function toRow(draft: TransactionDraft) {

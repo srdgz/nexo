@@ -8,6 +8,7 @@ import {
 import { provideI18n } from '@core/i18n/provide-i18n';
 import { provideAuth } from '@features/auth/infrastructure/provide-auth';
 import { provideFinances } from '@features/finances/infrastructure/provide-finances';
+import { provideOrganization } from '@features/organization/infrastructure/provide-organization';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
@@ -22,5 +23,6 @@ export const appConfig: ApplicationConfig = {
     provideI18n(),
     provideAuth(),
     provideFinances(),
+    provideOrganization(),
   ],
 };

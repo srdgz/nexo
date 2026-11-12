@@ -75,6 +75,10 @@ export class FinanceService {
     return (await this.gateway()).transactions.countByCategory(month);
   }
 
+  async transactionsForTask(taskId: string): Promise<Transaction[]> {
+    return (await this.gateway()).transactions.byTask(taskId);
+  }
+
   saveTransaction(id: string | null, draft: TransactionDraft): Promise<Transaction> {
     if (!isValidAmount(draft.amount)) {
       return Promise.reject(new FinanceError('invalid'));

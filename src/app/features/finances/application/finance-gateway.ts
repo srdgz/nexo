@@ -19,6 +19,7 @@ export interface TransactionRepository {
   update(id: string, draft: TransactionDraft): Promise<Transaction>;
   remove(id: string): Promise<void>;
   countByCategory(month: MonthKey): Promise<Record<string, number>>;
+  byTask(taskId: string): Promise<Transaction[]>;
 }
 
 export interface BudgetRepository {
