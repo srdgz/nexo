@@ -392,6 +392,25 @@
       "emptyText": "Pon un límite mensual a las categorías que quieras vigilar.",
       "copyFrom": "Copiar de {{month}}",
       "copied": "Se han copiado {{count}} presupuestos"
+    },
+    "overview": {
+      "summary": "Resumen del mes",
+      "income": "Ingresos",
+      "expense": "Gastos",
+      "balance": "Balance",
+      "savings": "Tasa de ahorro",
+      "notAvailable": "No disponible",
+      "vsPrevious": "{{change}} vs. mes anterior",
+      "pointsVsPrevious": "{{points}} puntos vs. mes anterior",
+      "trendTitle": "Ingresos y gastos · últimos {{count}} meses",
+      "range": "Periodo del gráfico",
+      "months": "{{count}} m",
+      "month": "Mes",
+      "byCategory": "Gastos por categoría",
+      "otherCategories": "Otras categorías",
+      "noExpenses": "Sin gastos este mes",
+      "largest": "Mayores gastos del mes",
+      "seeTransactions": "Ver movimientos"
     }
   }
 }

@@ -392,6 +392,25 @@
       "emptyText": "Set a monthly limit for the categories you want to keep an eye on.",
       "copyFrom": "Copy from {{month}}",
       "copied": "{{count}} budgets copied"
+    },
+    "overview": {
+      "summary": "Month summary",
+      "income": "Income",
+      "expense": "Expenses",
+      "balance": "Balance",
+      "savings": "Savings rate",
+      "notAvailable": "Not available",
+      "vsPrevious": "{{change}} vs. last month",
+      "pointsVsPrevious": "{{points}} points vs. last month",
+      "trendTitle": "Income and expenses · last {{count}} months",
+      "range": "Chart period",
+      "months": "{{count}} m",
+      "month": "Month",
+      "byCategory": "Expenses by category",
+      "otherCategories": "Other categories",
+      "noExpenses": "No expenses this month",
+      "largest": "Largest expenses this month",
+      "seeTransactions": "See transactions"
     }
   }
 }

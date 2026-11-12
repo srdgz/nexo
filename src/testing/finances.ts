@@ -9,7 +9,13 @@ import {
   createFinanceSeed,
 } from '@features/finances/infrastructure/demo/demo-finance.seed';
 
+export type { FinanceData };
+
 export const TEST_TODAY = new Date();
+
+export function testFinanceSeed(): FinanceData {
+  return createFinanceSeed(TEST_TODAY, 'es');
+}
 
 export function createTestFinanceGateway(
   seed: () => FinanceData = () => createFinanceSeed(TEST_TODAY, 'es'),

@@ -1,5 +1,4 @@
 import type { Routes } from '@angular/router';
-import { PendingPage } from '@shared/ui/pending-page/pending-page';
 
 export const FINANCES_ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'overview' },
@@ -7,7 +6,7 @@ export const FINANCES_ROUTES: Routes = [
     path: 'overview',
     title: 'pages.overview',
     data: { monthPicker: true },
-    component: PendingPage,
+    loadComponent: () => import('./pages/overview/overview-page').then((m) => m.OverviewPage),
   },
   {
     path: 'transactions',

@@ -1,0 +1,147 @@
+@use 'mixins' as *;
+
+:host {
+  display: grid;
+  gap: var(--nx-space-4);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--nx-space-4);
+
+  @include bp(desktop) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .wide {
+    grid-column: 1 / -1;
+  }
+
+  @include below(tablet) {
+    gap: var(--nx-space-3);
+  }
+}
+
+.charts {
+  display: grid;
+  gap: var(--nx-space-4);
+  align-items: start;
+
+  @include bp(wide) {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
+}
+
+.breakdown {
+  display: grid;
+  justify-items: center;
+  gap: var(--nx-space-5);
+
+  @include bp(tablet) {
+    grid-template-columns: 160px minmax(0, 1fr);
+    align-items: center;
+  }
+}
+
+.legend {
+  display: grid;
+  gap: var(--nx-space-3);
+  width: 100%;
+  margin: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: var(--nx-space-2);
+  }
+}
+
+.swatch {
+  width: 4px;
+  height: 24px;
+  flex: none;
+  border-radius: 2px;
+}
+
+.legend-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.legend-amount {
+  min-width: 6em;
+  font-weight: 600;
+  text-align: right;
+}
+
+.muted {
+  color: var(--nx-text-muted);
+  font-size: var(--nx-text-sm);
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--nx-sage-700);
+  font-size: var(--nx-text-sm);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.largest {
+  display: grid;
+  margin: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: var(--nx-space-3);
+    padding: 10px 0;
+    border-bottom: 1px solid var(--nx-surface-muted);
+
+    &:first-child {
+      padding-top: 0;
+    }
+
+    &:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+  }
+}
+
+.date {
+  width: 3.5em;
+  flex: none;
+}
+
+.largest-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 500;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.category {
+  @include below(tablet) {
+    display: none;
+  }
+}
+
+.amount {
+  font-weight: 600;
+  white-space: nowrap;
+}

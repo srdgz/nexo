@@ -46,7 +46,13 @@ Vista previa de cada variante en [`design/nexo-diseno.html`](design/nexo-diseno.
 - Los controles propios implementan `FormValueControl` de Signal Forms; `nx-field` muestra los errores traducidos (`ui.errors.*`) cuando el control se ha tocado.
 - `nx-sheet` no es un componente aparte: es `nx-dialog` con `presentation="sheet"`. Con `presentation="auto"` el diálogo se muestra como hoja inferior por debajo de 768 px.
 - `nx-menu` usa la Popover API nativa (cierre al pulsar fuera y con Escape) y navegación con flechas, Inicio y Fin.
-- Se crean en la fase que los usa: `nx-priority-badge` y `nx-status-badge` (Fase 4), `nx-data-table`, `nx-pagination` y `nx-month-picker` (Fase 3) y los gráficos (Fases 3 y 5).
+- Se crean en la fase que los usa: `nx-priority-badge` y `nx-status-badge` (Fase 4) y `nx-lollipop-chart` y `nx-spark` (Fase 5).
+
+### Estado tras la Fase 3
+
+- Añadidos en `shared`: `nx-month-picker`, `nx-pagination`, `nx-alert`, y los gráficos `nx-bar-chart` y `nx-donut-chart` (SVG propio, con tabla equivalente oculta para lectores de pantalla).
+- `nx-data-table` no es un componente genérico: la tabla de movimientos es propia de la página (tabla real en escritorio, lista agrupada por día en móvil). Se extraerá si otra pantalla la necesita.
+- En finanzas: `nx-category-tile`, `nx-category-dialog`, `nx-icon-picker`, `nx-color-picker` y `nx-budget-dialog`.
 - La galería `/app/ui` muestra todos los componentes; solo existe en desarrollo.
 
 ## Gráficos (`shared/charts`, SVG propio)

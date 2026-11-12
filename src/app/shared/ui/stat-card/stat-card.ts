@@ -47,6 +47,7 @@ export interface StatTrend {
     :host {
       display: block;
       min-width: 0;
+      container-type: inline-size;
     }
     nx-card {
       height: 100%;
@@ -58,10 +59,11 @@ export interface StatTrend {
       opacity: 0.75;
     }
     .value {
-      font-size: var(--nx-text-3xl);
+      font-size: clamp(1.125rem, 14cqi, var(--nx-text-3xl));
       font-weight: 600;
       letter-spacing: -0.02em;
       line-height: 1.1;
+      white-space: nowrap;
       font-variant-numeric: tabular-nums;
     }
     .trend {

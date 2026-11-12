@@ -1,0 +1,126 @@
+<section class="stats" [attr.aria-label]="'finances.overview.summary' | transloco">
+  @if (stats(); as stats) {
+    @for (stat of stats; track stat.label) {
+      <nx-stat-card
+        [label]="stat.label"
+        [value]="stat.value"
+        [trend]="stat.trend"
+        [variant]="stat.highlight ? 'highlight' : 'default'"
+      />
+    }
+  } @else if (summary.error()) {
+    <nx-card class="wide">
+      <nx-error-state variant="card" (retry)="summary.reload()" />
+    </nx-card>
+  } @else {
+    @for (item of [1, 2, 3, 4]; track item) {
+      <nx-stat-card label=" " loading />
+    }
+  }
+</section>
+
+<div class="charts">
+  <nx-card class="trend">
+    <nx-card-header [heading]="'finances.overview.trendTitle' | transloco: { count: range() }">
+      <nx-segmented
+        [label]="'finances.overview.range' | transloco"
+        [options]="rangeOptions()"
+        [(value)]="range"
+      />
+    </nx-card-header>
+    @if (trend.hasValue()) {
+      <nx-bar-chart
+        [series]="series()"
+        [groups]="trendGroups()"
+        [caption]="'finances.overview.trendTitle' | transloco: { count: range() }"
+        [categoryHeader]="'finances.overview.month' | transloco"
+        [format]="formatMoney"
+        [formatAxis]="formatAxis"
+      />
+    } @else if (trend.error()) {
+      <nx-error-state variant="card" (retry)="trend.reload()" />
+    } @else {
+      <nx-skeleton variant="chart" />
+    }
+  </nx-card>
+
+  <nx-card class="categories">
+    <nx-card-header [heading]="'finances.overview.byCategory' | transloco" />
+    @if (byCategory.hasValue()) {
+      @if (breakdown().length === 0) {
+        <nx-empty-state
+          variant="card"
+          [icon]="icons.empty"
+          [heading]="'finances.overview.noExpenses' | transloco"
+        />
+      } @else {
+        <div class="breakdown">
+          <nx-donut-chart
+            [segments]="segments()"
+            [caption]="'finances.overview.byCategory' | transloco"
+            [centerValue]="money(expenseTotal())"
+            [centerLabel]="'finances.overview.expense' | transloco"
+            [format]="formatMoney"
+          />
+          <ul class="legend" role="list">
+            @for (row of breakdown(); track row.id) {
+              <li>
+                <i class="swatch" [style.background]="row.chartColor" aria-hidden="true"></i>
+                <nx-category-tile size="sm" [icon]="row.icon" [color]="row.color" />
+                <span class="legend-name">{{ row.name }}</span>
+                <span class="muted nx-num">{{ percent(row.share) }} %</span>
+                <span class="legend-amount nx-num">{{ money(row.total) }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+      }
+    } @else if (byCategory.error()) {
+      <nx-error-state variant="card" (retry)="byCategory.reload()" />
+    } @else {
+      <nx-skeleton variant="card" />
+    }
+  </nx-card>
+</div>
+
+<nx-card>
+  <nx-card-header [heading]="'finances.overview.largest' | transloco">
+    <a
+      class="link"
+      routerLink="/app/finances/transactions"
+      [queryParams]="transactionsLink(current())"
+    >
+      {{ 'finances.overview.seeTransactions' | transloco }}
+      <svg nx-icon [icon]="icons.arrow" size="14"></svg>
+    </a>
+  </nx-card-header>
+  @if (largest.hasValue()) {
+    @if (largest.value().length === 0) {
+      <p class="muted">{{ 'finances.overview.noExpenses' | transloco }}</p>
+    } @else {
+      <ul class="largest" role="list">
+        @for (transaction of largest.value(); track transaction.id) {
+          @let category = categories.find(transaction.categoryId);
+          <li>
+            <span class="muted nx-num date">{{ date(transaction.date) }}</span>
+            <nx-category-tile
+              size="sm"
+              [icon]="category?.icon"
+              [color]="category?.color ?? 'sand'"
+            />
+            <a
+              class="largest-name"
+              [routerLink]="['/app/finances/transactions', transaction.id, 'edit']"
+            >
+              {{ transaction.description || category?.name }}
+            </a>
+            <span class="muted category">{{ category?.name }}</span>
+            <span class="amount nx-num">{{ amount(transaction) }}</span>
+          </li>
+        }
+      </ul>
+    }
+  } @else {
+    <nx-skeleton variant="list-row" />
+  }
+</nx-card>
