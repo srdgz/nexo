@@ -362,6 +362,36 @@
       "tip": "Consejo: añade una descripción corta para encontrar el movimiento con el buscador.",
       "notFoundTitle": "Movimiento no encontrado"
     },
-    "actions": "Acciones"
+    "actions": "Acciones",
+    "budgets": {
+      "new": "Nuevo presupuesto",
+      "edit": "Editar presupuesto",
+      "editAmount": "Cambiar importe",
+      "create": "Crear presupuesto",
+      "category": "Categoría de gasto",
+      "amount": "Importe mensual",
+      "onlyFree": "Solo aparecen categorías sin presupuesto en {{month}}.",
+      "saved": "Presupuesto guardado",
+      "deleted": "Presupuesto eliminado",
+      "duplicate": "Ya tienes un presupuesto para esta categoría en {{month}}.",
+      "deleteTitle": "¿Eliminar el presupuesto de «{{name}}»?",
+      "deleteText": "Los movimientos no se borran, solo el límite mensual.",
+      "budgeted": "Presupuestado",
+      "spent": "Gastado",
+      "available": "Disponible",
+      "total": "Total del mes",
+      "countOne": "1 presupuesto",
+      "countOther": "{{count}} presupuestos",
+      "spentAmount": "{{amount}} gastados",
+      "ofAmount": "de {{amount}}",
+      "status": {
+        "warning": "cerca",
+        "over": "superado"
+      },
+      "emptyTitle": "No hay presupuestos en {{month}}",
+      "emptyText": "Pon un límite mensual a las categorías que quieras vigilar.",
+      "copyFrom": "Copiar de {{month}}",
+      "copied": "Se han copiado {{count}} presupuestos"
+    }
   }
 }

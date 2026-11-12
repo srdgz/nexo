@@ -1,0 +1,166 @@
+@if (budgets.isLoading() && !budgets.hasValue()) {
+  <nx-skeleton variant="card" />
+  <div class="grid">
+    <nx-skeleton variant="card" />
+    <nx-skeleton variant="card" />
+  </div>
+} @else if (budgets.error()) {
+  <nx-card>
+    <nx-error-state (retry)="budgets.reload()" />
+  </nx-card>
+} @else if (rows().length === 0) {
+  <nx-card>
+    <nx-empty-state
+      [icon]="icons.empty"
+      [heading]="'finances.budgets.emptyTitle' | transloco: { month: monthLabel(current()) }"
+      [description]="'finances.budgets.emptyText' | transloco"
+    >
+      @if (canCopy()) {
+        <button
+          nx-button
+          variant="secondary"
+          type="button"
+          [loading]="busy()"
+          (click)="copyPrevious()"
+        >
+          <svg nx-icon [icon]="icons.copy" size="16"></svg>
+          {{ 'finances.budgets.copyFrom' | transloco: { month: monthLabel(previous()) } }}
+        </button>
+      }
+      <button nx-button type="button" (click)="create()">
+        <svg nx-icon [icon]="icons.plus" size="17" strokeWidth="2.2"></svg>
+        {{ 'finances.budgets.new' | transloco }}
+      </button>
+    </nx-empty-state>
+  </nx-card>
+} @else {
+  <nx-card variant="muted" class="summary">
+    <dl class="totals">
+      <div>
+        <dt>{{ 'finances.budgets.budgeted' | transloco }}</dt>
+        <dd>{{ money(totals().budgeted) }}</dd>
+      </div>
+      <div>
+        <dt>{{ 'finances.budgets.spent' | transloco }}</dt>
+        <dd>{{ money(totals().spent) }}</dd>
+      </div>
+      <div>
+        <dt>{{ 'finances.budgets.available' | transloco }}</dt>
+        <dd [class.negative]="totals().available < 0">{{ money(totals().available) }}</dd>
+      </div>
+    </dl>
+    <nx-progress
+      size="md"
+      [label]="'finances.budgets.total' | transloco"
+      [valueText]="money(totals().spent) + ' / ' + money(totals().budgeted)"
+      [value]="totals().spent"
+      [max]="totals().budgeted"
+    />
+  </nx-card>
+
+  <div class="toolbar">
+    <h2 class="count">
+      {{
+        (rows().length === 1 ? 'finances.budgets.countOne' : 'finances.budgets.countOther')
+          | transloco: { count: rows().length }
+      }}
+    </h2>
+    <button nx-button type="button" (click)="create()">
+      <svg nx-icon [icon]="icons.plus" size="17" strokeWidth="2.2"></svg>
+      {{ 'finances.budgets.new' | transloco }}
+    </button>
+  </div>
+
+  <ul class="grid" role="list">
+    @for (row of rows(); track row.budget.id) {
+      <li>
+        <nx-card class="budget">
+          <div class="head">
+            <nx-category-tile [icon]="row.category?.icon" [color]="row.category?.color ?? 'sand'" />
+            <h3 class="name">{{ row.category?.name }}</h3>
+            <nx-badge [tone]="tone(row.status)">
+              {{ row.usage }} %
+              @if (row.status !== 'ok') {
+                · {{ 'finances.budgets.status.' + row.status | transloco }}
+              }
+            </nx-badge>
+            <button
+              type="button"
+              nx-icon-button
+              size="sm"
+              [label]="'finances.actionsFor' | transloco: { name: row.category?.name }"
+              [nxMenuTrigger]="menu"
+            >
+              <svg nx-icon [icon]="icons.more" size="18"></svg>
+            </button>
+            <nx-menu #menu [label]="row.category?.name ?? ''">
+              <button type="button" nx-menu-item (click)="edit(row.budget)">
+                <svg nx-icon [icon]="icons.edit" size="18"></svg>
+                {{ 'finances.budgets.editAmount' | transloco }}
+              </button>
+              <nx-menu-separator />
+              <button type="button" nx-menu-item danger (click)="askRemove(row.budget)">
+                <svg nx-icon [icon]="icons.remove" size="18"></svg>
+                {{ 'finances.delete' | transloco }}
+              </button>
+            </nx-menu>
+          </div>
+          <nx-progress
+            [label]="row.category?.name ?? ''"
+            [valueText]="money(row.spent) + ' / ' + money(row.budget.amount)"
+            [value]="row.spent"
+            [max]="row.budget.amount"
+          />
+          <p class="amounts">
+            <span>{{
+              'finances.budgets.spentAmount' | transloco: { amount: money(row.spent) }
+            }}</span>
+            <span>{{
+              'finances.budgets.ofAmount' | transloco: { amount: money(row.budget.amount) }
+            }}</span>
+          </p>
+        </nx-card>
+      </li>
+    }
+  </ul>
+}
+
+<nx-budget-dialog
+  [budget]="editing()"
+  [month]="current()"
+  [taken]="taken()"
+  [(open)]="dialogOpen"
+/>
+
+<nx-dialog
+  size="sm"
+  [heading]="
+    'finances.budgets.deleteTitle'
+      | transloco: { name: categories.find(removing()?.categoryId)?.name ?? '' }
+  "
+  [description]="'finances.budgets.deleteText' | transloco"
+  [(open)]="removeOpen"
+>
+  @if (removeError(); as code) {
+    <nx-alert tone="danger">{{ messageKey(code) | transloco }}</nx-alert>
+  }
+  <button
+    nx-button
+    variant="secondary"
+    dialog-actions
+    type="button"
+    (click)="removeOpen.set(false)"
+  >
+    {{ 'finances.cancel' | transloco }}
+  </button>
+  <button
+    nx-button
+    variant="danger"
+    dialog-actions
+    type="button"
+    [loading]="busy()"
+    (click)="remove()"
+  >
+    {{ 'finances.delete' | transloco }}
+  </button>
+</nx-dialog>

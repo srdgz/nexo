@@ -362,6 +362,36 @@
       "tip": "Tip: add a short description so you can find the transaction with the search.",
       "notFoundTitle": "Transaction not found"
     },
-    "actions": "Actions"
+    "actions": "Actions",
+    "budgets": {
+      "new": "New budget",
+      "edit": "Edit budget",
+      "editAmount": "Change amount",
+      "create": "Create budget",
+      "category": "Expense category",
+      "amount": "Monthly amount",
+      "onlyFree": "Only categories without a budget in {{month}} are listed.",
+      "saved": "Budget saved",
+      "deleted": "Budget deleted",
+      "duplicate": "You already have a budget for this category in {{month}}.",
+      "deleteTitle": "Delete the “{{name}}” budget?",
+      "deleteText": "Transactions aren’t deleted, only the monthly limit.",
+      "budgeted": "Budgeted",
+      "spent": "Spent",
+      "available": "Available",
+      "total": "Month total",
+      "countOne": "1 budget",
+      "countOther": "{{count}} budgets",
+      "spentAmount": "{{amount}} spent",
+      "ofAmount": "of {{amount}}",
+      "status": {
+        "warning": "close",
+        "over": "over"
+      },
+      "emptyTitle": "No budgets in {{month}}",
+      "emptyText": "Set a monthly limit for the categories you want to keep an eye on.",
+      "copyFrom": "Copy from {{month}}",
+      "copied": "{{count}} budgets copied"
+    }
   }
 }

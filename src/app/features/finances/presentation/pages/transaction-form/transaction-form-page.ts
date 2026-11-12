@@ -37,7 +37,7 @@ import { type MonthKey, isIsoDate, isoDate, monthOfDate } from '../../../domain/
 import { DESCRIPTION_MAX, type Transaction, isValidAmount } from '../../../domain/transaction';
 import { NxCategoryTile } from '../../components/category-tile';
 import { financeMessageKey } from '../../finance-messages';
-import { formatMonth } from '@shared/ui/month-picker/month-picker';
+import { formatMonthInline } from '@shared/ui/month-picker/month-picker';
 
 interface TransactionModel {
   type: EntryType;
@@ -216,7 +216,7 @@ export class TransactionFormPage {
 
   protected monthLabel(): string {
     const month = this.month();
-    return month ? formatMonth(month, this.language()) : '';
+    return month ? formatMonthInline(month, this.language()) : '';
   }
 
   protected async onSubmit(event: Event): Promise<void> {

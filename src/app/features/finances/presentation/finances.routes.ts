@@ -32,7 +32,7 @@ export const FINANCES_ROUTES: Routes = [
     path: 'budgets',
     title: 'pages.budgets',
     data: { monthPicker: true },
-    component: PendingPage,
+    loadComponent: () => import('./pages/budgets/budgets-page').then((m) => m.BudgetsPage),
   },
   {
     path: 'categories',

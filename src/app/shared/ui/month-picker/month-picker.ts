@@ -28,6 +28,13 @@ export function formatMonth(month: string, language: string, short = false): str
   return `${name.charAt(0).toLocaleUpperCase()}${name.slice(1)} ${year}`;
 }
 
+export function formatMonthInline(month: string, language: string): string {
+  const [year, index] = month.split('-').map(Number) as [number, number];
+  return new Intl.DateTimeFormat(localeFor(language), { month: 'long', year: 'numeric' }).format(
+    new Date(year, index - 1, 1),
+  );
+}
+
 @Component({
   selector: 'nx-month-picker',
   imports: [NxIcon, NxIconButton, TranslocoPipe],

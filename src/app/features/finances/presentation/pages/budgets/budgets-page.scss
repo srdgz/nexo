@@ -1,0 +1,85 @@
+@use 'mixins' as *;
+
+:host {
+  display: grid;
+  gap: var(--nx-space-4);
+}
+
+.totals {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--nx-space-3);
+  margin: 0;
+
+  dt {
+    color: var(--nx-text-muted);
+    font-size: var(--nx-text-sm);
+  }
+
+  dd {
+    margin: 0;
+    font-size: var(--nx-text-xl);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+
+    @include below(tablet) {
+      font-size: var(--nx-text-base);
+    }
+  }
+}
+
+.negative {
+  color: var(--nx-danger);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--nx-space-3);
+}
+
+.count {
+  font-size: var(--nx-text-lg);
+}
+
+.grid {
+  display: grid;
+  gap: var(--nx-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include bp(tablet) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.budget {
+  height: 100%;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: var(--nx-space-3);
+}
+
+.name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--nx-text-base);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.amounts {
+  display: flex;
+  justify-content: space-between;
+  color: var(--nx-text-muted);
+  font-size: var(--nx-text-sm);
+  font-variant-numeric: tabular-nums;
+}
