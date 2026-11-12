@@ -1,5 +1,4 @@
 import type { Routes } from '@angular/router';
-import { PendingPage } from '@shared/ui/pending-page/pending-page';
 
 export const ORGANIZATION_ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'tasks' },
@@ -18,7 +17,19 @@ export const ORGANIZATION_ROUTES: Routes = [
     title: 'pages.editTask',
     loadComponent: () => import('./pages/task-form/task-form-page').then((m) => m.TaskFormPage),
   },
-  { path: 'calendar', title: 'pages.calendar', component: PendingPage },
-  { path: 'calendar/events/new', title: 'pages.newEvent', component: PendingPage },
-  { path: 'calendar/events/:id/edit', title: 'pages.editEvent', component: PendingPage },
+  {
+    path: 'calendar',
+    title: 'pages.calendar',
+    loadComponent: () => import('./pages/calendar/calendar-page').then((m) => m.CalendarPage),
+  },
+  {
+    path: 'calendar/events/new',
+    title: 'pages.newEvent',
+    loadComponent: () => import('./pages/event-form/event-form-page').then((m) => m.EventFormPage),
+  },
+  {
+    path: 'calendar/events/:id/edit',
+    title: 'pages.editEvent',
+    loadComponent: () => import('./pages/event-form/event-form-page').then((m) => m.EventFormPage),
+  },
 ];

@@ -101,7 +101,8 @@
       "passwordPolicy": "Usa al menos 8 caracteres con letras y números.",
       "mismatch": "Las contraseñas no coinciden.",
       "amount": "Introduce un importe mayor que cero.",
-      "date": "Introduce una fecha válida."
+      "date": "Introduce una fecha válida.",
+      "endBeforeStart": "El fin debe ser posterior al inicio."
     },
     "month": {
       "previous": "Mes anterior",
@@ -510,6 +511,34 @@
       "linkedNew": "Aparecerán aquí los pagos que enlaces a esta tarea.",
       "linkedEmpty": "Todavía no hay movimientos enlazados.",
       "linkedTotal": "Total pagado: {{amount}}"
+    },
+    "calendar": {
+      "today": "Hoy",
+      "newEvent": "Evento",
+      "more": "+{{count}} más",
+      "event": "Evento",
+      "taskDue": "Vencimiento de tarea",
+      "empty": "No hay nada este día.",
+      "allDay": "Todo el día",
+      "taskLabel": "Tarea · vence este día",
+      "addOnDay": "Añadir evento este día"
+    },
+    "event": {
+      "title": "Título",
+      "start": "Inicio",
+      "end": "Fin",
+      "time": "Hora",
+      "location": "Ubicación",
+      "task": "Tarea relacionada",
+      "create": "Guardar evento",
+      "created": "Evento creado",
+      "updated": "Evento actualizado",
+      "deleted": "Evento eliminado",
+      "notFound": "Evento no encontrado",
+      "sameDay": "Ese día",
+      "noOthers": "No hay otros eventos.",
+      "deleteTitle": "¿Eliminar «{{title}}»?",
+      "deleteText": "Esta acción no se puede deshacer."
     }
   }
 }

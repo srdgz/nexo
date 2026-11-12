@@ -46,7 +46,7 @@ Vista previa de cada variante en [`design/nexo-diseno.html`](design/nexo-diseno.
 - Los controles propios implementan `FormValueControl` de Signal Forms; `nx-field` muestra los errores traducidos (`ui.errors.*`) cuando el control se ha tocado.
 - `nx-sheet` no es un componente aparte: es `nx-dialog` con `presentation="sheet"`. Con `presentation="auto"` el diálogo se muestra como hoja inferior por debajo de 768 px.
 - `nx-menu` usa la Popover API nativa (cierre al pulsar fuera y con Escape) y navegación con flechas, Inicio y Fin.
-- Se crean en la fase que los usa: `nx-priority-badge` y `nx-status-badge` (Fase 4) y `nx-lollipop-chart` y `nx-spark` (Fase 5).
+- Se crean en la fase que los usa: `nx-lollipop-chart` y `nx-spark` (Fase 5).
 
 ### Estado tras la Fase 3
 
@@ -54,6 +54,12 @@ Vista previa de cada variante en [`design/nexo-diseno.html`](design/nexo-diseno.
 - `nx-data-table` no es un componente genérico: la tabla de movimientos es propia de la página (tabla real en escritorio, lista agrupada por día en móvil). Se extraerá si otra pantalla la necesita.
 - En finanzas: `nx-category-tile`, `nx-category-dialog`, `nx-icon-picker`, `nx-color-picker` y `nx-budget-dialog`.
 - La galería `/app/ui` muestra todos los componentes; solo existe en desarrollo.
+
+### Estado tras la Fase 4
+
+- `nx-priority-badge` y `nx-status-badge` viven en `features/organization/presentation` porque traducen valores del dominio de tareas.
+- `nx-task-check` (casilla redonda con estado de carga) y `nx-task-payment-prompt` (diálogo «¿Registrar el pago?»): la lógica está en el servicio `TaskCompletion`, así que la lista de tareas, el calendario y el dashboard comparten el mismo flujo.
+- Finanzas no depende de Organización: declara el puerto `TaskLookup` (tareas para el selector «Tarea relacionada») y Organización lo implementa.
 
 ## Gráficos (`shared/charts`, SVG propio)
 

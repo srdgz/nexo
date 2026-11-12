@@ -1,0 +1,76 @@
+@use 'mixins' as *;
+
+.layout {
+  display: grid;
+  gap: var(--nx-space-4);
+  align-items: start;
+
+  @include bp(desktop) {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  }
+}
+
+.form {
+  display: grid;
+  gap: var(--nx-space-5);
+}
+
+.range {
+  display: grid;
+  gap: var(--nx-space-4);
+
+  @include bp(tablet) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.moment {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: var(--nx-space-3);
+  align-items: start;
+
+  > :only-child {
+    grid-column: 1 / -1;
+  }
+}
+
+.error {
+  margin-top: calc(var(--nx-space-3) * -1);
+  color: var(--nx-danger);
+  font-size: var(--nx-text-xs);
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--nx-space-2);
+
+  @include below(tablet) {
+    > * {
+      flex: 1;
+    }
+  }
+}
+
+.delete {
+  margin-right: auto;
+  color: var(--nx-danger);
+}
+
+.muted {
+  color: var(--nx-text-muted);
+  font-size: var(--nx-text-sm);
+}
+
+.others {
+  display: grid;
+  gap: var(--nx-space-3);
+  margin: 0;
+
+  li {
+    display: grid;
+  }
+}

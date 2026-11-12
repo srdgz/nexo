@@ -1,0 +1,140 @@
+<div class="layout">
+  <nx-card class="month-card">
+    <div class="month-head">
+      <nx-month-picker
+        [month]="current()"
+        [compact]="compact()"
+        (monthChange)="changeMonth($event)"
+      />
+      <button nx-button variant="secondary" size="sm" type="button" (click)="goToday()">
+        {{ 'organization.calendar.today' | transloco }}
+      </button>
+      <a
+        nx-button
+        size="sm"
+        class="new"
+        routerLink="/app/organization/calendar/events/new"
+        [queryParams]="{ date: selected() }"
+      >
+        <svg nx-icon [icon]="icons.plus" size="16" strokeWidth="2.2"></svg>
+        {{ 'organization.calendar.newEvent' | transloco }}
+      </a>
+    </div>
+
+    @if (events.error() || tasks.error()) {
+      <nx-error-state variant="card" (retry)="events.reload(); tasks.reload()" />
+    } @else {
+      <div class="grid" [class.compact]="compact()" [attr.aria-busy]="loading() ? 'true' : null">
+        @for (weekday of weekdays(); track $index) {
+          <span class="weekday" aria-hidden="true">{{ weekday }}</span>
+        }
+        @for (cell of grid(); track cell.date) {
+          @let items = itemsOn(cell.date);
+          <button
+            type="button"
+            class="cell"
+            [class.outside]="!cell.inMonth"
+            [class.today]="cell.date === today"
+            [class.selected]="cell.date === selected()"
+            [attr.aria-pressed]="cell.date === selected()"
+            [attr.aria-label]="cellLabel(cell.date)"
+            (click)="select(cell.date)"
+          >
+            <span class="number">{{ cell.day }}</span>
+            @if (compact()) {
+              @if (items.length > 0) {
+                <i class="dot" aria-hidden="true"></i>
+              }
+            } @else {
+              @for (item of items.slice(0, visibleItems); track $index) {
+                @if (item.kind === 'event') {
+                  <span class="chip event" aria-hidden="true">{{ item.event.title }}</span>
+                } @else {
+                  <span
+                    class="chip task"
+                    [class.done]="item.task.status === 'completed'"
+                    aria-hidden="true"
+                  >
+                    {{ item.task.title }}
+                  </span>
+                }
+              }
+              @if (items.length > visibleItems) {
+                <span class="more" aria-hidden="true">
+                  {{
+                    'organization.calendar.more' | transloco: { count: items.length - visibleItems }
+                  }}
+                </span>
+              }
+            }
+          </button>
+        }
+      </div>
+      @if (!compact()) {
+        <p class="legend" aria-hidden="true">
+          <span class="chip event">{{ 'organization.calendar.event' | transloco }}</span>
+          <span class="chip task">{{ 'organization.calendar.taskDue' | transloco }}</span>
+        </p>
+      }
+    }
+  </nx-card>
+
+  <nx-card class="agenda">
+    <nx-card-header [heading]="dayTitle(selected())" />
+    @if (loading()) {
+      <nx-skeleton variant="list-row" />
+      <nx-skeleton variant="list-row" />
+    } @else if (agenda().length === 0) {
+      <p class="muted">{{ 'organization.calendar.empty' | transloco }}</p>
+    } @else {
+      <ul class="items" role="list">
+        @for (item of agenda(); track $index) {
+          <li>
+            @if (item.kind === 'event') {
+              <span class="bar" aria-hidden="true"></span>
+              <a
+                class="text"
+                [routerLink]="['/app/organization/calendar/events', item.event.id, 'edit']"
+              >
+                <span class="title">{{ item.event.title }}</span>
+                <span class="muted">
+                  {{
+                    item.event.allDay
+                      ? ('organization.calendar.allDay' | transloco)
+                      : range(item.event)
+                  }}
+                  @if (item.event.location) {
+                    · {{ item.event.location }}
+                  }
+                </span>
+              </a>
+            } @else {
+              <nx-task-check
+                [task]="item.task"
+                [returnUrl]="'/app/organization/calendar?day=' + selected()"
+              />
+              <a class="text" [routerLink]="['/app/organization/tasks', item.task.id, 'edit']">
+                <span class="title" [class.done]="item.task.status === 'completed'">
+                  {{ item.task.title }}
+                </span>
+                <span class="muted">{{ 'organization.calendar.taskLabel' | transloco }}</span>
+              </a>
+            }
+          </li>
+        }
+      </ul>
+    }
+    <a
+      nx-button
+      variant="secondary"
+      block
+      routerLink="/app/organization/calendar/events/new"
+      [queryParams]="{ date: selected() }"
+    >
+      <svg nx-icon [icon]="icons.plus" size="16"></svg>
+      {{ 'organization.calendar.addOnDay' | transloco }}
+    </a>
+  </nx-card>
+</div>
+
+<nx-task-payment-prompt />

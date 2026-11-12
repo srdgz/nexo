@@ -1,0 +1,137 @@
+@if (id() && existing.error()) {
+  <nx-card>
+    <nx-error-state
+      [heading]="'organization.event.notFound' | transloco"
+      [description]="'organization.errors.not_found' | transloco"
+      (retry)="existing.reload()"
+    />
+  </nx-card>
+} @else if (id() && existing.isLoading()) {
+  <nx-card><nx-skeleton variant="card" /></nx-card>
+} @else {
+  <div class="layout">
+    <nx-card>
+      <form class="form" novalidate (submit)="onSubmit($event)">
+        @if (error(); as code) {
+          <nx-alert tone="danger">{{ 'organization.errors.' + code | transloco }}</nx-alert>
+        }
+        <nx-field [label]="'organization.event.title' | transloco" [state]="draft.title()">
+          <input nxInput type="text" autocomplete="off" [formField]="draft.title" />
+        </nx-field>
+        <label class="nx-choice">
+          <input type="checkbox" nxSwitch [formField]="draft.allDay" />
+          {{ 'organization.calendar.allDay' | transloco }}
+        </label>
+        <div class="range">
+          <div class="moment">
+            <nx-field [label]="'organization.event.start' | transloco" [state]="draft.startDate()">
+              <input nxInput type="date" [formField]="draft.startDate" />
+            </nx-field>
+            @if (!model().allDay) {
+              <nx-field [label]="'organization.event.time' | transloco">
+                <input nxInput type="time" [formField]="draft.startTime" />
+              </nx-field>
+            }
+          </div>
+          <div class="moment">
+            <nx-field [label]="'organization.event.end' | transloco">
+              <input nxInput type="date" [formField]="draft.endDate" />
+            </nx-field>
+            @if (!model().allDay) {
+              <nx-field [label]="'organization.event.time' | transloco" [state]="draft.endTime()">
+                <input nxInput type="time" [formField]="draft.endTime" />
+              </nx-field>
+            }
+          </div>
+        </div>
+        @if (model().allDay && draft.endTime().invalid() && draft.endTime().touched()) {
+          <p class="error" role="alert">{{ 'ui.errors.endBeforeStart' | transloco }}</p>
+        }
+        <nx-field
+          optional
+          [label]="'organization.event.location' | transloco"
+          [state]="draft.location()"
+        >
+          <input nxInput type="text" autocomplete="off" [formField]="draft.location" />
+        </nx-field>
+        <nx-field optional [label]="'organization.form.description' | transloco">
+          <textarea nxInput [formField]="draft.description"></textarea>
+        </nx-field>
+        <nx-field optional [label]="'organization.event.task' | transloco">
+          <select nxInput [formField]="draft.taskId">
+            <option value="">{{ 'finances.transactions.noTask' | transloco }}</option>
+            @for (task of taskOptions(); track task.id) {
+              <option [value]="task.id">{{ task.title }}</option>
+            }
+          </select>
+        </nx-field>
+        <div class="actions">
+          @if (id()) {
+            <button
+              type="button"
+              nx-button
+              variant="ghost"
+              class="delete"
+              (click)="removeOpen.set(true)"
+            >
+              <svg nx-icon [icon]="removeIcon" size="16"></svg>
+              {{ 'organization.delete' | transloco }}
+            </button>
+          }
+          <a nx-button variant="secondary" [routerLink]="backUrl()">
+            {{ 'organization.cancel' | transloco }}
+          </a>
+          <button type="submit" nx-button [loading]="draft().submitting()">
+            {{ (id() ? 'organization.save' : 'organization.event.create') | transloco }}
+          </button>
+        </div>
+      </form>
+    </nx-card>
+
+    <nx-card variant="muted">
+      <nx-card-header [heading]="'organization.event.sameDay' | transloco" />
+      <p class="muted">{{ dayTitle() }}</p>
+      @if (sameDay.hasValue()) {
+        @if (sameDay.value().length === 0) {
+          <p class="muted">{{ 'organization.event.noOthers' | transloco }}</p>
+        } @else {
+          <ul class="others" role="list">
+            @for (other of sameDay.value(); track other.id) {
+              <li>
+                <b>{{ other.title }}</b>
+                <span class="muted">{{ range(other) }}</span>
+              </li>
+            }
+          </ul>
+        }
+      }
+    </nx-card>
+  </div>
+}
+
+<nx-dialog
+  size="sm"
+  [heading]="'organization.event.deleteTitle' | transloco: { title: model().title }"
+  [description]="'organization.event.deleteText' | transloco"
+  [(open)]="removeOpen"
+>
+  <button
+    nx-button
+    variant="secondary"
+    dialog-actions
+    type="button"
+    (click)="removeOpen.set(false)"
+  >
+    {{ 'organization.cancel' | transloco }}
+  </button>
+  <button
+    nx-button
+    variant="danger"
+    dialog-actions
+    type="button"
+    [loading]="removing()"
+    (click)="remove()"
+  >
+    {{ 'organization.delete' | transloco }}
+  </button>
+</nx-dialog>

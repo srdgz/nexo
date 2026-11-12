@@ -101,7 +101,8 @@
       "passwordPolicy": "Use at least 8 characters with letters and numbers.",
       "mismatch": "The passwords don’t match.",
       "amount": "Enter an amount greater than zero.",
-      "date": "Enter a valid date."
+      "date": "Enter a valid date.",
+      "endBeforeStart": "The end must be after the start."
     },
     "month": {
       "previous": "Previous month",
@@ -510,6 +511,34 @@
       "linkedNew": "Payments you link to this task will show up here.",
       "linkedEmpty": "No linked transactions yet.",
       "linkedTotal": "Total paid: {{amount}}"
+    },
+    "calendar": {
+      "today": "Today",
+      "newEvent": "Event",
+      "more": "+{{count}} more",
+      "event": "Event",
+      "taskDue": "Task due",
+      "empty": "Nothing on this day.",
+      "allDay": "All day",
+      "taskLabel": "Task · due this day",
+      "addOnDay": "Add an event this day"
+    },
+    "event": {
+      "title": "Title",
+      "start": "Start",
+      "end": "End",
+      "time": "Time",
+      "location": "Location",
+      "task": "Related task",
+      "create": "Save event",
+      "created": "Event created",
+      "updated": "Event updated",
+      "deleted": "Event deleted",
+      "notFound": "Event not found",
+      "sameDay": "That day",
+      "noOthers": "No other events.",
+      "deleteTitle": "Delete “{{title}}”?",
+      "deleteText": "This can’t be undone."
     }
   }
 }
