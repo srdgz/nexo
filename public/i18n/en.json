@@ -100,6 +100,10 @@
       "pattern": "The format is not valid.",
       "passwordPolicy": "Use at least 8 characters with letters and numbers.",
       "mismatch": "The passwords don’t match."
+    },
+    "month": {
+      "previous": "Previous month",
+      "next": "Next month"
     }
   },
   "auth": {
@@ -227,5 +231,91 @@
     "createAccount": "Create account",
     "options": "Options",
     "exit": "Leave the demo"
+  },
+  "finances": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "actionsFor": "Actions for {{name}}",
+    "types": {
+      "expense": "Expenses",
+      "income": "Income"
+    },
+    "typeSingular": {
+      "expense": "Expense",
+      "income": "Income"
+    },
+    "errors": {
+      "duplicate": "That item already exists.",
+      "inUse": "It’s in use and can’t be deleted.",
+      "notFound": "We couldn’t find it. It may have been deleted.",
+      "invalid": "Check the data: some value isn’t valid.",
+      "network": "Can’t reach the server. Please try again.",
+      "unknown": "Something went wrong. Please try again."
+    },
+    "categories": {
+      "new": "New category",
+      "edit": "Edit category",
+      "name": "Name",
+      "type": "Type",
+      "icon": "Icon",
+      "color": "Colour",
+      "usageOne": "1 transaction this month",
+      "usageOther": "{{count}} transactions this month",
+      "noUsage": "No transactions this month",
+      "archived": "Archived · {{count}}",
+      "archiveHint": "Categories with transactions aren’t deleted: they’re archived.",
+      "archive": "Archive",
+      "restore": "Restore",
+      "deleteTitle": "Delete “{{name}}”?",
+      "deleteText": "This can’t be undone.",
+      "inUseText": "It has transactions or budgets, so it can’t be deleted. You can archive it so it doesn’t show up when you record transactions.",
+      "saved": "Category saved",
+      "archivedToast": "Category archived",
+      "restored": "Category restored",
+      "deleted": "Category deleted",
+      "duplicateName": "You already have a category with that name.",
+      "typeLocked": "You can’t change the type because it already has transactions.",
+      "emptyTitle": "No categories of this type",
+      "emptyText": "Create one to start sorting your transactions."
+    },
+    "icons": {
+      "briefcase": "Briefcase",
+      "sparkles": "Sparkles",
+      "coins": "Coins",
+      "landmark": "Bank",
+      "piggy-bank": "Piggy bank",
+      "gift": "Gift",
+      "house": "House",
+      "shopping-cart": "Cart",
+      "car": "Car",
+      "bus": "Bus",
+      "zap": "Lightning",
+      "heart-pulse": "Health",
+      "ticket": "Ticket",
+      "utensils": "Cutlery",
+      "coffee": "Coffee",
+      "repeat": "Repeat",
+      "shield-check": "Shield",
+      "smartphone": "Phone",
+      "shirt": "Clothes",
+      "graduation-cap": "Studies",
+      "plane": "Plane",
+      "dumbbell": "Sport",
+      "paw-print": "Pets",
+      "baby": "Baby",
+      "ellipsis": "Other"
+    },
+    "colors": {
+      "sage": "Sage",
+      "sand": "Sand",
+      "mist": "Mist",
+      "blush": "Blush",
+      "butter": "Butter",
+      "lavender": "Lavender",
+      "peach": "Peach",
+      "mint": "Mint"
+    }
   }
 }

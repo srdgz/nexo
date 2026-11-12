@@ -100,6 +100,10 @@
       "pattern": "El formato no es válido.",
       "passwordPolicy": "Usa al menos 8 caracteres con letras y números.",
       "mismatch": "Las contraseñas no coinciden."
+    },
+    "month": {
+      "previous": "Mes anterior",
+      "next": "Mes siguiente"
     }
   },
   "auth": {
@@ -227,5 +231,91 @@
     "createAccount": "Crear cuenta",
     "options": "Opciones",
     "exit": "Salir de la demo"
+  },
+  "finances": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "actionsFor": "Acciones de {{name}}",
+    "types": {
+      "expense": "Gastos",
+      "income": "Ingresos"
+    },
+    "typeSingular": {
+      "expense": "Gasto",
+      "income": "Ingreso"
+    },
+    "errors": {
+      "duplicate": "Ya existe un elemento igual.",
+      "inUse": "Está en uso y no se puede eliminar.",
+      "notFound": "No lo encontramos. Puede que se haya eliminado.",
+      "invalid": "Revisa los datos: hay algún valor no válido.",
+      "network": "No hay conexión con el servidor. Inténtalo de nuevo.",
+      "unknown": "Algo ha fallado. Inténtalo de nuevo."
+    },
+    "categories": {
+      "new": "Nueva categoría",
+      "edit": "Editar categoría",
+      "name": "Nombre",
+      "type": "Tipo",
+      "icon": "Icono",
+      "color": "Color",
+      "usageOne": "1 movimiento este mes",
+      "usageOther": "{{count}} movimientos este mes",
+      "noUsage": "Sin movimientos este mes",
+      "archived": "Archivadas · {{count}}",
+      "archiveHint": "Las categorías con movimientos no se borran: se archivan.",
+      "archive": "Archivar",
+      "restore": "Restaurar",
+      "deleteTitle": "¿Eliminar «{{name}}»?",
+      "deleteText": "Esta acción no se puede deshacer.",
+      "inUseText": "Tiene movimientos o presupuestos, así que no se puede eliminar. Puedes archivarla para que no aparezca al registrar movimientos.",
+      "saved": "Categoría guardada",
+      "archivedToast": "Categoría archivada",
+      "restored": "Categoría restaurada",
+      "deleted": "Categoría eliminada",
+      "duplicateName": "Ya tienes una categoría con ese nombre.",
+      "typeLocked": "No puedes cambiar el tipo porque ya tiene movimientos.",
+      "emptyTitle": "No hay categorías de este tipo",
+      "emptyText": "Crea una para empezar a clasificar tus movimientos."
+    },
+    "icons": {
+      "briefcase": "Maletín",
+      "sparkles": "Destellos",
+      "coins": "Monedas",
+      "landmark": "Banco",
+      "piggy-bank": "Hucha",
+      "gift": "Regalo",
+      "house": "Casa",
+      "shopping-cart": "Carrito",
+      "car": "Coche",
+      "bus": "Autobús",
+      "zap": "Rayo",
+      "heart-pulse": "Salud",
+      "ticket": "Entrada",
+      "utensils": "Cubiertos",
+      "coffee": "Café",
+      "repeat": "Repetir",
+      "shield-check": "Escudo",
+      "smartphone": "Móvil",
+      "shirt": "Ropa",
+      "graduation-cap": "Estudios",
+      "plane": "Avión",
+      "dumbbell": "Deporte",
+      "paw-print": "Mascotas",
+      "baby": "Bebé",
+      "ellipsis": "Otros"
+    },
+    "colors": {
+      "sage": "Salvia",
+      "sand": "Arena",
+      "mist": "Niebla",
+      "blush": "Rubor",
+      "butter": "Mantequilla",
+      "lavender": "Lavanda",
+      "peach": "Melocotón",
+      "mint": "Menta"
+    }
   }
 }

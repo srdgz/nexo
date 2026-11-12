@@ -6,6 +6,7 @@ import { TranslocoService } from '@jsverse/transloco';
 import { TranslatedTitleStrategy } from '@core/i18n/translated-title.strategy';
 import { FakeAuthRepository, TEST_USER, initTestAuth, provideTestAuth } from '../testing/auth';
 import { provideTestI18n } from '../testing/i18n';
+import { provideTestFinances } from '../testing/finances';
 import { routes } from './app.routes';
 
 const appScreens: [url: string, title: string][] = [
@@ -40,6 +41,7 @@ async function setup(user: typeof TEST_USER | null): Promise<void> {
     providers: [
       provideRouter(routes, withComponentInputBinding()),
       provideTestAuth(new FakeAuthRepository(user)),
+      provideTestFinances(),
       { provide: TitleStrategy, useExisting: TranslatedTitleStrategy },
     ],
   });

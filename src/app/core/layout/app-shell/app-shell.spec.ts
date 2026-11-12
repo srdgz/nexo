@@ -3,6 +3,7 @@ import { Router, TitleStrategy, provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { routes } from '../../../app.routes';
 import { provideTestI18n } from '../../../../testing/i18n';
+import { provideTestFinances } from '../../../../testing/finances';
 import { LanguageService } from '../../i18n/language.service';
 import { TranslatedTitleStrategy } from '../../i18n/translated-title.strategy';
 import { APP_MODE } from '../../app-mode/app-mode';
@@ -36,6 +37,7 @@ describe('AppShell', () => {
       providers: [
         provideRouter(routes),
         provideTestAuth(repository),
+        provideTestFinances(),
         { provide: TitleStrategy, useExisting: TranslatedTitleStrategy },
       ],
     });
@@ -48,9 +50,7 @@ describe('AppShell', () => {
       const harness = await RouterTestingHarness.create(path);
 
       expect(TestBed.inject(Router).url).toContain(path);
-      expect(
-        harness.routeNativeElement?.querySelector('nx-app-shell, nx-pending-page'),
-      ).toBeTruthy();
+      expect(harness.routeNativeElement?.querySelector('main router-outlet + *')).toBeTruthy();
     },
   );
 
@@ -108,6 +108,7 @@ describe('AppShell in demo mode', () => {
       providers: [
         provideRouter(routes),
         provideTestAuth(),
+        provideTestFinances(),
         { provide: APP_MODE, useValue: 'demo' },
         { provide: TitleStrategy, useExisting: TranslatedTitleStrategy },
       ],

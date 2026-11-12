@@ -23,6 +23,15 @@
   }
 </h1>
 
+@if (monthPicker().visible) {
+  <nx-month-picker
+    class="month"
+    [month]="monthPicker().month"
+    [compact]="mode() === 'mobile'"
+    (monthChange)="changeMonth($event)"
+  />
+}
+
 <div class="actions">
   @if (mode() !== 'mobile') {
     <button nx-button [nxMenuTrigger]="quickAddMenu">

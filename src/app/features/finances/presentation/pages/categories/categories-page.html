@@ -1,0 +1,164 @@
+<div class="toolbar">
+  <nx-segmented
+    size="md"
+    [label]="'finances.categories.type' | transloco"
+    [options]="typeOptions()"
+    [(value)]="type"
+  />
+  <button nx-button type="button" (click)="create()">
+    <svg nx-icon [icon]="icons.plus" size="17" strokeWidth="2.2"></svg>
+    {{ 'finances.categories.new' | transloco }}
+  </button>
+</div>
+
+@if (store.loading()) {
+  <div class="columns">
+    <nx-card>
+      @for (row of [1, 2, 3, 4]; track row) {
+        <nx-skeleton variant="list-row" />
+      }
+    </nx-card>
+    <nx-card>
+      @for (row of [1, 2, 3, 4]; track row) {
+        <nx-skeleton variant="list-row" />
+      }
+    </nx-card>
+  </div>
+} @else if (store.resource.error()) {
+  <nx-card>
+    <nx-error-state (retry)="store.resource.reload()" />
+  </nx-card>
+} @else if (visible().length === 0) {
+  <nx-card>
+    <nx-empty-state
+      [icon]="icons.empty"
+      [heading]="'finances.categories.emptyTitle' | transloco"
+      [description]="'finances.categories.emptyText' | transloco"
+    >
+      <button nx-button type="button" (click)="create()">
+        {{ 'finances.categories.new' | transloco }}
+      </button>
+    </nx-empty-state>
+  </nx-card>
+} @else {
+  <div class="columns">
+    @for (column of columns(); track $index) {
+      <nx-card>
+        <ul class="list" role="list">
+          @for (category of column; track category.id) {
+            <li class="row">
+              <nx-category-tile [icon]="category.icon" [color]="category.color" />
+              <span class="text">
+                <span class="name">{{ category.name }}</span>
+                <span class="meta">{{ usageText(category) }}</span>
+              </span>
+              <button
+                type="button"
+                nx-icon-button
+                size="sm"
+                [label]="'finances.actionsFor' | transloco: { name: category.name }"
+                [nxMenuTrigger]="menu"
+              >
+                <svg nx-icon [icon]="icons.more" size="18"></svg>
+              </button>
+              <nx-menu #menu [label]="category.name">
+                <button type="button" nx-menu-item (click)="edit(category)">
+                  <svg nx-icon [icon]="icons.edit" size="18"></svg>
+                  {{ 'finances.edit' | transloco }}
+                </button>
+                <button type="button" nx-menu-item (click)="setArchived(category, true)">
+                  <svg nx-icon [icon]="icons.archive" size="18"></svg>
+                  {{ 'finances.categories.archive' | transloco }}
+                </button>
+                <nx-menu-separator />
+                <button type="button" nx-menu-item danger (click)="askRemove(category)">
+                  <svg nx-icon [icon]="icons.remove" size="18"></svg>
+                  {{ 'finances.delete' | transloco }}
+                </button>
+              </nx-menu>
+            </li>
+          }
+        </ul>
+      </nx-card>
+    }
+  </div>
+}
+
+<nx-card variant="muted" class="archived">
+  <div class="archived-header">
+    <h2 class="archived-title">
+      {{ 'finances.categories.archived' | transloco: { count: archived().length } }}
+    </h2>
+    <p class="meta">{{ 'finances.categories.archiveHint' | transloco }}</p>
+  </div>
+  @if (archived().length > 0) {
+    <ul class="list" role="list">
+      @for (category of archived(); track category.id) {
+        <li class="row">
+          <nx-category-tile [icon]="category.icon" [color]="category.color" />
+          <span class="text">
+            <span class="name">{{ category.name }}</span>
+            <span class="meta">{{ 'finances.typeSingular.' + category.type | transloco }}</span>
+          </span>
+          <button
+            type="button"
+            nx-button
+            variant="secondary"
+            size="sm"
+            [disabled]="busy()"
+            (click)="setArchived(category, false)"
+          >
+            <svg nx-icon [icon]="icons.restore" size="16"></svg>
+            {{ 'finances.categories.restore' | transloco }}
+          </button>
+        </li>
+      }
+    </ul>
+  }
+</nx-card>
+
+<nx-category-dialog [category]="editing()" [defaultType]="type()" [(open)]="dialogOpen" />
+
+<nx-dialog
+  size="sm"
+  [heading]="'finances.categories.deleteTitle' | transloco: { name: removing()?.name ?? '' }"
+  [description]="'finances.categories.deleteText' | transloco"
+  [(open)]="removeOpen"
+>
+  @if (removeError(); as code) {
+    <nx-alert tone="danger">
+      {{ (code === 'in_use' ? 'finances.categories.inUseText' : messageKey(code)) | transloco }}
+    </nx-alert>
+  }
+  <button
+    nx-button
+    variant="secondary"
+    dialog-actions
+    type="button"
+    (click)="removeOpen.set(false)"
+  >
+    {{ 'finances.cancel' | transloco }}
+  </button>
+  @if (removeError() === 'in_use' && removing(); as category) {
+    <button
+      nx-button
+      dialog-actions
+      type="button"
+      [loading]="busy()"
+      (click)="setArchived(category, true)"
+    >
+      {{ 'finances.categories.archive' | transloco }}
+    </button>
+  } @else {
+    <button
+      nx-button
+      variant="danger"
+      dialog-actions
+      type="button"
+      [loading]="busy()"
+      (click)="remove()"
+    >
+      {{ 'finances.delete' | transloco }}
+    </button>
+  }
+</nx-dialog>

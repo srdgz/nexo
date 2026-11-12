@@ -1,11 +1,14 @@
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
+import { filter } from 'rxjs';
 import { ChevronDown, LogOut, Menu, PanelLeftClose, Plus } from 'lucide';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { NxAvatar } from '@shared/ui/avatar/avatar';
 import { NxButton } from '@shared/ui/button/button';
 import { NxIconButton } from '@shared/ui/icon-button/icon-button';
 import { NxLogo } from '@shared/ui/logo/logo';
+import { NxMonthPicker } from '@shared/ui/month-picker/month-picker';
 import {
   NxMenu,
   NxMenuItem,
@@ -34,6 +37,7 @@ import { NxIcon } from '@shared/ui/icon/icon';
     NxMenuLabel,
     NxMenuSeparator,
     NxMenuTrigger,
+    NxMonthPicker,
     RouterLink,
     TranslocoPipe,
   ],
@@ -46,6 +50,25 @@ export class NxAppHeader {
   readonly mode = input.required<LayoutMode>();
   readonly railOpen = input(false);
   readonly toggleRail = output();
+
+  private readonly router = inject(Router);
+  private readonly navigation = toSignal(
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)),
+    { initialValue: null },
+  );
+
+  protected readonly monthPicker = computed(() => {
+    this.navigation();
+    let route = this.router.routerState.snapshot.root;
+    while (route.firstChild) {
+      route = route.firstChild;
+    }
+    const value = route.queryParamMap.get('month');
+    return {
+      visible: route.data['monthPicker'] === true,
+      month: value && /^\d{4}-(0[1-9]|1[0-2])$/.test(value) ? value : currentMonth(),
+    };
+  });
 
   protected readonly titleKey = inject(TranslatedTitleStrategy).titleKey;
   protected readonly session = inject(Session);
@@ -62,4 +85,18 @@ export class NxAppHeader {
     chevron: ChevronDown,
     signOut: LogOut,
   };
+
+  protected changeMonth(month: string): void {
+    const tree = this.router.parseUrl(this.router.url);
+    const params = { ...tree.queryParams };
+    delete params['page'];
+    delete params['month'];
+    tree.queryParams = month === currentMonth() ? params : { ...params, month };
+    void this.router.navigateByUrl(tree);
+  }
+}
+
+function currentMonth(): string {
+  const today = new Date();
+  return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
 }
