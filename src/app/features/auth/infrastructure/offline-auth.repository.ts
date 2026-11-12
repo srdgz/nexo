@@ -16,4 +16,8 @@ export class OfflineAuthRepository implements AuthRepository {
   requestPasswordReset = unavailable;
   updatePassword = unavailable;
   completeEmailLink = unavailable;
+  updateProfile = unavailable;
+  changeEmail = unavailable;
+  changePassword = unavailable;
+  deleteAccount = unavailable;
 }

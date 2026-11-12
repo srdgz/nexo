@@ -102,7 +102,8 @@
       "mismatch": "Las contraseñas no coinciden.",
       "amount": "Introduce un importe mayor que cero.",
       "date": "Introduce una fecha válida.",
-      "endBeforeStart": "El fin debe ser posterior al inicio."
+      "endBeforeStart": "El fin debe ser posterior al inicio.",
+      "sameEmail": "Es el email que ya usas."
     },
     "month": {
       "previous": "Mes anterior",
@@ -178,7 +179,8 @@
       "checking": "Comprobando el enlace…",
       "errorTitle": "No hemos podido completar el acceso",
       "backToLogin": "Ir a iniciar sesión",
-      "requestAgain": "¿Necesitas cambiar la contraseña? Pide un enlace nuevo"
+      "requestAgain": "¿Necesitas cambiar la contraseña? Pide un enlace nuevo",
+      "confirmOther": "Enlace aceptado. Confirma también el que te hemos enviado al otro correo."
     },
     "errors": {
       "invalidCredentials": "Email o contraseña incorrectos.",
@@ -191,7 +193,9 @@
       "network": "No hay conexión con el servidor. Inténtalo de nuevo.",
       "unavailable": "Las cuentas todavía no están activas en esta instalación. Puedes explorar la demo.",
       "unknown": "Algo ha fallado. Inténtalo de nuevo.",
-      "cancelled": "Has cancelado el acceso. Puedes intentarlo de nuevo cuando quieras."
+      "cancelled": "Has cancelado el acceso. Puedes intentarlo de nuevo cuando quieras.",
+      "wrongPassword": "La contraseña actual no es correcta.",
+      "invalidEmail": "Ese correo no es válido."
     },
     "showcase": {
       "label": "Funciones de NEXO",
@@ -587,6 +591,47 @@
     "events": {
       "title": "Próximos eventos",
       "empty": "No hay eventos en las próximas semanas."
+    }
+  },
+  "settings": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "profile": {
+      "since": "Cuenta creada el {{date}}",
+      "demoNote": "En la demo puedes cambiar el nombre, pero no el email, la contraseña ni eliminar la cuenta.",
+      "personal": "Datos personales",
+      "nameSaved": "Nombre actualizado",
+      "email": "Email",
+      "currentEmail": "Email actual",
+      "newEmail": "Nuevo email",
+      "emailHint": "Te enviaremos un enlace al nuevo email para confirmarlo.",
+      "changeEmail": "Cambiar email",
+      "emailSent": "Te hemos enviado un enlace a {{email}}. El cambio se aplicará cuando lo confirmes.",
+      "password": "Contraseña",
+      "currentPassword": "Contraseña actual",
+      "changePassword": "Actualizar contraseña",
+      "passwordSaved": "Contraseña actualizada",
+      "noPassword": "Entras con Google, así que tu cuenta no tiene contraseña en NEXO.",
+      "session": "Sesión",
+      "sessionText": "Cierra la sesión en este dispositivo.",
+      "deleteTitle": "Eliminar cuenta",
+      "deleteText": "Se borrarán tus movimientos, presupuestos, tareas y eventos. No se puede deshacer.",
+      "deleteConfirm": "Escribe {{word}} para confirmar",
+      "deleteAction": "Eliminar cuenta",
+      "deleted": "Tu cuenta se ha eliminado"
+    },
+    "preferences": {
+      "language": "Idioma",
+      "languageHint": "Se aplica al instante y se guarda en tu perfil.",
+      "weekStart": "Primer día de la semana",
+      "weekStartHint": "Se usa en el calendario y en la vista semanal del inicio.",
+      "monday": "Lunes",
+      "sunday": "Domingo",
+      "currency": "Moneda",
+      "euro": "Euro (€)",
+      "currencyHint": "En esta versión NEXO trabaja solo con euros.",
+      "preview": "Vista previa del formato",
+      "saved": "Preferencias guardadas"
     }
   }
 }

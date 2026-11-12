@@ -10,13 +10,16 @@ import {
 } from '@features/auth/application/auth-repository';
 import { AuthStore } from '@features/auth/application/auth-store';
 import { AuthError, type AuthErrorCode } from '@features/auth/domain/auth-error';
-import type { AuthUser, SignUpData } from '@features/auth/domain/auth-user';
+import type { AuthUser, ProfileChanges, SignUpData } from '@features/auth/domain/auth-user';
 
 export const TEST_USER: AuthUser = {
   id: '11111111-1111-4111-8111-111111111111',
   email: 'laura@example.com',
   displayName: 'Laura Martín',
   locale: 'es',
+  weekStartsOn: 1,
+  createdAt: '2026-11-02T10:00:00.000Z',
+  hasPassword: true,
 };
 
 export class FakeAuthRepository implements AuthRepository {
@@ -68,6 +71,29 @@ export class FakeAuthRepository implements AuthRepository {
 
   completeEmailLink = (params: EmailLinkParams) =>
     this.run('completeEmailLink', [params], () => TEST_USER);
+
+  updateProfile = (changes: ProfileChanges) =>
+    this.run('updateProfile', [changes], () => {
+      const current = this.user ?? TEST_USER;
+      this.user = {
+        ...current,
+        ...(changes.fullName !== undefined ? { displayName: changes.fullName } : {}),
+        ...(changes.locale !== undefined ? { locale: changes.locale } : {}),
+        ...(changes.weekStartsOn !== undefined ? { weekStartsOn: changes.weekStartsOn } : {}),
+      };
+      return this.user;
+    });
+
+  changeEmail = (email: string, redirectTo: string) =>
+    this.run('changeEmail', [email, redirectTo], () => undefined);
+
+  changePassword = (current: string, next: string) =>
+    this.run('changePassword', [current, next], () => undefined);
+
+  deleteAccount = () =>
+    this.run('deleteAccount', [], () => {
+      this.user = null;
+    });
 
   private run<T>(method: string, args: unknown[], result: () => T): Promise<T> {
     this.calls.push({ method, args });

@@ -72,6 +72,10 @@ export class AppShell {
   );
 
   protected readonly section = computed(() => sectionFor(this.url()));
+  protected readonly tabSection = computed(() => {
+    const section = this.section();
+    return section && (this.mode() === 'mobile' || section.tabsOnDesktop) ? section : null;
+  });
 
   constructor() {
     effect(() => {

@@ -80,6 +80,7 @@ export function spendSeries(
   month: string,
   today: Date,
   range: SpendRange,
+  weekStartsOn: 0 | 1 = 1,
 ): SpendPoint[] {
   const totals = new Map(daily.map((row) => [row.date, row.total]));
   const todayIso = iso(today);
@@ -89,7 +90,7 @@ export function spendSeries(
   let length = count;
   if (range === 'week') {
     const anchor = monthState(month, today) === 'current' ? today.getDate() : count;
-    const weekday = (new Date(year, index - 1, anchor).getDay() + 6) % 7;
+    const weekday = (new Date(year, index - 1, anchor).getDay() - weekStartsOn + 7) % 7;
     start = Math.max(1, anchor - weekday);
     length = Math.min(7, count - start + 1);
   }

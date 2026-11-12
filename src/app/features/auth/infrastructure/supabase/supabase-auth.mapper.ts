@@ -1,10 +1,12 @@
 import { AuthError, type AuthErrorCode } from '../../domain/auth-error';
-import type { AuthUser, UserLocale } from '../../domain/auth-user';
+import type { AuthUser, UserLocale, WeekStart } from '../../domain/auth-user';
 
 export interface SupabaseUserLike {
   readonly id: string;
   readonly email?: string;
+  readonly created_at?: string;
   readonly user_metadata?: Record<string, unknown>;
+  readonly app_metadata?: Record<string, unknown>;
 }
 
 export interface SupabaseErrorLike {
@@ -15,6 +17,7 @@ export interface SupabaseErrorLike {
 
 const CODE_MAP: Readonly<Record<string, AuthErrorCode>> = {
   invalid_credentials: 'invalid_credentials',
+  email_address_invalid: 'invalid_email',
   email_not_confirmed: 'email_not_confirmed',
   user_already_exists: 'email_taken',
   email_exists: 'email_taken',
@@ -51,11 +54,17 @@ export function mapUser(user: SupabaseUserLike): AuthUser {
   const metadata = user.user_metadata ?? {};
   const email = user.email ?? '';
   const fullName = typeof metadata['full_name'] === 'string' ? metadata['full_name'].trim() : '';
-  const locale: UserLocale = metadata['locale'] === 'en' ? 'en' : 'es';
+  const locale: UserLocale | null =
+    metadata['locale'] === 'en' || metadata['locale'] === 'es' ? metadata['locale'] : null;
+  const weekStartsOn: WeekStart = metadata['week_starts_on'] === 0 ? 0 : 1;
+  const providers = user.app_metadata?.['providers'];
   return {
     id: user.id,
     email,
     displayName: fullName || email.split('@')[0] || email,
     locale,
+    weekStartsOn,
+    createdAt: user.created_at ?? null,
+    hasPassword: Array.isArray(providers) ? providers.includes('email') : true,
   };
 }

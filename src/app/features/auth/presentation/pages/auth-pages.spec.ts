@@ -233,6 +233,9 @@ describe('password recovery', () => {
       email: 'ana@example.com',
       displayName: 'Ana',
       locale: 'es',
+      weekStartsOn: 1,
+      createdAt: null,
+      hasPassword: true,
     });
     const inputs = root.querySelectorAll<HTMLInputElement>('nx-password-input input');
 

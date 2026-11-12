@@ -1,0 +1,151 @@
+@if (user(); as current) {
+  <div class="layout">
+    <div class="column">
+      <nx-card class="identity">
+        <nx-avatar size="lg" [name]="current.displayName" />
+        <div class="identity-text">
+          <h2>{{ current.displayName }}</h2>
+          <p class="muted">{{ current.email }}</p>
+          @if (since(); as date) {
+            <p class="muted">{{ 'settings.profile.since' | transloco: { date } }}</p>
+          }
+        </div>
+      </nx-card>
+
+      @if (demo) {
+        <nx-alert tone="info">{{ 'settings.profile.demoNote' | transloco }}</nx-alert>
+      }
+
+      <nx-card>
+        <nx-card-header [heading]="'settings.profile.personal' | transloco" />
+        @if (nameError(); as code) {
+          <nx-alert tone="danger">{{ messageKey(code) | transloco }}</nx-alert>
+        }
+        <form class="form" novalidate (submit)="saveName($event)">
+          <nx-field [label]="'auth.fields.name' | transloco" [state]="nameForm.fullName()">
+            <input nxInput autocomplete="name" [formField]="nameForm.fullName" />
+          </nx-field>
+          <div class="actions">
+            <button
+              type="submit"
+              nx-button
+              [disabled]="!nameChanged()"
+              [loading]="nameForm().submitting()"
+            >
+              {{ 'settings.save' | transloco }}
+            </button>
+          </div>
+        </form>
+      </nx-card>
+
+      <nx-card>
+        <nx-card-header [heading]="'settings.profile.email' | transloco" />
+        <p class="current">
+          <span class="muted">{{ 'settings.profile.currentEmail' | transloco }}</span>
+          <b>{{ current.email }}</b>
+        </p>
+        @if (emailSentTo(); as address) {
+          <nx-alert tone="success">
+            {{ 'settings.profile.emailSent' | transloco: { email: address } }}
+          </nx-alert>
+        }
+        @if (emailError(); as code) {
+          <nx-alert tone="danger">{{ messageKey(code) | transloco }}</nx-alert>
+        }
+        <form class="form" novalidate (submit)="saveEmail($event)">
+          <nx-field
+            [label]="'settings.profile.newEmail' | transloco"
+            [hint]="'settings.profile.emailHint' | transloco"
+            [state]="emailForm.email()"
+          >
+            <input nxInput type="email" autocomplete="email" [formField]="emailForm.email" />
+          </nx-field>
+          <div class="actions">
+            <button
+              type="submit"
+              nx-button
+              variant="secondary"
+              [disabled]="demo"
+              [loading]="emailForm().submitting()"
+            >
+              {{ 'settings.profile.changeEmail' | transloco }}
+            </button>
+          </div>
+        </form>
+      </nx-card>
+    </div>
+
+    <div class="column">
+      <nx-card>
+        <nx-card-header [heading]="'settings.profile.password' | transloco" />
+        @if (current.hasPassword) {
+          @if (passwordError(); as code) {
+            <nx-alert tone="danger">{{ messageKey(code) | transloco }}</nx-alert>
+          }
+          <form class="form" novalidate (submit)="savePassword($event)">
+            <nx-field
+              [label]="'settings.profile.currentPassword' | transloco"
+              [state]="passwordForm.current()"
+            >
+              <nx-password-input
+                autocomplete="current-password"
+                [formField]="passwordForm.current"
+              />
+            </nx-field>
+            <nx-field [label]="'auth.fields.newPassword' | transloco" [state]="passwordForm.next()">
+              <nx-password-input autocomplete="new-password" [formField]="passwordForm.next" />
+            </nx-field>
+            @if (nextPassword()) {
+              <nx-password-checks [password]="nextPassword()" />
+            }
+            <div class="actions">
+              <button
+                type="submit"
+                nx-button
+                variant="secondary"
+                [disabled]="demo"
+                [loading]="passwordForm().submitting()"
+              >
+                {{ 'settings.profile.changePassword' | transloco }}
+              </button>
+            </div>
+          </form>
+        } @else {
+          <p class="muted">{{ 'settings.profile.noPassword' | transloco }}</p>
+        }
+      </nx-card>
+
+      <nx-card>
+        <div class="split">
+          <div class="split-text">
+            <h2 class="title">{{ 'settings.profile.session' | transloco }}</h2>
+            <p class="muted">{{ 'settings.profile.sessionText' | transloco }}</p>
+          </div>
+          <button type="button" nx-button variant="secondary" (click)="signOut()">
+            <svg nx-icon [icon]="icons.signOut" size="18"></svg>
+            {{ 'auth.signOut' | transloco }}
+          </button>
+        </div>
+      </nx-card>
+
+      <nx-card class="danger">
+        <nx-card-header [heading]="'settings.profile.deleteTitle' | transloco" />
+        <p class="muted">{{ 'settings.profile.deleteText' | transloco }}</p>
+        <div class="actions">
+          <button
+            type="button"
+            nx-button
+            variant="danger"
+            [disabled]="demo"
+            (click)="deleting.set(true)"
+          >
+            <svg nx-icon [icon]="icons.trash" size="18"></svg>
+            {{ 'settings.profile.deleteAction' | transloco }}
+          </button>
+        </div>
+      </nx-card>
+    </div>
+  </div>
+
+  <nx-delete-account-dialog [(open)]="deleting" />
+}

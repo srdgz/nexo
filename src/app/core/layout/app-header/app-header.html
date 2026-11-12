@@ -87,7 +87,7 @@
         nx-menu-item
         [checked]="language.current() === lang"
         [attr.lang]="lang"
-        (click)="language.use(lang)"
+        (click)="changeLanguage(lang)"
       >
         {{ 'language.' + lang | transloco }}
       </button>

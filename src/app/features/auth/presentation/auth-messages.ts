@@ -2,6 +2,8 @@ import type { AuthErrorCode } from '../domain/auth-error';
 
 const MESSAGE_KEYS: Readonly<Record<AuthErrorCode, string>> = {
   invalid_credentials: 'auth.errors.invalidCredentials',
+  wrong_password: 'auth.errors.wrongPassword',
+  invalid_email: 'auth.errors.invalidEmail',
   email_not_confirmed: 'auth.errors.emailNotConfirmed',
   email_taken: 'auth.errors.emailTaken',
   weak_password: 'auth.errors.weakPassword',

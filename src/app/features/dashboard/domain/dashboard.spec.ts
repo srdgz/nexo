@@ -73,6 +73,12 @@ describe('dashboard domain', () => {
     ]);
   });
 
+  it('builds the current week from sunday when the user prefers it', () => {
+    const week = spendSeries([], '2026-11', today, 'week', 0);
+    expect(week[0]!.date).toBe('2026-11-08');
+    expect(week.at(-1)!.date).toBe('2026-11-14');
+  });
+
   it('compares spending with the previous month up to the same day', () => {
     const comparison = compareSpend(
       [

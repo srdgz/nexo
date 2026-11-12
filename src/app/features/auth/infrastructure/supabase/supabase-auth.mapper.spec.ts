@@ -28,22 +28,42 @@ describe('mapAuthError', () => {
 });
 
 describe('mapUser', () => {
-  it('reads the name and language from the user metadata', () => {
+  it('reads the name and preferences from the user metadata', () => {
     expect(
       mapUser({
         id: 'u1',
         email: 'ben@example.com',
-        user_metadata: { full_name: ' Ben Smith ', locale: 'en' },
+        created_at: '2026-11-02T10:00:00Z',
+        user_metadata: { full_name: ' Ben Smith ', locale: 'en', week_starts_on: 0 },
+        app_metadata: { providers: ['email'] },
       }),
-    ).toEqual({ id: 'u1', email: 'ben@example.com', displayName: 'Ben Smith', locale: 'en' });
+    ).toEqual({
+      id: 'u1',
+      email: 'ben@example.com',
+      displayName: 'Ben Smith',
+      locale: 'en',
+      weekStartsOn: 0,
+      createdAt: '2026-11-02T10:00:00Z',
+      hasPassword: true,
+    });
   });
 
-  it('falls back to the email name and Spanish', () => {
-    expect(mapUser({ id: 'u2', email: 'carla@example.com', user_metadata: {} })).toEqual({
+  it('falls back to the email name, no language and monday', () => {
+    expect(
+      mapUser({
+        id: 'u2',
+        email: 'carla@example.com',
+        user_metadata: {},
+        app_metadata: { providers: ['google'] },
+      }),
+    ).toEqual({
       id: 'u2',
       email: 'carla@example.com',
       displayName: 'carla',
-      locale: 'es',
+      locale: null,
+      weekStartsOn: 1,
+      createdAt: null,
+      hasPassword: false,
     });
   });
 });

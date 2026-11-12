@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import type { AuthUser, SignUpData } from '../domain/auth-user';
+import type { AuthUser, ProfileChanges, SignUpData } from '../domain/auth-user';
 
 export type AuthChange = 'signed_in' | 'signed_out' | 'password_recovery' | 'user_updated';
 
@@ -20,6 +20,10 @@ export interface AuthRepository {
   requestPasswordReset(email: string, redirectTo: string): Promise<void>;
   updatePassword(password: string): Promise<void>;
   completeEmailLink(params: EmailLinkParams): Promise<AuthUser>;
+  updateProfile(changes: ProfileChanges): Promise<AuthUser>;
+  changeEmail(email: string, redirectTo: string): Promise<void>;
+  changePassword(current: string, next: string): Promise<void>;
+  deleteAccount(): Promise<void>;
 }
 
 export const AUTH_REPOSITORY_LOADER = new InjectionToken<() => Promise<AuthRepository>>(

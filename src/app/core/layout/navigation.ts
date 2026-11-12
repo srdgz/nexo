@@ -24,6 +24,7 @@ export interface NavItem {
 
 export interface NavSection extends NavItem {
   readonly items: readonly NavItem[];
+  readonly tabsOnDesktop?: boolean;
 }
 
 export interface QuickAddItem extends NavItem {
@@ -67,6 +68,7 @@ export const SETTINGS: NavSection = {
   labelKey: 'nav.settings',
   path: '/app/settings',
   icon: Settings,
+  tabsOnDesktop: true,
   items: [
     { labelKey: 'nav.profile', path: '/app/settings/profile', icon: User },
     {

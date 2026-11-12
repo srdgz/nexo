@@ -16,7 +16,7 @@ import {
   NxMenuSeparator,
   NxMenuTrigger,
 } from '@shared/ui/menu/menu';
-import { SUPPORTED_LANGUAGES } from '../../i18n/language';
+import { type Language, SUPPORTED_LANGUAGES } from '../../i18n/language';
 import { LanguageService } from '../../i18n/language.service';
 import { TranslatedTitleStrategy } from '../../i18n/translated-title.strategy';
 import { Session } from '../../session/session';
@@ -87,6 +87,10 @@ export class NxAppHeader {
     chevron: ChevronDown,
     signOut: LogOut,
   };
+
+  protected changeLanguage(language: Language): void {
+    this.session.updatePreferences({ locale: language }).catch(() => undefined);
+  }
 
   protected changeMonth(month: string): void {
     const tree = this.router.parseUrl(this.router.url);

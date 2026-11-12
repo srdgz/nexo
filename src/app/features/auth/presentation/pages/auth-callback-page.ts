@@ -1,10 +1,11 @@
 import type { OnInit } from '@angular/core';
 import { ChangeDetectionStrategy, Component, DOCUMENT, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { TranslocoPipe } from '@jsverse/transloco';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { Link2Off } from 'lucide';
 import { NxButton } from '@shared/ui/button/button';
 import { NxIcon } from '@shared/ui/icon/icon';
+import { ToastService } from '@shared/ui/toast/toast';
 import { AuthStore } from '../../application/auth-store';
 import { type AuthErrorCode, toAuthError } from '../../domain/auth-error';
 import { safeLinkTarget } from '../../domain/return-url';
@@ -46,6 +47,8 @@ export class AuthCallbackPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly document = inject(DOCUMENT);
+  private readonly toast = inject(ToastService);
+  private readonly transloco = inject(TranslocoService);
 
   protected readonly error = signal<AuthErrorCode | null>(null);
   protected readonly linkIcon = Link2Off;
@@ -54,6 +57,11 @@ export class AuthCallbackPage implements OnInit {
   async ngOnInit(): Promise<void> {
     const query = this.route.snapshot.queryParamMap;
     const hash = new URLSearchParams(this.document.location.hash.replace(/^#/, ''));
+    if (!query.get('code') && !query.get('error') && hash.get('message')) {
+      this.toast.info(this.transloco.translate('auth.callback.confirmOther'));
+      await this.router.navigateByUrl(safeLinkTarget(query.get('next')), { replaceUrl: true });
+      return;
+    }
     try {
       await this.store.completeEmailLink({
         code: query.get('code'),

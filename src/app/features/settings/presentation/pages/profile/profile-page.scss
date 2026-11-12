@@ -1,0 +1,90 @@
+@use 'mixins' as *;
+
+.layout {
+  display: grid;
+  gap: var(--nx-space-4);
+  align-items: start;
+
+  @include bp(desktop) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.column {
+  display: grid;
+  gap: var(--nx-space-4);
+  min-width: 0;
+}
+
+.identity {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--nx-space-4);
+}
+
+.identity-text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+
+  h2 {
+    font-size: var(--nx-text-xl);
+  }
+
+  p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.muted {
+  color: var(--nx-text-muted);
+  font-size: var(--nx-text-sm);
+}
+
+.form {
+  display: grid;
+  gap: var(--nx-space-4);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+
+  @include below(tablet) {
+    button {
+      flex: 1;
+    }
+  }
+}
+
+.current {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+
+  b {
+    overflow-wrap: anywhere;
+  }
+}
+
+.split {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--nx-space-4);
+}
+
+.split-text {
+  display: grid;
+  flex: 1 1 220px;
+  gap: 2px;
+}
+
+.title {
+  font-size: var(--nx-text-base);
+}
+
+.danger {
+  border-color: color-mix(in srgb, var(--nx-danger) 35%, transparent);
+}

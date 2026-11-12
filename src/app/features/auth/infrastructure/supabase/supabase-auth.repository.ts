@@ -5,7 +5,7 @@ import type {
   EmailLinkParams,
 } from '../../application/auth-repository';
 import { AuthError } from '../../domain/auth-error';
-import type { AuthUser, SignUpData } from '../../domain/auth-user';
+import type { AuthUser, ProfileChanges, SignUpData } from '../../domain/auth-user';
 import { mapAuthError, mapUser } from './supabase-auth.mapper';
 
 const CHANGES: Partial<Record<AuthChangeEvent, AuthChange>> = {
@@ -115,5 +115,68 @@ export class SupabaseAuthRepository implements AuthRepository {
       throw mapAuthError(error);
     }
     return mapUser(data.user);
+  }
+
+  async updateProfile(changes: ProfileChanges): Promise<AuthUser> {
+    const current = await this.requireUser();
+    const values: Record<string, string | number> = {};
+    if (changes.fullName !== undefined) {
+      values['full_name'] = changes.fullName;
+    }
+    if (changes.locale !== undefined) {
+      values['locale'] = changes.locale;
+    }
+    if (changes.weekStartsOn !== undefined) {
+      values['week_starts_on'] = changes.weekStartsOn;
+    }
+    const { error } = await this.client.from('profiles').update(values).eq('id', current.id);
+    if (error) {
+      throw mapAuthError(error);
+    }
+    const { data, error: updateError } = await this.client.auth.updateUser({ data: values });
+    if (updateError) {
+      throw mapAuthError(updateError);
+    }
+    return mapUser(data.user);
+  }
+
+  async changeEmail(email: string, redirectTo: string): Promise<void> {
+    const { error } = await this.client.auth.updateUser({ email }, { emailRedirectTo: redirectTo });
+    if (error) {
+      throw mapAuthError(error);
+    }
+  }
+
+  async changePassword(current: string, next: string): Promise<void> {
+    const user = await this.requireUser();
+    const { error: signInError } = await this.client.auth.signInWithPassword({
+      email: user.email ?? '',
+      password: current,
+    });
+    if (signInError) {
+      throw signInError.code === 'invalid_credentials'
+        ? new AuthError('wrong_password')
+        : mapAuthError(signInError);
+    }
+    const { error } = await this.client.auth.updateUser({ password: next });
+    if (error) {
+      throw mapAuthError(error);
+    }
+  }
+
+  async deleteAccount(): Promise<void> {
+    const { error } = await this.client.functions.invoke('delete-account', { method: 'POST' });
+    if (error) {
+      throw new AuthError('unknown');
+    }
+    await this.client.auth.signOut({ scope: 'local' });
+  }
+
+  private async requireUser() {
+    const { data } = await this.client.auth.getSession();
+    if (!data.session) {
+      throw new AuthError('unknown');
+    }
+    return data.session.user;
   }
 }

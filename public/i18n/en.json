@@ -102,7 +102,8 @@
       "mismatch": "The passwords don’t match.",
       "amount": "Enter an amount greater than zero.",
       "date": "Enter a valid date.",
-      "endBeforeStart": "The end must be after the start."
+      "endBeforeStart": "The end must be after the start.",
+      "sameEmail": "That is the email you already use."
     },
     "month": {
       "previous": "Previous month",
@@ -178,7 +179,8 @@
       "checking": "Checking the link…",
       "errorTitle": "We couldn’t complete the sign in",
       "backToLogin": "Go to sign in",
-      "requestAgain": "Need to change your password? Request a new link"
+      "requestAgain": "Need to change your password? Request a new link",
+      "confirmOther": "Link accepted. Please also confirm the one we sent to your other email."
     },
     "errors": {
       "invalidCredentials": "Incorrect email or password.",
@@ -191,7 +193,9 @@
       "network": "Can’t reach the server. Please try again.",
       "unavailable": "Accounts aren’t enabled on this installation yet. You can explore the demo.",
       "unknown": "Something went wrong. Please try again.",
-      "cancelled": "You cancelled the sign in. You can try again whenever you like."
+      "cancelled": "You cancelled the sign in. You can try again whenever you like.",
+      "wrongPassword": "Your current password is not correct.",
+      "invalidEmail": "That email address is not valid."
     },
     "showcase": {
       "label": "NEXO features",
@@ -587,6 +591,47 @@
     "events": {
       "title": "Upcoming events",
       "empty": "No events in the coming weeks."
+    }
+  },
+  "settings": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "profile": {
+      "since": "Member since {{date}}",
+      "demoNote": "In the demo you can change your name, but not your email or password, and you cannot delete the account.",
+      "personal": "Personal details",
+      "nameSaved": "Name updated",
+      "email": "Email",
+      "currentEmail": "Current email",
+      "newEmail": "New email",
+      "emailHint": "We will send a link to the new email to confirm it.",
+      "changeEmail": "Change email",
+      "emailSent": "We sent a link to {{email}}. The change applies once you confirm it.",
+      "password": "Password",
+      "currentPassword": "Current password",
+      "changePassword": "Update password",
+      "passwordSaved": "Password updated",
+      "noPassword": "You sign in with Google, so your account has no NEXO password.",
+      "session": "Session",
+      "sessionText": "Sign out on this device.",
+      "deleteTitle": "Delete account",
+      "deleteText": "Your transactions, budgets, tasks and events will be erased. This cannot be undone.",
+      "deleteConfirm": "Type {{word}} to confirm",
+      "deleteAction": "Delete account",
+      "deleted": "Your account has been deleted"
+    },
+    "preferences": {
+      "language": "Language",
+      "languageHint": "Applies straight away and is saved to your profile.",
+      "weekStart": "First day of the week",
+      "weekStartHint": "Used by the calendar and the weekly view on Home.",
+      "monday": "Monday",
+      "sunday": "Sunday",
+      "currency": "Currency",
+      "euro": "Euro (€)",
+      "currencyHint": "This version of NEXO works with euros only.",
+      "preview": "Format preview",
+      "saved": "Preferences saved"
     }
   }
 }

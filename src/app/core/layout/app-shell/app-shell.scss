@@ -82,6 +82,10 @@ nx-sidebar.floating {
   margin: 0 var(--nx-space-4);
 }
 
+:host(:not(.mobile)) .section-tabs {
+  margin-bottom: var(--nx-space-4);
+}
+
 .content {
   flex: 1;
   min-width: 0;

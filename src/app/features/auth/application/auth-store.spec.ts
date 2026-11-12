@@ -2,6 +2,7 @@ import { DOCUMENT } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { APP_MODE, RELOAD } from '@core/app-mode/app-mode';
+import { LanguageService } from '@core/i18n/language.service';
 import { ToastService } from '@shared/ui/toast/toast';
 import { FakeAuthRepository, TEST_USER, provideTestAuth } from '../../../../testing/auth';
 import { provideTestI18n } from '../../../../testing/i18n';
@@ -35,6 +36,7 @@ describe('AuthStore', () => {
       displayName: 'Laura Martín',
       email: 'laura@example.com',
       avatarUrl: null,
+      weekStartsOn: 1,
     });
   });
 
@@ -126,5 +128,44 @@ describe('AuthStore', () => {
     expect(sessionStorage.getItem('nexo.mode')).toBeNull();
     expect(sessionStorage.getItem('nexo.demo.transactions')).toBeNull();
     expect(reload).toHaveBeenCalledWith('/auth/login');
+  });
+
+  it('switches to the language saved in the profile when the user signs in', async () => {
+    setup({ ...TEST_USER, locale: 'en' });
+    await store.init();
+    await new Promise((resolve) => setTimeout(resolve));
+
+    expect(TestBed.inject(LanguageService).current()).toBe('en');
+  });
+
+  it('keeps the active language for users without a saved one', async () => {
+    setup({ ...TEST_USER, locale: null });
+    await store.init();
+
+    expect(TestBed.inject(LanguageService).current()).toBe('es');
+  });
+
+  it('only changes the language when nobody is signed in', async () => {
+    setup(null);
+    await store.init();
+
+    await store.updatePreferences({ locale: 'en' });
+
+    expect(TestBed.inject(LanguageService).current()).toBe('en');
+    expect(repository.calls).toEqual([]);
+  });
+
+  it('signs out quietly after deleting the account', async () => {
+    setup();
+    await store.init();
+    const toast = TestBed.inject(ToastService);
+    const info = vi.spyOn(toast, 'info');
+
+    await store.deleteAccount();
+    repository.emit('signed_out', null);
+
+    expect(store.isAuthenticated()).toBe(false);
+    expect(info).not.toHaveBeenCalled();
+    expect(TestBed.inject(Router).url).toBe('/auth/login');
   });
 });

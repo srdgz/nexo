@@ -216,7 +216,13 @@ export class DashboardPage {
     const language = this.language();
     const weekday = new Intl.DateTimeFormat(localeFor(language), { weekday: 'short' });
     const full = new Intl.DateTimeFormat(localeFor(language), { day: 'numeric', month: 'long' });
-    const series = spendSeries(this.daily.value().current, this.current(), this.now, this.range());
+    const series = spendSeries(
+      this.daily.value().current,
+      this.current(),
+      this.now,
+      this.range(),
+      this.session.user()?.weekStartsOn ?? 1,
+    );
     const last = series.length;
     return series.map((point, index) => {
       const date = parseDay(point.date);

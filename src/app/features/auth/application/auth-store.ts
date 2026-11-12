@@ -2,10 +2,11 @@ import { DOCUMENT, Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslocoService } from '@jsverse/transloco';
 import { APP_MODE, RELOAD, leaveDemo } from '@core/app-mode/app-mode';
-import { type CurrentUser, Session } from '@core/session/session';
+import { LanguageService } from '@core/i18n/language.service';
+import { type CurrentUser, type PreferenceChanges, Session } from '@core/session/session';
 import { ToastService } from '@shared/ui/toast/toast';
 import { AuthError } from '../domain/auth-error';
-import type { AuthUser, SignUpData } from '../domain/auth-user';
+import type { AuthUser, ProfileChanges, SignUpData } from '../domain/auth-user';
 import { safeReturnUrl } from '../domain/return-url';
 import {
   AUTH_REPOSITORY_LOADER,
@@ -24,6 +25,7 @@ export class AuthStore extends Session {
   private readonly transloco = inject(TranslocoService);
   private readonly document = inject(DOCUMENT);
   private readonly reload = inject(RELOAD);
+  private readonly language = inject(LanguageService);
 
   private repository: AuthRepository | null = null;
   private signingOut = false;
@@ -44,7 +46,14 @@ export class AuthStore extends Session {
 
   readonly user = computed<CurrentUser | null>(() => {
     const user = this.state().user;
-    return user ? { displayName: user.displayName, email: user.email, avatarUrl: null } : null;
+    return user
+      ? {
+          displayName: user.displayName,
+          email: user.email,
+          avatarUrl: null,
+          weekStartsOn: user.weekStartsOn,
+        }
+      : null;
   });
 
   async init(): Promise<void> {
@@ -92,6 +101,45 @@ export class AuthStore extends Session {
     this.setUser(await this.repo().completeEmailLink(params));
   }
 
+  async updateProfile(changes: ProfileChanges): Promise<void> {
+    const fullName = changes.fullName?.trim();
+    this.setUser(
+      await this.repo().updateProfile({
+        ...changes,
+        ...(fullName !== undefined ? { fullName } : {}),
+      }),
+    );
+  }
+
+  async updatePreferences(changes: PreferenceChanges): Promise<void> {
+    if (changes.locale) {
+      await this.language.use(changes.locale);
+    }
+    if (this.isAuthenticated()) {
+      await this.updateProfile(changes);
+    }
+  }
+
+  changeEmail(email: string): Promise<void> {
+    return this.repo().changeEmail(email.trim(), this.linkUrl('/app/settings/profile'));
+  }
+
+  changePassword(current: string, next: string): Promise<void> {
+    return this.repo().changePassword(current, next);
+  }
+
+  async deleteAccount(): Promise<void> {
+    this.signingOut = true;
+    try {
+      await this.repo().deleteAccount();
+    } finally {
+      this.signingOut = false;
+    }
+    this.setUser(null);
+    this.toast.success(this.transloco.translate('settings.profile.deleted'));
+    await this.router.navigateByUrl('/auth/login');
+  }
+
   async signOut(): Promise<void> {
     if (this.mode === 'demo') {
       leaveDemo(this.document);
@@ -126,7 +174,11 @@ export class AuthStore extends Session {
   }
 
   private setUser(user: AuthUser | null): void {
+    const previous = this.state().user;
     this.state.set({ status: user ? 'authenticated' : 'anonymous', user });
+    if (user?.locale && user.id !== previous?.id && user.locale !== this.language.current()) {
+      void this.language.use(user.locale);
+    }
   }
 
   private repo(): AuthRepository {

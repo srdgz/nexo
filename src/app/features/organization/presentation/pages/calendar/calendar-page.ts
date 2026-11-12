@@ -10,6 +10,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { MapPin, Plus } from 'lucide';
 import { injectMediaQuery } from '@core/layout/media-query';
+import { Session } from '@core/session/session';
 import { NxButton } from '@shared/ui/button/button';
 import { NxCard, NxCardHeader } from '@shared/ui/card/card';
 import { NxErrorState } from '@shared/ui/feedback-state/feedback-state';
@@ -66,6 +67,7 @@ export class CalendarPage {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly language = injectActiveLanguage();
+  private readonly session = inject(Session);
   protected readonly compact = injectMediaQuery('(max-width: 767.98px)');
 
   protected readonly icons = { plus: Plus, location: MapPin };
@@ -82,7 +84,9 @@ export class CalendarPage {
     return month && MONTH_PATTERN.test(month) ? month : this.selected().slice(0, 7);
   });
 
-  protected readonly grid = computed(() => monthGrid(this.current(), 1));
+  protected readonly grid = computed(() =>
+    monthGrid(this.current(), this.session.user()?.weekStartsOn ?? 1),
+  );
 
   protected readonly weekdays = computed(() => {
     const format = new Intl.DateTimeFormat(localeFor(this.language()), {
