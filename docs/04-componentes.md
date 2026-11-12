@@ -61,6 +61,13 @@ Vista previa de cada variante en [`design/nexo-diseno.html`](design/nexo-diseno.
 - `nx-task-check` (casilla redonda con estado de carga) y `nx-task-payment-prompt` (diálogo «¿Registrar el pago?»): la lógica está en el servicio `TaskCompletion`, así que la lista de tareas, el calendario y el dashboard comparten el mismo flujo.
 - Finanzas no depende de Organización: declara el puerto `TaskLookup` (tareas para el selector «Tarea relacionada») y Organización lo implementa.
 
+### Estado tras la Fase 5
+
+- `nx-lollipop-chart` en `shared/charts`: dibuja a la anchura real del contenedor (`ResizeObserver`), así las etiquetas se leen igual en móvil que en escritorio. Los días futuros se marcan con un punto, el día de hoy se resalta con una etiqueta flotante y la tabla oculta solo lista los días pasados.
+- `PageHeading` en `core/layout`: servicio con el que una página sustituye el título y el subtítulo de la cabecera mientras está activa. El dashboard lo usa para el saludo («Buenas tardes, Laura») y el resumen del día; el título de la pestaña sigue siendo «Inicio · NEXO».
+- El dashboard no tiene componentes propios: sus tarjetas son `nx-card` y reutilizan `nx-task-check`, `nx-task-payment-prompt`, `nx-category-tile` y `nx-donut-chart`. Se extraerán si otra pantalla las necesita.
+- `nx-card-header` deja que el título ocupe su ancho natural y pasa las acciones a la línea siguiente cuando no caben.
+
 ## Gráficos (`shared/charts`, SVG propio)
 
 | Componente          | Uso                                                        | Accesibilidad                        |
