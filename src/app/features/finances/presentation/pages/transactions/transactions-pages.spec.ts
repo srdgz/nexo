@@ -126,9 +126,9 @@ describe('transaction form', () => {
   it('only offers categories of the chosen type', async () => {
     const { harness, root } = await open('/app/finances/transactions/new?type=income');
     await settle(harness);
-    const options = Array.from(root().querySelectorAll('nx-field select option')).map((option) =>
-      option.textContent?.trim(),
-    );
+    const options = Array.from(
+      root().querySelector('nx-field select')!.querySelectorAll('option'),
+    ).map((option) => option.textContent?.trim());
 
     expect(options).toEqual(['Elige una categoría', 'Extras', 'Nómina']);
   });

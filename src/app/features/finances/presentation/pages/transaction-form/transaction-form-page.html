@@ -51,6 +51,14 @@
         >
           <input nxInput type="text" autocomplete="off" [formField]="draft.description" />
         </nx-field>
+        <nx-field optional [label]="'finances.transactions.task' | transloco">
+          <select nxInput [formField]="draft.taskId">
+            <option value="">{{ 'finances.transactions.noTask' | transloco }}</option>
+            @for (option of taskOptions(); track option.id) {
+              <option [value]="option.id">{{ option.title }}</option>
+            }
+          </select>
+        </nx-field>
         <div class="actions">
           @if (id()) {
             <button

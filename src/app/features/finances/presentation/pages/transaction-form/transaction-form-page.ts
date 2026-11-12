@@ -29,6 +29,7 @@ import { ToastService } from '@shared/ui/toast/toast';
 import { injectActiveLanguage } from '@shared/util/active-language';
 import { formatMoney } from '@shared/util/money';
 import { CategoriesStore } from '../../../application/categories.store';
+import { TASK_LOOKUP } from '../../../application/task-lookup';
 import { FinanceService } from '../../../application/finance.service';
 import { budgetStatus, budgetUsage } from '../../../domain/budget';
 import type { EntryType } from '../../../domain/category';
@@ -45,6 +46,7 @@ interface TransactionModel {
   categoryId: string;
   date: string;
   description: string;
+  taskId: string;
 }
 
 @Component({
@@ -77,6 +79,10 @@ export class TransactionFormPage {
   readonly id = input<string>();
   readonly type = input<string>();
   readonly returnUrl = input<string>();
+  readonly task = input<string>();
+  readonly amount = input<string>();
+  readonly category = input<string>();
+  readonly description = input<string>();
 
   protected readonly categories = inject(CategoriesStore);
   private readonly finance = inject(FinanceService);
@@ -99,6 +105,7 @@ export class TransactionFormPage {
     categoryId: '',
     date: isoDate(new Date()),
     description: '',
+    taskId: '',
   });
 
   protected readonly draft = form(this.model, (path) => {
@@ -120,6 +127,16 @@ export class TransactionFormPage {
       { value: 'expense', label: this.transloco.translate('finances.typeSingular.expense') },
       { value: 'income', label: this.transloco.translate('finances.typeSingular.income') },
     ];
+  });
+
+  private readonly taskLookup = inject(TASK_LOOKUP);
+  protected readonly tasks = resource({
+    loader: () => this.taskLookup.options(),
+  });
+  protected readonly taskOptions = computed(() => {
+    const current = this.model().taskId;
+    const options = this.tasks.hasValue() ? this.tasks.value() : [];
+    return options.filter((option) => option.open || option.id === current);
   });
 
   protected readonly categoryOptions = computed(() => {
@@ -184,11 +201,21 @@ export class TransactionFormPage {
   constructor() {
     effect(() => {
       const requested = this.type();
+      const prefill = {
+        taskId: this.task() ?? '',
+        amount: Number(this.amount()),
+        categoryId: this.category() ?? '',
+        description: this.description() ?? '',
+      };
       if (!this.id()) {
         untracked(() =>
           this.model.update((model) => ({
             ...model,
             type: requested === 'income' ? 'income' : 'expense',
+            taskId: prefill.taskId,
+            amount: isValidAmount(prefill.amount) ? prefill.amount : model.amount,
+            categoryId: prefill.categoryId || model.categoryId,
+            description: prefill.description.slice(0, DESCRIPTION_MAX) || model.description,
           })),
         );
       }
@@ -232,7 +259,7 @@ export class TransactionFormPage {
           amount: value.amount ?? 0,
           date: value.date,
           description: value.description,
-          taskId: this.existing.hasValue() ? this.existing.value().taskId : null,
+          taskId: value.taskId || null,
         });
         this.toast.success(this.savedMessage(saved, impact));
         await this.router.navigateByUrl(this.backUrl(saved));
@@ -278,6 +305,7 @@ export class TransactionFormPage {
       categoryId: transaction.categoryId,
       date: transaction.date,
       description: transaction.description ?? '',
+      taskId: transaction.taskId ?? '',
     });
   }
 

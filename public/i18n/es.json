@@ -359,8 +359,10 @@
       "noBudget": "No tienes presupuesto para {{name}} en {{month}}.",
       "createBudget": "Crear un presupuesto",
       "impactHint": "Elige una categoría para ver cómo afecta a tu presupuesto.",
-      "tip": "Consejo: añade una descripción corta para encontrar el movimiento con el buscador.",
-      "notFoundTitle": "Movimiento no encontrado"
+      "tip": "Consejo: enlaza el gasto a una tarea para verlo en su historial.",
+      "notFoundTitle": "Movimiento no encontrado",
+      "task": "Tarea relacionada",
+      "noTask": "Ninguna"
     },
     "actions": "Acciones",
     "budgets": {
@@ -411,6 +413,103 @@
       "noExpenses": "Sin gastos este mes",
       "largest": "Mayores gastos del mes",
       "seeTransactions": "Ver movimientos"
+    }
+  },
+  "organization": {
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "actionsFor": "Acciones de {{title}}",
+    "priority": {
+      "high": "Alta",
+      "medium": "Media",
+      "low": "Baja"
+    },
+    "status": {
+      "pending": "Pendiente",
+      "in_progress": "En curso",
+      "completed": "Completada",
+      "overdue": "Vencida"
+    },
+    "filter": {
+      "open": "Pendientes",
+      "in_progress": "En curso",
+      "completed": "Completadas",
+      "all": "Todas"
+    },
+    "sort": {
+      "due": "Orden: vencimiento",
+      "priority": "Orden: prioridad",
+      "created": "Orden: más recientes"
+    },
+    "groups": {
+      "overdue": "Vencidas",
+      "today": "Hoy",
+      "week": "Esta semana",
+      "later": "Más adelante",
+      "undated": "Sin fecha",
+      "done": "Completadas"
+    },
+    "due": {
+      "today": "Hoy",
+      "tomorrow": "Mañana",
+      "yesterday": "Ayer",
+      "overdue": "Venció el {{date}}",
+      "date": "{{date}}",
+      "none": "Sin fecha"
+    },
+    "errors": {
+      "not_found": "No lo encontramos. Puede que se haya eliminado.",
+      "invalid": "Revisa los datos: hay algún valor no válido.",
+      "network": "No hay conexión con el servidor. Inténtalo de nuevo.",
+      "unknown": "Algo ha fallado. Inténtalo de nuevo."
+    },
+    "tasks": {
+      "new": "Nueva tarea",
+      "statusFilter": "Estado de las tareas",
+      "priorityFilter": "Prioridad",
+      "sortLabel": "Ordenar tareas",
+      "complete": "Completar «{{title}}»",
+      "reopen": "Reabrir «{{title}}»",
+      "completed": "Tarea completada",
+      "reopened": "Tarea reabierta",
+      "markInProgress": "Marcar en curso",
+      "markPending": "Marcar pendiente",
+      "deleteTitle": "¿Eliminar «{{title}}»?",
+      "deleteText": "Sus movimientos y eventos se conservan, pero dejan de estar enlazados.",
+      "deleted": "Tarea eliminada",
+      "emptyTitle": "No hay tareas con estos filtros",
+      "emptyText": "Crea una tarea o cambia los filtros."
+    },
+    "payment": {
+      "title": "¿Registrar el pago de {{amount}}?",
+      "text": "Se creará un gasto en {{category}} enlazado a «{{title}}».",
+      "later": "Ahora no",
+      "register": "Registrar el pago"
+    },
+    "form": {
+      "title": "Título",
+      "description": "Descripción",
+      "priority": "Prioridad",
+      "dueDate": "Fecha límite",
+      "status": "Estado",
+      "plan": "Pago previsto",
+      "planHelp": "Une esta tarea con un gasto",
+      "amount": "Importe",
+      "category": "Categoría",
+      "planNote": "Al completar la tarea te propondremos registrar este gasto.",
+      "planNoBudget": "{{category}} no tiene presupuesto ese mes.",
+      "planFits": "Cabe en tu presupuesto de {{category}} ({{amount}}).",
+      "planOver": "Superará tu presupuesto de {{category}} ({{amount}}).",
+      "create": "Crear tarea",
+      "created": "Tarea creada",
+      "updated": "Tarea actualizada",
+      "notFound": "Tarea no encontrada",
+      "linked": "Movimientos relacionados",
+      "linkedNew": "Aparecerán aquí los pagos que enlaces a esta tarea.",
+      "linkedEmpty": "Todavía no hay movimientos enlazados.",
+      "linkedTotal": "Total pagado: {{amount}}"
     }
   }
 }

@@ -4,6 +4,7 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import { routes } from '../../../app.routes';
 import { provideTestI18n } from '../../../../testing/i18n';
 import { provideTestFinances } from '../../../../testing/finances';
+import { provideTestOrganization } from '../../../../testing/organization';
 import { LanguageService } from '../../i18n/language.service';
 import { TranslatedTitleStrategy } from '../../i18n/translated-title.strategy';
 import { APP_MODE } from '../../app-mode/app-mode';
@@ -38,6 +39,7 @@ describe('AppShell', () => {
         provideRouter(routes),
         provideTestAuth(repository),
         provideTestFinances(),
+        provideTestOrganization(),
         { provide: TitleStrategy, useExisting: TranslatedTitleStrategy },
       ],
     });
@@ -109,6 +111,7 @@ describe('AppShell in demo mode', () => {
         provideRouter(routes),
         provideTestAuth(),
         provideTestFinances(),
+        provideTestOrganization(),
         { provide: APP_MODE, useValue: 'demo' },
         { provide: TitleStrategy, useExisting: TranslatedTitleStrategy },
       ],

@@ -359,8 +359,10 @@
       "noBudget": "You don’t have a budget for {{name}} in {{month}}.",
       "createBudget": "Create a budget",
       "impactHint": "Choose a category to see how it affects your budget.",
-      "tip": "Tip: add a short description so you can find the transaction with the search.",
-      "notFoundTitle": "Transaction not found"
+      "tip": "Tip: link the expense to a task to see it in the task’s history.",
+      "notFoundTitle": "Transaction not found",
+      "task": "Related task",
+      "noTask": "None"
     },
     "actions": "Actions",
     "budgets": {
@@ -411,6 +413,103 @@
       "noExpenses": "No expenses this month",
       "largest": "Largest expenses this month",
       "seeTransactions": "See transactions"
+    }
+  },
+  "organization": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "actionsFor": "Actions for {{title}}",
+    "priority": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "status": {
+      "pending": "Pending",
+      "in_progress": "In progress",
+      "completed": "Completed",
+      "overdue": "Overdue"
+    },
+    "filter": {
+      "open": "Pending",
+      "in_progress": "In progress",
+      "completed": "Completed",
+      "all": "All"
+    },
+    "sort": {
+      "due": "Sort: due date",
+      "priority": "Sort: priority",
+      "created": "Sort: newest"
+    },
+    "groups": {
+      "overdue": "Overdue",
+      "today": "Today",
+      "week": "This week",
+      "later": "Later",
+      "undated": "No date",
+      "done": "Completed"
+    },
+    "due": {
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "yesterday": "Yesterday",
+      "overdue": "Was due {{date}}",
+      "date": "{{date}}",
+      "none": "No date"
+    },
+    "errors": {
+      "not_found": "We couldn’t find it. It may have been deleted.",
+      "invalid": "Check the data: some value isn’t valid.",
+      "network": "Can’t reach the server. Please try again.",
+      "unknown": "Something went wrong. Please try again."
+    },
+    "tasks": {
+      "new": "New task",
+      "statusFilter": "Task status",
+      "priorityFilter": "Priority",
+      "sortLabel": "Sort tasks",
+      "complete": "Complete “{{title}}”",
+      "reopen": "Reopen “{{title}}”",
+      "completed": "Task completed",
+      "reopened": "Task reopened",
+      "markInProgress": "Mark in progress",
+      "markPending": "Mark pending",
+      "deleteTitle": "Delete “{{title}}”?",
+      "deleteText": "Its transactions and events are kept but no longer linked.",
+      "deleted": "Task deleted",
+      "emptyTitle": "No tasks match these filters",
+      "emptyText": "Create a task or change the filters."
+    },
+    "payment": {
+      "title": "Record the {{amount}} payment?",
+      "text": "An expense in {{category}} linked to “{{title}}” will be created.",
+      "later": "Not now",
+      "register": "Record the payment"
+    },
+    "form": {
+      "title": "Title",
+      "description": "Description",
+      "priority": "Priority",
+      "dueDate": "Due date",
+      "status": "Status",
+      "plan": "Planned payment",
+      "planHelp": "Link this task with an expense",
+      "amount": "Amount",
+      "category": "Category",
+      "planNote": "When you complete the task we’ll offer to record this expense.",
+      "planNoBudget": "{{category}} has no budget that month.",
+      "planFits": "It fits your {{category}} budget ({{amount}}).",
+      "planOver": "It will go over your {{category}} budget ({{amount}}).",
+      "create": "Create task",
+      "created": "Task created",
+      "updated": "Task updated",
+      "notFound": "Task not found",
+      "linked": "Related transactions",
+      "linkedNew": "Payments you link to this task will show up here.",
+      "linkedEmpty": "No linked transactions yet.",
+      "linkedTotal": "Total paid: {{amount}}"
     }
   }
 }

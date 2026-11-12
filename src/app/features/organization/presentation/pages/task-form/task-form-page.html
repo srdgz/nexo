@@ -1,0 +1,185 @@
+@if (id() && existing.error()) {
+  <nx-card>
+    <nx-error-state
+      [heading]="'organization.form.notFound' | transloco"
+      [description]="'organization.errors.not_found' | transloco"
+      (retry)="existing.reload()"
+    />
+  </nx-card>
+} @else if (id() && existing.isLoading()) {
+  <nx-card><nx-skeleton variant="card" /></nx-card>
+} @else {
+  <div class="layout">
+    <nx-card>
+      <form class="form" novalidate (submit)="onSubmit($event)">
+        @if (error(); as code) {
+          <nx-alert tone="danger">{{ 'organization.errors.' + code | transloco }}</nx-alert>
+        }
+        <nx-field [label]="'organization.form.title' | transloco" [state]="draft.title()">
+          <input nxInput type="text" autocomplete="off" [formField]="draft.title" />
+        </nx-field>
+        <nx-field
+          optional
+          [label]="'organization.form.description' | transloco"
+          [state]="draft.description()"
+        >
+          <textarea nxInput [formField]="draft.description"></textarea>
+        </nx-field>
+        <div class="pair">
+          <div class="group">
+            <span class="group-label">{{ 'organization.form.priority' | transloco }}</span>
+            <nx-segmented
+              size="md"
+              [label]="'organization.form.priority' | transloco"
+              [options]="priorityOptions()"
+              [formField]="draft.priority"
+            />
+          </div>
+          <nx-field optional [label]="'organization.form.dueDate' | transloco">
+            <input nxInput type="date" [formField]="draft.dueDate" />
+          </nx-field>
+        </div>
+        @if (id()) {
+          <div class="group">
+            <span class="group-label">{{ 'organization.form.status' | transloco }}</span>
+            <nx-segmented
+              size="md"
+              [label]="'organization.form.status' | transloco"
+              [options]="statusOptions()"
+              [formField]="draft.status"
+            />
+          </div>
+        }
+
+        <section class="plan" [class.on]="model().hasPlan">
+          <label class="nx-choice plan-toggle">
+            <span class="plan-title">
+              <b>{{ 'organization.form.plan' | transloco }}</b>
+              <span class="muted">{{ 'organization.form.planHelp' | transloco }}</span>
+            </span>
+            <input type="checkbox" nxSwitch [formField]="draft.hasPlan" />
+          </label>
+          @if (model().hasPlan) {
+            <div class="pair">
+              <nx-field [label]="'organization.form.amount' | transloco" [state]="draft.amount()">
+                <nx-money-input [formField]="draft.amount" />
+              </nx-field>
+              <nx-field
+                [label]="'organization.form.category' | transloco"
+                [state]="draft.categoryId()"
+              >
+                <select nxInput [formField]="draft.categoryId">
+                  <option value="" disabled>
+                    {{ 'finances.transactions.chooseCategory' | transloco }}
+                  </option>
+                  @for (category of expenseCategories(); track category.id) {
+                    <option [value]="category.id">{{ category.name }}</option>
+                  }
+                </select>
+              </nx-field>
+            </div>
+            <p class="hint">
+              <svg nx-icon [icon]="icons.info" size="16"></svg>
+              <span>
+                {{ 'organization.form.planNote' | transloco }}
+                @if (planHint(); as hint) {
+                  {{ hint }}
+                }
+              </span>
+            </p>
+          }
+        </section>
+
+        <div class="actions">
+          @if (id()) {
+            <button
+              type="button"
+              nx-button
+              variant="ghost"
+              class="delete"
+              (click)="removeOpen.set(true)"
+            >
+              <svg nx-icon [icon]="icons.remove" size="16"></svg>
+              {{ 'organization.delete' | transloco }}
+            </button>
+          }
+          <a nx-button variant="secondary" routerLink="/app/organization/tasks">
+            {{ 'organization.cancel' | transloco }}
+          </a>
+          <button type="submit" nx-button [loading]="draft().submitting()">
+            {{ (id() ? 'organization.save' : 'organization.form.create') | transloco }}
+          </button>
+        </div>
+      </form>
+    </nx-card>
+
+    <aside class="side">
+      <nx-card>
+        <nx-card-header [heading]="'organization.form.linked' | transloco" />
+        @if (!id()) {
+          <p class="muted">{{ 'organization.form.linkedNew' | transloco }}</p>
+        } @else if (linked.hasValue()) {
+          @if (linked.value().length === 0) {
+            <p class="muted">{{ 'organization.form.linkedEmpty' | transloco }}</p>
+            @if (existing.value()?.planned && registerLink(); as link) {
+              <a
+                nx-button
+                variant="secondary"
+                size="sm"
+                [routerLink]="link.path"
+                [queryParams]="link.queryParams"
+              >
+                <svg nx-icon [icon]="icons.link" size="16"></svg>
+                {{ 'organization.payment.register' | transloco }}
+              </a>
+            }
+          } @else {
+            <ul class="linked" role="list">
+              @for (item of linked.value(); track item.id) {
+                <li>
+                  <a [routerLink]="['/app/finances/transactions', item.id, 'edit']">
+                    {{ item.description || categories.find(item.categoryId)?.name }}
+                  </a>
+                  <span class="muted">{{ shortDate(item.date) }}</span>
+                  <b class="nx-num">−{{ money(item.amount) }}</b>
+                </li>
+              }
+            </ul>
+            <p class="total">
+              {{ 'organization.form.linkedTotal' | transloco: { amount: linkedTotal() } }}
+            </p>
+          }
+        } @else {
+          <nx-skeleton variant="list-row" />
+        }
+      </nx-card>
+    </aside>
+  </div>
+}
+
+<nx-dialog
+  size="sm"
+  [heading]="'organization.tasks.deleteTitle' | transloco: { title: model().title }"
+  [description]="'organization.tasks.deleteText' | transloco"
+  [(open)]="removeOpen"
+>
+  <button
+    nx-button
+    variant="secondary"
+    dialog-actions
+    type="button"
+    (click)="removeOpen.set(false)"
+  >
+    {{ 'organization.cancel' | transloco }}
+  </button>
+  <button
+    nx-button
+    variant="danger"
+    dialog-actions
+    type="button"
+    [loading]="removing()"
+    (click)="remove()"
+  >
+    {{ 'organization.delete' | transloco }}
+  </button>
+</nx-dialog>

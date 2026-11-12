@@ -1,0 +1,164 @@
+<div class="toolbar">
+  <div class="chips" role="group" [attr.aria-label]="'organization.tasks.statusFilter' | transloco">
+    @for (item of filters; track item) {
+      <button
+        nx-chip
+        [selected]="filter() === item"
+        [count]="item === 'completed' || item === 'all' ? null : counts()[item]"
+        (click)="setFilter(item)"
+      >
+        {{ 'organization.filter.' + item | transloco }}
+      </button>
+    }
+  </div>
+  <div
+    class="chips"
+    role="group"
+    [attr.aria-label]="'organization.tasks.priorityFilter' | transloco"
+  >
+    @for (item of priorities; track item) {
+      <button
+        nx-chip
+        [selected]="selectedPriorities().includes(item)"
+        (click)="togglePriority(item)"
+      >
+        {{ 'organization.priority.' + item | transloco }}
+      </button>
+    }
+  </div>
+  <select
+    nxInput
+    class="sort"
+    [attr.aria-label]="'organization.tasks.sortLabel' | transloco"
+    (change)="setSort($any($event.target).value)"
+  >
+    @for (item of sorts; track item) {
+      <option [value]="item" [selected]="order() === item">
+        {{ 'organization.sort.' + item | transloco }}
+      </option>
+    }
+  </select>
+  <a nx-button class="new" routerLink="/app/organization/tasks/new">
+    <svg nx-icon [icon]="icons.plus" size="17" strokeWidth="2.2"></svg>
+    {{ 'organization.tasks.new' | transloco }}
+  </a>
+</div>
+
+<nx-card class="results" [attr.aria-busy]="tasks.isLoading() ? 'true' : null">
+  @if (tasks.isLoading() && !tasks.hasValue()) {
+    @for (row of [1, 2, 3, 4, 5]; track row) {
+      <nx-skeleton variant="list-row" />
+    }
+  } @else if (tasks.error()) {
+    <nx-error-state variant="card" (retry)="tasks.reload()" />
+  } @else if (groups().length === 0) {
+    <nx-empty-state
+      variant="card"
+      [icon]="icons.empty"
+      [heading]="'organization.tasks.emptyTitle' | transloco"
+      [description]="'organization.tasks.emptyText' | transloco"
+    >
+      <a nx-button routerLink="/app/organization/tasks/new">
+        {{ 'organization.tasks.new' | transloco }}
+      </a>
+    </nx-empty-state>
+  } @else {
+    @for (group of groups(); track group.key) {
+      <section class="group" [class.overdue]="group.key === 'overdue'">
+        <h2 class="group-label">
+          {{ 'organization.groups.' + group.key | transloco }} · {{ group.tasks.length }}
+        </h2>
+        <ul class="rows" role="list">
+          @for (task of group.tasks; track task.id) {
+            <li class="row" [class.done]="task.status === 'completed'">
+              <nx-task-check [task]="task" />
+              <a class="text" [routerLink]="['/app/organization/tasks', task.id, 'edit']">
+                <span class="title">{{ task.title }}</span>
+                <span class="meta">
+                  <span [class.late]="isOverdueText(task)">{{ dueText(task) }}</span>
+                  @if (task.status === 'in_progress') {
+                    · {{ 'organization.status.in_progress' | transloco }}
+                  }
+                  @if (task.description) {
+                    · {{ task.description }}
+                  }
+                </span>
+              </a>
+              @if (task.planned; as planned) {
+                <nx-badge appearance="outline" class="amount">{{ money(planned.amount) }}</nx-badge>
+              }
+              <nx-priority-badge class="priority" [priority]="task.priority" />
+              <button
+                type="button"
+                nx-icon-button
+                size="sm"
+                [label]="'organization.actionsFor' | transloco: { title: task.title }"
+                [nxMenuTrigger]="menu"
+              >
+                <svg nx-icon [icon]="icons.more" size="18"></svg>
+              </button>
+              <nx-menu #menu [label]="task.title">
+                <a nx-menu-item [routerLink]="['/app/organization/tasks', task.id, 'edit']">
+                  <svg nx-icon [icon]="icons.edit" size="18"></svg>
+                  {{ 'organization.edit' | transloco }}
+                </a>
+                @if (task.status !== 'completed') {
+                  <button
+                    type="button"
+                    nx-menu-item
+                    (click)="setInProgress(task, task.status !== 'in_progress')"
+                  >
+                    <svg nx-icon [icon]="icons.progress" size="18"></svg>
+                    {{
+                      (task.status === 'in_progress'
+                        ? 'organization.tasks.markPending'
+                        : 'organization.tasks.markInProgress'
+                      ) | transloco
+                    }}
+                  </button>
+                }
+                <nx-menu-separator />
+                <button type="button" nx-menu-item danger (click)="askRemove(task)">
+                  <svg nx-icon [icon]="icons.remove" size="18"></svg>
+                  {{ 'organization.delete' | transloco }}
+                </button>
+              </nx-menu>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+  }
+</nx-card>
+
+<nx-task-payment-prompt />
+
+<nx-dialog
+  size="sm"
+  [heading]="'organization.tasks.deleteTitle' | transloco: { title: removing()?.title ?? '' }"
+  [description]="'organization.tasks.deleteText' | transloco"
+  [(open)]="removeOpen"
+>
+  @if (removeError(); as code) {
+    <nx-alert tone="danger">{{ 'organization.errors.' + code | transloco }}</nx-alert>
+  }
+  <button
+    nx-button
+    variant="secondary"
+    dialog-actions
+    type="button"
+    (click)="removeOpen.set(false)"
+  >
+    {{ 'organization.cancel' | transloco }}
+  </button>
+  <button
+    nx-button
+    variant="danger"
+    dialog-actions
+    type="button"
+    [loading]="busy()"
+    (click)="remove()"
+  >
+    {{ 'organization.delete' | transloco }}
+  </button>
+</nx-dialog>
