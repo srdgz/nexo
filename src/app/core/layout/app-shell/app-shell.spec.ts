@@ -99,7 +99,9 @@ describe('AppShell', () => {
 
     expect(TestBed.inject(LanguageService).current()).toBe('en');
     expect(english.getAttribute('aria-checked')).toBe('true');
-    expect(harness.routeNativeElement!.querySelector('h1')?.textContent?.trim()).toBe('Home');
+    expect(harness.routeNativeElement!.querySelector('h1')?.textContent?.trim()).toMatch(
+      /^Good (morning|afternoon|evening), Laura$/,
+    );
   });
 });
 

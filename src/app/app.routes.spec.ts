@@ -11,7 +11,6 @@ import { provideTestOrganization } from '../testing/organization';
 import { routes } from './app.routes';
 
 const appScreens: [url: string, title: string][] = [
-  ['/app/dashboard', 'Inicio'],
   ['/app/finances/overview', 'Resumen financiero'],
   ['/app/finances/transactions', 'Movimientos'],
   ['/app/finances/transactions/new', 'Nuevo movimiento'],
@@ -58,6 +57,15 @@ describe('app routes with a session', () => {
 
     expect(harness.routeNativeElement?.querySelector('h1')?.textContent?.trim()).toBe(title);
     expect(TestBed.inject(Title).getTitle()).toBe(`${title} · NEXO`);
+  });
+
+  it('/app/dashboard greets the user and keeps "Inicio" as page title', async () => {
+    const harness = await RouterTestingHarness.create('/app/dashboard');
+
+    expect(harness.routeNativeElement?.querySelector('h1')?.textContent?.trim()).toMatch(
+      /^(Buenos días|Buenas tardes|Buenas noches), Laura$/,
+    );
+    expect(TestBed.inject(Title).getTitle()).toBe('Inicio · NEXO');
   });
 
   it.each([

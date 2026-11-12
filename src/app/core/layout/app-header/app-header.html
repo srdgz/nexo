@@ -17,11 +17,18 @@
   </a>
 }
 
-<h1 class="title">
-  @if (titleKey(); as key) {
-    {{ key | transloco }}
+<div class="heading">
+  <h1 class="title">
+    @if (heading.value(); as custom) {
+      {{ custom.title }}
+    } @else if (titleKey(); as key) {
+      {{ key | transloco }}
+    }
+  </h1>
+  @if (heading.value()?.subtitle; as subtitle) {
+    <p class="subtitle">{{ subtitle }}</p>
   }
-</h1>
+</div>
 
 @if (monthPicker().visible) {
   <nx-month-picker

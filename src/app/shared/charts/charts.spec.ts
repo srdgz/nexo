@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { NxBarChart, niceMax } from './bar-chart';
 import { NxDonutChart } from './donut-chart';
+import { NxLollipopChart } from './lollipop-chart';
 
 describe('niceMax', () => {
   it.each([
@@ -16,7 +17,7 @@ describe('niceMax', () => {
 });
 
 @Component({
-  imports: [NxBarChart, NxDonutChart],
+  imports: [NxBarChart, NxDonutChart, NxLollipopChart],
   template: `
     <nx-bar-chart
       caption="Income and expenses"
@@ -39,6 +40,16 @@ describe('niceMax', () => {
         { label: 'Food', value: 25, color: 'sage' },
         { label: 'Empty', value: 0, color: 'sand' },
       ]"
+    />
+    <nx-lollipop-chart
+      caption="Daily spend"
+      badgeText="Today · 30 €"
+      [points]="[
+        { label: '1', title: 'Day 1', value: 10, showLabel: true },
+        { label: '2', title: 'Day 2', value: 30, highlight: true },
+        { label: '3', title: 'Day 3', value: 0, future: true },
+      ]"
+      [format]="format"
     />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -84,5 +95,25 @@ describe('charts', () => {
     expect(arcs).toHaveLength(2);
     expect(lengths[0]! / lengths[1]!).toBeCloseTo(3, 0);
     expect(root.querySelectorAll('nx-donut-chart tbody tr')).toHaveLength(3);
+  });
+
+  it('draws a lollipop for each past day and a dot for the days to come', () => {
+    const chart = root.querySelector('nx-lollipop-chart')!;
+
+    expect(chart.querySelectorAll('.head')).toHaveLength(2);
+    expect(chart.querySelectorAll('.future')).toHaveLength(1);
+    expect(chart.querySelector('.head.highlight title')?.textContent).toBe('Day 2');
+    expect(chart.querySelector('.badge text')?.textContent?.trim()).toBe('Today · 30 €');
+  });
+
+  it('lists only the past days in the lollipop table', () => {
+    const rows = Array.from(root.querySelectorAll('nx-lollipop-chart tbody tr')).map((row) =>
+      Array.from(row.children).map((cell) => cell.textContent?.trim()),
+    );
+
+    expect(rows).toEqual([
+      ['Day 1', '10 €'],
+      ['Day 2', '30 €'],
+    ]);
   });
 });

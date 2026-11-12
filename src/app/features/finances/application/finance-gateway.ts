@@ -1,7 +1,7 @@
 import { InjectionToken } from '@angular/core';
 import type { Budget, BudgetDraft } from '../domain/budget';
 import type { Category, CategoryDraft } from '../domain/category';
-import type { CategoryTotal, MonthTotals, PeriodSummary } from '../domain/insights';
+import type { CategoryTotal, DailyTotal, MonthTotals, PeriodSummary } from '../domain/insights';
 import type { MonthKey } from '../domain/month';
 import type { Page, Transaction, TransactionDraft, TransactionQuery } from '../domain/transaction';
 
@@ -34,6 +34,7 @@ export interface InsightsRepository {
   expensesByCategory(month: MonthKey): Promise<CategoryTotal[]>;
   trend(lastMonth: MonthKey, months: number): Promise<MonthTotals[]>;
   largestExpenses(month: MonthKey, limit: number): Promise<Transaction[]>;
+  dailyExpenses(month: MonthKey): Promise<DailyTotal[]>;
 }
 
 export interface FinanceGateway {

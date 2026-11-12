@@ -1,0 +1,357 @@
+<div class="grid">
+  <nx-card variant="highlight" class="hero">
+    @if (hero(); as hero) {
+      <div class="hero-head">
+        <p class="hero-label">{{ 'dashboard.hero.title' | transloco: { month: monthName() } }}</p>
+        <span class="hero-badge">{{ heroBadge() }}</span>
+      </div>
+      <p class="hero-amount nx-num">{{ money(hero.balance) }}</p>
+      <div class="hero-split">
+        <a
+          class="hero-tile"
+          routerLink="/app/finances/transactions"
+          [queryParams]="{ month: current(), type: 'income' }"
+        >
+          <span class="hero-icon income"
+            ><svg nx-icon [icon]="icons.income" size="15" strokeWidth="2.2"></svg
+          ></span>
+          <span>
+            <small>{{ 'finances.overview.income' | transloco }}</small>
+            <b class="nx-num">{{ money(hero.income) }}</b>
+          </span>
+        </a>
+        <a
+          class="hero-tile"
+          routerLink="/app/finances/transactions"
+          [queryParams]="{ month: current(), type: 'expense' }"
+        >
+          <span class="hero-icon expense"
+            ><svg nx-icon [icon]="icons.expense" size="15" strokeWidth="2.2"></svg
+          ></span>
+          <span>
+            <small>{{ 'finances.overview.expense' | transloco }}</small>
+            <b class="nx-num">{{ money(hero.expense) }}</b>
+          </span>
+        </a>
+      </div>
+      <div class="hero-rate">
+        <p>
+          <span>{{ 'finances.overview.savings' | transloco }}</span>
+          <b class="nx-num">
+            {{
+              hero.rate === null
+                ? ('finances.overview.notAvailable' | transloco)
+                : percent(hero.rate) + ' %'
+            }}
+          </b>
+        </p>
+        <nx-progress
+          size="md"
+          class="hero-progress"
+          [label]="'finances.overview.savings' | transloco"
+          [value]="hero.rate === null ? 0 : hero.rate < 0 ? 0 : hero.rate"
+          [max]="100"
+        />
+      </div>
+    } @else if (summary.error()) {
+      <nx-error-state variant="card" (retry)="summary.reload()" />
+    } @else {
+      <nx-skeleton variant="card" />
+    }
+  </nx-card>
+
+  <nx-card class="spend">
+    <nx-card-header [heading]="'dashboard.spend.title' | transloco">
+      <nx-segmented
+        [label]="'dashboard.spend.range' | transloco"
+        [options]="rangeOptions()"
+        [(value)]="range"
+      />
+    </nx-card-header>
+    @if (daily.hasValue()) {
+      <div class="spend-body">
+        @if (comparison(); as comparison) {
+          <div class="spend-summary">
+            @if (comparison.change === null) {
+              <p class="spend-change nx-num">{{ money(comparison.current) }}</p>
+              <p class="muted">{{ 'dashboard.spend.noPrevious' | transloco }}</p>
+            } @else {
+              <p
+                class="spend-change nx-num"
+                [class.up]="comparison.change > 0"
+                [class.down]="comparison.change <= 0"
+              >
+                {{ comparison.change > 0 ? '+' : '−'
+                }}{{ percent(comparison.change < 0 ? -comparison.change : comparison.change) }} %
+              </p>
+              <p class="muted">
+                {{
+                  (comparison.change > 0 ? 'dashboard.spend.more' : 'dashboard.spend.less')
+                    | transloco: { month: previousName(), amount: money(comparison.previous) }
+                }}
+              </p>
+            }
+          </div>
+        }
+        <nx-lollipop-chart
+          class="spend-chart"
+          [points]="spendPoints()"
+          [caption]="'dashboard.spend.title' | transloco"
+          [badgeText]="spendBadge()"
+          [format]="formatMoney"
+          [formatAxis]="formatAxis"
+        />
+      </div>
+    } @else if (daily.error()) {
+      <nx-error-state variant="card" (retry)="daily.reload()" />
+    } @else {
+      <nx-skeleton variant="chart" />
+    }
+  </nx-card>
+
+  <nx-card class="budgets">
+    <nx-card-header [heading]="'pages.budgets' | transloco">
+      <a class="link" routerLink="/app/finances/budgets" [queryParams]="{ month: current() }">
+        {{ 'dashboard.seeAll' | transloco }}
+        <svg nx-icon [icon]="icons.arrow" size="14"></svg>
+      </a>
+    </nx-card-header>
+    @if (budgets.hasValue()) {
+      @if (budgetRows().length === 0) {
+        <p class="muted">{{ 'dashboard.noBudgets' | transloco: { month: monthName() } }}</p>
+        <a class="link" routerLink="/app/finances/budgets" [queryParams]="{ month: current() }">
+          {{ 'finances.budgets.new' | transloco }}
+        </a>
+      } @else {
+        <ul class="stack" role="list">
+          @for (row of budgetRows(); track row.budget.id) {
+            <li class="budget">
+              <div class="row">
+                <nx-category-tile
+                  size="sm"
+                  [icon]="row.category?.icon"
+                  [color]="row.category?.color ?? 'sand'"
+                />
+                <span class="text">
+                  <b>{{ row.category?.name }}</b>
+                  <span class="muted nx-num"
+                    >{{ money(row.spent) }} / {{ money(row.budget.amount) }}</span
+                  >
+                </span>
+                <nx-badge
+                  [tone]="
+                    row.status === 'over'
+                      ? 'danger'
+                      : row.status === 'warning'
+                        ? 'warning'
+                        : 'neutral'
+                  "
+                >
+                  {{ row.usage }} %
+                  @if (row.status !== 'ok') {
+                    · {{ 'finances.budgets.status.' + row.status | transloco }}
+                  }
+                </nx-badge>
+              </div>
+              <nx-progress
+                [label]="row.category?.name ?? ''"
+                [valueText]="money(row.spent) + ' / ' + money(row.budget.amount)"
+                [value]="row.spent"
+                [max]="row.budget.amount"
+              />
+            </li>
+          }
+        </ul>
+      }
+    } @else if (budgets.error()) {
+      <nx-error-state variant="card" (retry)="budgets.reload()" />
+    } @else {
+      <nx-skeleton variant="list-row" />
+      <nx-skeleton variant="list-row" />
+    }
+  </nx-card>
+
+  <nx-card class="categories">
+    <nx-card-header [heading]="'finances.overview.byCategory' | transloco">
+      <a class="link" routerLink="/app/finances/overview" [queryParams]="{ month: current() }">
+        {{ 'dashboard.seeMore' | transloco }}
+        <svg nx-icon [icon]="icons.arrow" size="14"></svg>
+      </a>
+    </nx-card-header>
+    @if (byCategory.hasValue()) {
+      @if (breakdown().length === 0) {
+        <nx-empty-state
+          variant="card"
+          [icon]="icons.empty"
+          [heading]="'finances.overview.noExpenses' | transloco"
+        />
+      } @else {
+        <nx-donut-chart
+          class="donut"
+          [segments]="segments()"
+          [caption]="'finances.overview.byCategory' | transloco"
+          [centerValue]="money(expenseTotal())"
+          [centerLabel]="'dashboard.spent' | transloco"
+          [format]="formatMoney"
+        />
+        <ul class="legend" role="list">
+          @for (row of breakdown(); track row.id) {
+            <li>
+              <i class="swatch" [style.background]="row.chartColor" aria-hidden="true"></i>
+              <span class="legend-name">{{ row.name }}</span>
+              <span class="muted nx-num">{{ percent(row.share) }} %</span>
+              <b class="nx-num">{{ money(row.total) }}</b>
+            </li>
+          }
+        </ul>
+      }
+    } @else if (byCategory.error()) {
+      <nx-error-state variant="card" (retry)="byCategory.reload()" />
+    } @else {
+      <nx-skeleton variant="card" />
+    }
+  </nx-card>
+
+  <nx-card class="payments">
+    <nx-card-header [heading]="'dashboard.payments.title' | transloco">
+      @if (payments().length > 0) {
+        <nx-badge class="nx-num">{{ money(paymentsTotal()) }}</nx-badge>
+      }
+    </nx-card-header>
+    @if (tasks.hasValue()) {
+      @if (payments().length === 0) {
+        <p class="muted">{{ 'dashboard.payments.empty' | transloco }}</p>
+      } @else {
+        <ul class="stack" role="list">
+          @for (payment of payments(); track payment.task.id) {
+            <li class="row">
+              <nx-category-tile
+                size="sm"
+                [icon]="payment.category?.icon"
+                [color]="payment.category?.color ?? 'sand'"
+              />
+              <a class="text" [routerLink]="['/app/organization/tasks', payment.task.id, 'edit']">
+                <b>{{ payment.task.title }}</b>
+                <span class="muted">
+                  {{ dueText(payment.task) }} · {{ payment.category?.name }}
+                  @if (payment.overBudget) {
+                    · <span class="warn">{{ 'dashboard.payments.over' | transloco }}</span>
+                  }
+                </span>
+              </a>
+              <b class="nx-num">{{ money(payment.task.planned?.amount ?? 0) }}</b>
+            </li>
+          }
+        </ul>
+      }
+      <p class="note">
+        <svg nx-icon [icon]="icons.link" size="15"></svg>
+        <span>{{ 'dashboard.payments.note' | transloco }}</span>
+      </p>
+    } @else if (tasks.error()) {
+      <nx-error-state variant="card" (retry)="tasks.reload()" />
+    } @else {
+      <nx-skeleton variant="list-row" />
+    }
+  </nx-card>
+
+  <nx-card class="tasks">
+    <nx-card-header [heading]="'dashboard.tasks.title' | transloco">
+      <div class="chips" role="group" [attr.aria-label]="'dashboard.tasks.filter' | transloco">
+        <button nx-chip [selected]="taskTab() === 'all'" (click)="taskTab.set('all')">
+          {{ 'organization.filter.all' | transloco }}
+        </button>
+        <button
+          nx-chip
+          [selected]="taskTab() === 'today'"
+          [count]="taskCounts().today"
+          (click)="taskTab.set('today')"
+        >
+          {{ 'dashboard.tasks.today' | transloco }}
+        </button>
+        <button
+          nx-chip
+          [selected]="taskTab() === 'high'"
+          [count]="taskCounts().high"
+          (click)="taskTab.set('high')"
+        >
+          {{ 'organization.priority.high' | transloco }}
+        </button>
+      </div>
+    </nx-card-header>
+    @if (tasks.hasValue()) {
+      @if (visibleTasks().length === 0) {
+        <p class="muted">{{ 'dashboard.tasks.empty' | transloco }}</p>
+      } @else {
+        <ul class="stack" role="list">
+          @for (task of visibleTasks(); track task.id) {
+            <li class="row">
+              <nx-task-check [task]="task" returnUrl="/app/dashboard" />
+              <a class="text" [routerLink]="['/app/organization/tasks', task.id, 'edit']">
+                <b>{{ task.title }}</b>
+                <span class="muted" [class.warn]="isLate(task)">{{ dueText(task) }}</span>
+              </a>
+              @if (task.planned; as planned) {
+                <nx-badge appearance="outline" class="nx-num">{{ money(planned.amount) }}</nx-badge>
+              }
+              <nx-priority-badge [priority]="task.priority" />
+            </li>
+          }
+        </ul>
+      }
+      <a class="link" routerLink="/app/organization/tasks">
+        {{ 'dashboard.tasks.seeAll' | transloco: { count: taskCounts().all } }}
+        <svg nx-icon [icon]="icons.arrow" size="14"></svg>
+      </a>
+    } @else if (tasks.error()) {
+      <nx-error-state variant="card" (retry)="tasks.reload()" />
+    } @else {
+      <nx-skeleton variant="list-row" />
+      <nx-skeleton variant="list-row" />
+    }
+  </nx-card>
+
+  <nx-card class="events">
+    <nx-card-header [heading]="'dashboard.events.title' | transloco">
+      <a class="link" routerLink="/app/organization/calendar">
+        {{ 'nav.calendar' | transloco }}
+        <svg nx-icon [icon]="icons.arrow" size="14"></svg>
+      </a>
+    </nx-card-header>
+    @if (events.hasValue()) {
+      @if (nextEvents().length === 0) {
+        <p class="muted">{{ 'dashboard.events.empty' | transloco }}</p>
+      } @else {
+        <ul class="stack" role="list">
+          @for (event of nextEvents(); track event.id) {
+            @let day = eventDay(event.startsAt);
+            <li class="row">
+              <span class="date" aria-hidden="true">
+                <small>{{ day.weekday }}</small>
+                <b>{{ day.day }}</b>
+              </span>
+              <a
+                class="text"
+                [routerLink]="['/app/organization/calendar/events', event.id, 'edit']"
+              >
+                <b>{{ event.title }}</b>
+                <span class="muted">
+                  {{ eventTime(event.startsAt, event.allDay) }}
+                  @if (event.location) {
+                    · {{ event.location }}
+                  }
+                </span>
+              </a>
+            </li>
+          }
+        </ul>
+      }
+    } @else if (events.error()) {
+      <nx-error-state variant="card" (retry)="events.reload()" />
+    } @else {
+      <nx-skeleton variant="list-row" />
+    }
+  </nx-card>
+</div>
+
+<nx-task-payment-prompt />

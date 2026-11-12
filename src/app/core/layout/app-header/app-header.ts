@@ -22,6 +22,7 @@ import { TranslatedTitleStrategy } from '../../i18n/translated-title.strategy';
 import { Session } from '../../session/session';
 import type { LayoutMode } from '../layout-mode';
 import { DASHBOARD, QUICK_ADD, SETTINGS } from '../navigation';
+import { PageHeading } from '../page-heading';
 import { NxIcon } from '@shared/ui/icon/icon';
 
 @Component({
@@ -71,6 +72,7 @@ export class NxAppHeader {
   });
 
   protected readonly titleKey = inject(TranslatedTitleStrategy).titleKey;
+  protected readonly heading = inject(PageHeading);
   protected readonly session = inject(Session);
   protected readonly user = this.session.user;
   protected readonly language = inject(LanguageService);

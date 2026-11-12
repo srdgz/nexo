@@ -3,7 +3,7 @@ import type { Budget } from '../domain/budget';
 import type { Category, CategoryDraft } from '../domain/category';
 import { normalizeCategoryName } from '../domain/category';
 import { FinanceError } from '../domain/finance-error';
-import type { CategoryTotal, MonthTotals, PeriodSummary } from '../domain/insights';
+import type { CategoryTotal, DailyTotal, MonthTotals, PeriodSummary } from '../domain/insights';
 import { type MonthKey, monthOfDate } from '../domain/month';
 import {
   type Page,
@@ -158,6 +158,10 @@ export class FinanceService {
 
   async trend(lastMonth: MonthKey, months: number): Promise<MonthTotals[]> {
     return (await this.gateway()).insights.trend(lastMonth, months);
+  }
+
+  async dailyExpenses(month: MonthKey): Promise<DailyTotal[]> {
+    return (await this.gateway()).insights.dailyExpenses(month);
   }
 
   async largestExpenses(month: MonthKey, limit = 5): Promise<Transaction[]> {

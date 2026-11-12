@@ -62,8 +62,8 @@ export class NxCard {
       gap: 10px;
     }
     .title {
-      flex: 1;
-      min-width: 0;
+      flex: 1 0 auto;
+      max-width: 100%;
       font-size: var(--nx-text-base);
     }
   `,

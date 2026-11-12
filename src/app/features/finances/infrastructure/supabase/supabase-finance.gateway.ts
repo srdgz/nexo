@@ -8,7 +8,13 @@ import type {
 } from '../../application/finance-gateway';
 import type { Budget, BudgetDraft } from '../../domain/budget';
 import type { Category, CategoryDraft } from '../../domain/category';
-import type { CategoryTotal, MonthTotals, PeriodSummary } from '../../domain/insights';
+import {
+  type CategoryTotal,
+  type DailyTotal,
+  type MonthTotals,
+  type PeriodSummary,
+  sumDaily,
+} from '../../domain/insights';
 import { type MonthKey, monthRange, monthStart } from '../../domain/month';
 import {
   PAGE_SIZE,
@@ -30,6 +36,7 @@ import {
   mapCategory,
   mapFinanceError,
   mapTransaction,
+  toCents,
 } from './supabase-finance.mapper';
 
 interface Result<T> {
@@ -262,6 +269,10 @@ class SupabaseInsights implements InsightsRepository {
     }));
   }
 
+  dailyExpenses(month: MonthKey): Promise<DailyTotal[]> {
+    return new SupabaseDailyExpenses(this.client).load(month);
+  }
+
   async largestExpenses(month: MonthKey, limit: number): Promise<Transaction[]> {
     const { from, to } = monthRange(month);
     const rows = await run<TransactionRow[]>(
@@ -275,6 +286,25 @@ class SupabaseInsights implements InsightsRepository {
         .limit(limit),
     );
     return rows.map(mapTransaction);
+  }
+}
+
+class SupabaseDailyExpenses {
+  constructor(private readonly client: SupabaseClient) {}
+
+  async load(month: MonthKey): Promise<DailyTotal[]> {
+    const { from, to } = monthRange(month);
+    const rows = await run<{ transaction_date: string; amount: number | string }[]>(
+      this.client
+        .from('transactions')
+        .select('transaction_date, amount')
+        .eq('type', 'expense')
+        .gte('transaction_date', from)
+        .lte('transaction_date', to),
+    );
+    return sumDaily(
+      rows.map((row) => ({ date: row.transaction_date, amount: toCents(row.amount) })),
+    );
   }
 }
 

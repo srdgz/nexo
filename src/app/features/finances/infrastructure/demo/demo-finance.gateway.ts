@@ -8,7 +8,13 @@ import type {
 import type { Budget, BudgetDraft } from '../../domain/budget';
 import { type Category, type CategoryDraft, sameCategoryName } from '../../domain/category';
 import { FinanceError } from '../../domain/finance-error';
-import type { CategoryTotal, MonthTotals, PeriodSummary } from '../../domain/insights';
+import {
+  type CategoryTotal,
+  type DailyTotal,
+  type MonthTotals,
+  type PeriodSummary,
+  sumDaily,
+} from '../../domain/insights';
 import { type MonthKey, addMonths, monthOfDate } from '../../domain/month';
 import {
   PAGE_SIZE,
@@ -293,6 +299,12 @@ class DemoInsights implements InsightsRepository {
         return { month, ...totals(inMonth(data, month)) };
       });
     });
+  }
+
+  dailyExpenses(month: MonthKey): Promise<DailyTotal[]> {
+    return this.db.run((data) =>
+      sumDaily(inMonth(data, month).filter((transaction) => transaction.type === 'expense')),
+    );
   }
 
   largestExpenses(month: MonthKey, limit: number): Promise<Transaction[]> {

@@ -27,8 +27,22 @@
   border-radius: var(--nx-radius-md);
 }
 
-.title {
+.heading {
+  display: grid;
   flex: 1;
+  gap: 2px;
+  min-width: 0;
+}
+
+.subtitle {
+  overflow: hidden;
+  color: var(--nx-text-muted);
+  font-size: var(--nx-text-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.title {
   min-width: 0;
   overflow: hidden;
   font-size: 1.875rem;

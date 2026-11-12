@@ -540,5 +540,53 @@
       "deleteTitle": "Delete “{{title}}”?",
       "deleteText": "This can’t be undone."
     }
+  },
+  "dashboard": {
+    "greeting": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening"
+    },
+    "tasksToday": {
+      "none": "no tasks due today",
+      "one": "1 task due today",
+      "other": "{{count}} tasks due today"
+    },
+    "hero": {
+      "title": "{{month}} balance",
+      "current": "In progress · {{count}} days left",
+      "past": "Closed month",
+      "future": "Upcoming month"
+    },
+    "spend": {
+      "title": "Daily spending",
+      "range": "Chart period",
+      "month": "Month",
+      "week": "Week",
+      "less": "less than in {{month}} by this point ({{amount}})",
+      "more": "more than in {{month}} by this point ({{amount}})",
+      "noPrevious": "spent so far; no data for last month"
+    },
+    "seeAll": "See all",
+    "seeMore": "See overview",
+    "spent": "spent",
+    "noBudgets": "You have no budgets in {{month}}.",
+    "payments": {
+      "title": "Upcoming payments",
+      "empty": "No pending tasks with a planned payment.",
+      "over": "goes over budget",
+      "note": "They come from your tasks with a planned payment. When you complete them we’ll offer to record the expense."
+    },
+    "tasks": {
+      "title": "Pending tasks",
+      "filter": "Filter tasks",
+      "today": "Today",
+      "empty": "No tasks in this filter.",
+      "seeAll": "See all {{count}} tasks"
+    },
+    "events": {
+      "title": "Upcoming events",
+      "empty": "No events in the coming weeks."
+    }
   }
 }

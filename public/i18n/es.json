@@ -540,5 +540,53 @@
       "deleteTitle": "¿Eliminar «{{title}}»?",
       "deleteText": "Esta acción no se puede deshacer."
     }
+  },
+  "dashboard": {
+    "greeting": {
+      "morning": "Buenos días",
+      "afternoon": "Buenas tardes",
+      "evening": "Buenas noches"
+    },
+    "tasksToday": {
+      "none": "no tienes tareas para hoy",
+      "one": "tienes 1 tarea para hoy",
+      "other": "tienes {{count}} tareas para hoy"
+    },
+    "hero": {
+      "title": "Balance de {{month}}",
+      "current": "En curso · quedan {{count}} días",
+      "past": "Mes cerrado",
+      "future": "Mes próximo"
+    },
+    "spend": {
+      "title": "Gasto diario",
+      "range": "Periodo del gráfico",
+      "month": "Mes",
+      "week": "Semana",
+      "less": "menos que en {{month}} a estas alturas ({{amount}})",
+      "more": "más que en {{month}} a estas alturas ({{amount}})",
+      "noPrevious": "gastado hasta hoy; no hay datos del mes anterior"
+    },
+    "seeAll": "Ver todos",
+    "seeMore": "Ver resumen",
+    "spent": "gastado",
+    "noBudgets": "No tienes presupuestos en {{month}}.",
+    "payments": {
+      "title": "Próximos pagos",
+      "empty": "No hay tareas con pago previsto pendientes.",
+      "over": "superará el presupuesto",
+      "note": "Salen de tus tareas con pago previsto. Al completarlas te propondremos registrar el gasto."
+    },
+    "tasks": {
+      "title": "Tareas pendientes",
+      "filter": "Filtrar tareas",
+      "today": "Hoy",
+      "empty": "No hay tareas en este filtro.",
+      "seeAll": "Ver las {{count}} tareas"
+    },
+    "events": {
+      "title": "Próximos eventos",
+      "empty": "No hay eventos en las próximas semanas."
+    }
   }
 }
