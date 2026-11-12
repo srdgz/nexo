@@ -99,11 +99,20 @@
       "max": "The maximum value is {{max}}.",
       "pattern": "The format is not valid.",
       "passwordPolicy": "Use at least 8 characters with letters and numbers.",
-      "mismatch": "The passwords don’t match."
+      "mismatch": "The passwords don’t match.",
+      "amount": "Enter an amount greater than zero.",
+      "date": "Enter a valid date."
     },
     "month": {
       "previous": "Previous month",
       "next": "Next month"
+    },
+    "pagination": {
+      "label": "Pagination",
+      "range": "{{from}}–{{to}} of {{total}}",
+      "previous": "Previous page",
+      "next": "Next page",
+      "page": "Page {{page}}"
     }
   },
   "auth": {
@@ -316,6 +325,43 @@
       "lavender": "Lavender",
       "peach": "Peach",
       "mint": "Mint"
-    }
+    },
+    "transactions": {
+      "all": "All",
+      "typeFilter": "Transaction type",
+      "categoryFilter": "Filter by category",
+      "allCategories": "All categories",
+      "search": "Search description",
+      "new": "New transaction",
+      "date": "Date",
+      "description": "Description",
+      "category": "Category",
+      "amount": "Amount",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "emptyTitle": "No transactions this month yet",
+      "emptyText": "Record your first expense or income to see your summary.",
+      "noResults": "No transactions match",
+      "noResultsText": "Try other filters or clear them.",
+      "clearFilters": "Clear filters",
+      "deleteTitle": "Delete the transaction?",
+      "deleted": "Transaction deleted",
+      "updated": "Transaction updated",
+      "savedExpense": "Expense recorded",
+      "savedIncome": "Income recorded",
+      "budgetUsed": "You’ve used {{usage}}% of {{name}}",
+      "saveExpense": "Save expense",
+      "saveIncome": "Save income",
+      "chooseCategory": "Choose a category",
+      "impactTitle": "Impact on your budget",
+      "impactLeft": "After this expense: {{after}} of {{amount}}. {{left}} left.",
+      "impactOver": "After this expense: {{after}} of {{amount}}. You’d be {{left}} over.",
+      "noBudget": "You don’t have a budget for {{name}} in {{month}}.",
+      "createBudget": "Create a budget",
+      "impactHint": "Choose a category to see how it affects your budget.",
+      "tip": "Tip: add a short description so you can find the transaction with the search.",
+      "notFoundTitle": "Transaction not found"
+    },
+    "actions": "Actions"
   }
 }

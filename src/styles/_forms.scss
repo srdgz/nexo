@@ -40,6 +40,12 @@
   }
 }
 
+.nx-input.lg {
+  min-height: 56px;
+  font-size: var(--nx-text-2xl);
+  font-weight: 600;
+}
+
 textarea.nx-input {
   min-height: 96px;
   padding-block: 10px;

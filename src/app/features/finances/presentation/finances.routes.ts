@@ -13,13 +13,20 @@ export const FINANCES_ROUTES: Routes = [
     path: 'transactions',
     title: 'pages.transactions',
     data: { monthPicker: true },
-    component: PendingPage,
+    loadComponent: () =>
+      import('./pages/transactions/transactions-page').then((m) => m.TransactionsPage),
   },
-  { path: 'transactions/new', title: 'pages.newTransaction', component: PendingPage },
+  {
+    path: 'transactions/new',
+    title: 'pages.newTransaction',
+    loadComponent: () =>
+      import('./pages/transaction-form/transaction-form-page').then((m) => m.TransactionFormPage),
+  },
   {
     path: 'transactions/:id/edit',
     title: 'pages.editTransaction',
-    component: PendingPage,
+    loadComponent: () =>
+      import('./pages/transaction-form/transaction-form-page').then((m) => m.TransactionFormPage),
   },
   {
     path: 'budgets',

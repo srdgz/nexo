@@ -1,0 +1,180 @@
+@if (id() && existing.error()) {
+  <nx-card>
+    <nx-error-state
+      [heading]="'finances.transactions.notFoundTitle' | transloco"
+      [description]="'finances.errors.notFound' | transloco"
+      (retry)="existing.reload()"
+    />
+  </nx-card>
+} @else if (id() && existing.isLoading()) {
+  <div class="layout">
+    <nx-card><nx-skeleton variant="card" /></nx-card>
+  </div>
+} @else {
+  <div class="layout">
+    <nx-card class="form-card">
+      <form class="form" novalidate (submit)="onSubmit($event)">
+        @if (error(); as code) {
+          <nx-alert tone="danger">{{ messageKey(code) | transloco }}</nx-alert>
+        }
+        <nx-segmented
+          size="md"
+          [label]="'finances.categories.type' | transloco"
+          [options]="typeOptions()"
+          [formField]="draft.type"
+        />
+        <nx-field [label]="'finances.transactions.amount' | transloco" [state]="draft.amount()">
+          <nx-money-input size="lg" [formField]="draft.amount" />
+        </nx-field>
+        <div class="pair">
+          <nx-field
+            [label]="'finances.transactions.category' | transloco"
+            [state]="draft.categoryId()"
+          >
+            <select nxInput [formField]="draft.categoryId">
+              <option value="" disabled>
+                {{ 'finances.transactions.chooseCategory' | transloco }}
+              </option>
+              @for (category of categoryOptions(); track category.id) {
+                <option [value]="category.id">{{ category.name }}</option>
+              }
+            </select>
+          </nx-field>
+          <nx-field [label]="'finances.transactions.date' | transloco" [state]="draft.date()">
+            <input nxInput type="date" [formField]="draft.date" />
+          </nx-field>
+        </div>
+        <nx-field
+          optional
+          [label]="'finances.transactions.description' | transloco"
+          [state]="draft.description()"
+        >
+          <input nxInput type="text" autocomplete="off" [formField]="draft.description" />
+        </nx-field>
+        <div class="actions">
+          @if (id()) {
+            <button
+              type="button"
+              nx-button
+              variant="ghost"
+              class="delete"
+              (click)="removeOpen.set(true)"
+            >
+              <svg nx-icon [icon]="icons.remove" size="16"></svg>
+              {{ 'finances.delete' | transloco }}
+            </button>
+          }
+          <a nx-button variant="secondary" [routerLink]="backUrl(null)">
+            {{ 'finances.cancel' | transloco }}
+          </a>
+          <button type="submit" nx-button [loading]="draft().submitting()">
+            {{
+              (id()
+                ? 'finances.save'
+                : model().type === 'expense'
+                  ? 'finances.transactions.saveExpense'
+                  : 'finances.transactions.saveIncome'
+              ) | transloco
+            }}
+          </button>
+        </div>
+      </form>
+    </nx-card>
+
+    <aside class="side">
+      @if (model().type === 'expense') {
+        <nx-card>
+          <nx-card-header [heading]="'finances.transactions.impactTitle' | transloco" />
+          @if (impact(); as impact) {
+            @if (impact.budget; as budget) {
+              <div class="impact-row">
+                <nx-category-tile
+                  [icon]="impact.category?.icon"
+                  [color]="impact.category?.color ?? 'sand'"
+                />
+                <b class="impact-name">{{ impact.category?.name }}</b>
+                <nx-badge
+                  [tone]="
+                    budget.status === 'over'
+                      ? 'danger'
+                      : budget.status === 'warning'
+                        ? 'warning'
+                        : 'success'
+                  "
+                >
+                  {{ budget.usage }} %
+                </nx-badge>
+              </div>
+              <nx-progress
+                size="md"
+                [label]="impact.category?.name ?? ''"
+                [valueText]="money(budget.after) + ' / ' + money(budget.amount)"
+                [value]="budget.after"
+                [max]="budget.amount"
+              />
+              <p class="muted">
+                {{
+                  (budget.left >= 0
+                    ? 'finances.transactions.impactLeft'
+                    : 'finances.transactions.impactOver'
+                  )
+                    | transloco
+                      : {
+                          after: money(budget.after),
+                          amount: money(budget.amount),
+                          left: money(budget.left >= 0 ? budget.left : -budget.left),
+                        }
+                }}
+              </p>
+            } @else {
+              <p class="muted">
+                {{
+                  'finances.transactions.noBudget'
+                    | transloco: { name: impact.category?.name ?? '', month: monthLabel() }
+                }}
+              </p>
+              <a class="link" routerLink="/app/finances/budgets">
+                {{ 'finances.transactions.createBudget' | transloco }}
+              </a>
+            }
+          } @else if (budget.isLoading()) {
+            <nx-skeleton variant="line" />
+          } @else {
+            <p class="muted">{{ 'finances.transactions.impactHint' | transloco }}</p>
+          }
+        </nx-card>
+      }
+      <nx-card variant="muted" class="tip">
+        <svg nx-icon [icon]="icons.tip" size="18"></svg>
+        <p>{{ 'finances.transactions.tip' | transloco }}</p>
+      </nx-card>
+    </aside>
+  </div>
+}
+
+<nx-dialog
+  size="sm"
+  [heading]="'finances.transactions.deleteTitle' | transloco"
+  [description]="'finances.categories.deleteText' | transloco"
+  [(open)]="removeOpen"
+>
+  <button
+    nx-button
+    variant="secondary"
+    dialog-actions
+    type="button"
+    (click)="removeOpen.set(false)"
+  >
+    {{ 'finances.cancel' | transloco }}
+  </button>
+  <button
+    nx-button
+    variant="danger"
+    dialog-actions
+    type="button"
+    [loading]="removing()"
+    (click)="remove()"
+  >
+    {{ 'finances.delete' | transloco }}
+  </button>
+</nx-dialog>

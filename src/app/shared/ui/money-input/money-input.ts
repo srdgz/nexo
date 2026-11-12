@@ -21,6 +21,7 @@ import { NxField } from '../field/field';
       <input
         #control
         class="nx-input amount"
+        [class.lg]="size() === 'lg'"
         type="text"
         inputmode="decimal"
         autocomplete="off"
@@ -51,6 +52,7 @@ export class NxMoneyInput implements FormValueControl<number | null> {
   readonly value = model<number | null>(null);
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly name = input('');
+  readonly size = input<'md' | 'lg'>('md');
   readonly touch = output();
 
   protected readonly field = inject(NxField, { optional: true });

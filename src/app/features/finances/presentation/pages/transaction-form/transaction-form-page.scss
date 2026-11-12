@@ -1,0 +1,82 @@
+@use 'mixins' as *;
+
+.layout {
+  display: grid;
+  gap: var(--nx-space-4);
+  align-items: start;
+
+  @include bp(desktop) {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  }
+}
+
+.form {
+  display: grid;
+  gap: var(--nx-space-5);
+}
+
+.pair {
+  display: grid;
+  gap: var(--nx-space-4);
+
+  @include bp(tablet) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--nx-space-2);
+
+  @include below(tablet) {
+    > * {
+      flex: 1;
+    }
+  }
+}
+
+.delete {
+  margin-right: auto;
+  color: var(--nx-danger);
+}
+
+.side {
+  display: grid;
+  gap: var(--nx-space-4);
+}
+
+.impact-row {
+  display: flex;
+  align-items: center;
+  gap: var(--nx-space-3);
+}
+
+.impact-name {
+  flex: 1;
+}
+
+.muted {
+  color: var(--nx-text-muted);
+  font-size: var(--nx-text-sm);
+}
+
+.link {
+  color: var(--nx-sage-700);
+  font-size: var(--nx-text-sm);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.tip {
+  flex-direction: row;
+  align-items: flex-start;
+  color: var(--nx-text-muted);
+  font-size: var(--nx-text-sm);
+
+  svg {
+    flex: none;
+    color: var(--nx-navy-900);
+  }
+}

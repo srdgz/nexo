@@ -99,11 +99,20 @@
       "max": "El valor máximo es {{max}}.",
       "pattern": "El formato no es válido.",
       "passwordPolicy": "Usa al menos 8 caracteres con letras y números.",
-      "mismatch": "Las contraseñas no coinciden."
+      "mismatch": "Las contraseñas no coinciden.",
+      "amount": "Introduce un importe mayor que cero.",
+      "date": "Introduce una fecha válida."
     },
     "month": {
       "previous": "Mes anterior",
       "next": "Mes siguiente"
+    },
+    "pagination": {
+      "label": "Paginación",
+      "range": "{{from}}–{{to}} de {{total}}",
+      "previous": "Página anterior",
+      "next": "Página siguiente",
+      "page": "Página {{page}}"
     }
   },
   "auth": {
@@ -316,6 +325,43 @@
       "lavender": "Lavanda",
       "peach": "Melocotón",
       "mint": "Menta"
-    }
+    },
+    "transactions": {
+      "all": "Todos",
+      "typeFilter": "Tipo de movimiento",
+      "categoryFilter": "Filtrar por categoría",
+      "allCategories": "Todas las categorías",
+      "search": "Buscar descripción",
+      "new": "Nuevo movimiento",
+      "date": "Fecha",
+      "description": "Descripción",
+      "category": "Categoría",
+      "amount": "Importe",
+      "today": "Hoy",
+      "yesterday": "Ayer",
+      "emptyTitle": "Aún no hay movimientos este mes",
+      "emptyText": "Registra tu primer gasto o ingreso para ver tu resumen.",
+      "noResults": "Ningún movimiento coincide",
+      "noResultsText": "Prueba con otros filtros o quítalos.",
+      "clearFilters": "Quitar filtros",
+      "deleteTitle": "¿Eliminar el movimiento?",
+      "deleted": "Movimiento eliminado",
+      "updated": "Movimiento actualizado",
+      "savedExpense": "Gasto registrado",
+      "savedIncome": "Ingreso registrado",
+      "budgetUsed": "Has usado el {{usage}} % de {{name}}",
+      "saveExpense": "Guardar gasto",
+      "saveIncome": "Guardar ingreso",
+      "chooseCategory": "Elige una categoría",
+      "impactTitle": "Impacto en tu presupuesto",
+      "impactLeft": "Tras este gasto: {{after}} de {{amount}}. Te quedan {{left}}.",
+      "impactOver": "Tras este gasto: {{after}} de {{amount}}. Te pasarías {{left}}.",
+      "noBudget": "No tienes presupuesto para {{name}} en {{month}}.",
+      "createBudget": "Crear un presupuesto",
+      "impactHint": "Elige una categoría para ver cómo afecta a tu presupuesto.",
+      "tip": "Consejo: añade una descripción corta para encontrar el movimiento con el buscador.",
+      "notFoundTitle": "Movimiento no encontrado"
+    },
+    "actions": "Acciones"
   }
 }
