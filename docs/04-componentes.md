@@ -68,6 +68,15 @@ Vista previa de cada variante en [`design/nexo-diseno.html`](design/nexo-diseno.
 - El dashboard no tiene componentes propios: sus tarjetas son `nx-card` y reutilizan `nx-task-check`, `nx-task-payment-prompt`, `nx-category-tile` y `nx-donut-chart`. Se extraerán si otra pantalla las necesita.
 - `nx-card-header` deja que el título ocupe su ancho natural y pasa las acciones a la línea siguiente cuando no caben.
 
+### Estado tras Ajustes
+
+- Ajustes no tiene capa propia de datos: perfil y preferencias son parte de `AuthRepository` (`updateProfile`, `changeEmail`, `changePassword`, `deleteAccount`). Supabase guarda el nombre, el idioma y el primer día de la semana en `profiles` y también en los metadatos del usuario, para tenerlos en la sesión sin otra consulta.
+- El puerto `Session` de `core` expone `weekStartsOn` y `updatePreferences`; el calendario y el inicio lo leen de ahí. El selector de idioma del avatar también guarda el idioma en el perfil.
+- Al iniciar sesión se aplica el idioma guardado en el perfil, si lo hay. En la demo el usuario no tiene idioma guardado, así que se respeta el del navegador.
+- `nx-delete-account-dialog` pide escribir «ELIMINAR» (o «DELETE» en inglés). En la demo se pueden cambiar el nombre y las preferencias, pero no el email, la contraseña ni eliminar la cuenta.
+- Las cuentas que solo entran con Google no tienen contraseña: la tarjeta lo explica en lugar de mostrar el formulario.
+- Ajustes muestra sus pestañas Perfil / Preferencias también en escritorio (`tabsOnDesktop`), porque no tiene submenú en la barra lateral.
+
 ## Gráficos (`shared/charts`, SVG propio)
 
 | Componente          | Uso                                                        | Accesibilidad                        |
