@@ -30,6 +30,10 @@ describe('formatAmount', () => {
     expect(formatAmount(1250, 'es')).toBe('12,50');
   });
 
+  it('always groups thousands, also in Spanish', () => {
+    expect(formatAmount(123456, 'es')).toBe('1.234,56');
+  });
+
   it('uses a dot for decimals in English', () => {
     expect(formatAmount(123456, 'en')).toBe('1,234.56');
   });

@@ -102,7 +102,7 @@ describe('NxField', () => {
 
     input.dispatchEvent(new Event('blur'));
     TestBed.tick();
-    expect(input.value).toBe('1234,50');
+    expect(input.value).toBe('1.234,50');
   });
 
   it('clears the amount when the text is not a number', () => {

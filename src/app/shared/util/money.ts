@@ -6,6 +6,7 @@ export function formatAmount(cents: number, language: string): string {
   return new Intl.NumberFormat(localeFor(language), {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
+    useGrouping: 'always',
   }).format(cents / 100);
 }
 
@@ -13,6 +14,7 @@ export function formatMoney(cents: number, language: string): string {
   return new Intl.NumberFormat(localeFor(language), {
     style: 'currency',
     currency: 'EUR',
+    useGrouping: 'always',
   }).format(cents / 100);
 }
 
