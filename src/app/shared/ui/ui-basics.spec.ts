@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { initialsOf } from './avatar/avatar';
+import { NxAvatar, initialsOf } from './avatar/avatar';
 import { NxButton } from './button/button';
 import { NxProgress, progressStatus } from './progress/progress';
 import { NxSegmented } from './segmented/segmented';
@@ -97,5 +97,29 @@ describe('base components', () => {
 
     expect(host.period()).toBe('week');
     expect(radios[1]!.checked).toBe(true);
+  });
+});
+
+describe('NxAvatar', () => {
+  it('loads photos without a referrer and falls back to the initials when one fails', async () => {
+    const fixture = TestBed.createComponent(NxAvatar);
+    fixture.componentRef.setInput('name', 'Laura Martín');
+    fixture.componentRef.setInput('src', 'https://lh3.googleusercontent.com/a/photo');
+    await fixture.whenStable();
+    const element = fixture.nativeElement as HTMLElement;
+    const image = element.querySelector('img')!;
+
+    expect(image.getAttribute('referrerpolicy')).toBe('no-referrer');
+
+    image.dispatchEvent(new Event('error'));
+    await fixture.whenStable();
+
+    expect(element.querySelector('img')).toBeNull();
+    expect(element.textContent?.trim()).toBe('LM');
+
+    fixture.componentRef.setInput('src', 'https://res.cloudinary.com/nexo/image/upload/v2/a');
+    await fixture.whenStable();
+
+    expect(element.querySelector('img')).not.toBeNull();
   });
 });

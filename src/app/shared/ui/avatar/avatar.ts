@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, linkedSignal } from '@angular/core';
 import { User } from 'lucide';
 import { NxIcon } from '../icon/icon';
 
@@ -16,8 +16,8 @@ export function initialsOf(name: string): string {
   selector: 'nx-avatar',
   imports: [NxIcon],
   template: `
-    @if (src(); as src) {
-      <img [src]="src" alt="" />
+    @if (visibleSrc(); as src) {
+      <img [src]="src" alt="" referrerpolicy="no-referrer" (error)="failed.set(true)" />
     } @else if (initials()) {
       <span aria-hidden="true">{{ initials() }}</span>
     } @else {
@@ -69,6 +69,8 @@ export class NxAvatar {
   readonly src = input<string | null>(null);
   readonly size = input<'sm' | 'md' | 'lg' | 'xl'>('md');
 
+  protected readonly failed = linkedSignal({ source: this.src, computation: () => false });
+  protected readonly visibleSrc = computed(() => (this.failed() ? null : this.src()));
   protected readonly initials = computed(() => initialsOf(this.name()));
   protected readonly fallbackIcon = User;
 }
