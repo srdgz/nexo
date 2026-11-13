@@ -15,5 +15,6 @@ Esta carpeta recoge todo lo que se define **antes de escribir código**. Cada do
 | 6   | [Modelo de datos](06-modelo-datos.md)      | Tablas, restricciones, relaciones, RLS y SQL                                                             |
 | 7   | [Identidad visual](07-identidad-visual.md) | Logo, design tokens y tipografía                                                                         |
 | 8   | [Modo demo](08-modo-demo.md)               | Probar la app sin registrarse, con adaptadores en memoria                                                |
+| 9   | [Ampliación](09-ampliacion.md)             | Fases 6–12 tras el MVP y decisiones D-25 a D-33                                                          |
 
 Los recursos del logo están en [`../brand/`](../brand).
