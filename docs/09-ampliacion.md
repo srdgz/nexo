@@ -34,6 +34,7 @@ Funcionalidades acordadas el 13/11/2026, tras cerrar el MVP (Fases 0–5 y Ajust
 | ---- | -------------------------------------------------------------------------------------------------------------------------------- |
 | 6    | Aplicar la migración de `profiles.theme` en el SQL Editor                                                                        |
 | 7    | Guardar `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY` y `CLOUDINARY_API_SECRET` como secretos de Supabase y desplegar la función |
+| 9    | Aplicar la migración `20261113150000_realtime.sql` en el SQL Editor                                                              |
 | 10   | Elegir proveedor de IA y guardar su clave como secreto de Supabase                                                               |
 | 11   | Guardar las claves VAPID como secretos y activar `pg_cron`                                                                       |
 | 12   | Crear el proyecto en Sentry y en Vercel                                                                                          |

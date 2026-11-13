@@ -283,6 +283,10 @@ revoke all on all tables in schema public from anon;
 
 `profiles` no tiene `insert` ni `delete` para el cliente: los crea el trigger y se borran en cascada con `auth.users`.
 
+## Tiempo real
+
+La migración `20261113150000_realtime.sql` añade `categories`, `transactions`, `budgets`, `tasks` y `events` a la publicación `supabase_realtime` (sin duplicarlas si ya estaban). `profiles` no se publica. Realtime aplica RLS a altas y cambios; los borrados no pasan por RLS y solo llevan la clave primaria, por eso la app no usa su contenido: solo recarga.
+
 ## Lecturas agregadas para el dashboard
 
 Para no descargar todos los movimientos del mes al navegador, el dashboard usa funciones `security invoker` (respetan RLS):

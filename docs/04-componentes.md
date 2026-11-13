@@ -100,6 +100,14 @@ Vista previa de cada variante en [`design/nexo-diseno.html`](design/nexo-diseno.
 - Puertos: `TransactionRepository` gana `listAll(filter)` y `createMany`; `EventRepository` gana `all()` y `createMany`. `OrganizationService.newEvents` descarta los eventos que ya existen (mismo título, inicio y fin) para que reimportar no duplique.
 - UI: un botón con menú junto a «Nuevo movimiento» y «Nuevo» en el calendario. Exportar descarga lo que se ve (mes y filtros) en movimientos y todo el calendario en eventos; importar abre un diálogo con vista previa, filas con errores y el número exacto que se va a crear.
 
+### Estado tras la Fase 9 (tiempo real)
+
+- `core/realtime`: el puerto `ChangeFeed` avisa de qué parte cambió (`finances` u `organization`) y de cuándo se recupera la conexión. Lo carga `CHANGE_FEED_LOADER` según el modo: `SupabaseChangeFeed`, `DemoChannel` o ninguno sin backend.
+- `RealtimeSync` se arranca desde `nx-app-shell` cuando hay usuario y se para al salir. Agrupa los avisos de 250 ms y llama a `refresh()` de `FinanceService` u `OrganizationService`, que sube su `version`; las vistas con `resource()` se recargan solas, sin código nuevo. Al reconectar se refresca todo, por si se perdió algún cambio. Cada feature se registra con el token múltiple `REALTIME_LISTENERS`, así `core` no depende de `features`.
+- Supabase: un canal `nexo-changes-<id>` con `postgres_changes` para las cinco tablas. Altas y cambios se filtran por `user_id`; los borrados no admiten filtro en Supabase Realtime, así que llegan todos (solo la clave primaria) y como mucho provocan una recarga de más. Movimientos y tareas avisan a las dos partes porque se enlazan entre sí.
+- Demo: `DemoChannel` usa `BroadcastChannel`. Cada base de datos de la demo publica su estado completo cuando cambia y aplica el que llega de otra pestaña; una pestaña nueva pide los datos al entrar (`hello`) y adopta la primera respuesta. «Restablecer datos» reinicia todas las pestañas.
+- Los cambios propios también vuelven por el canal: es una recarga extra que se absorbe en la agrupación, a cambio de no tener que distinguir el origen.
+
 ## Gráficos (`shared/charts`, SVG propio)
 
 | Componente          | Uso                                                        | Accesibilidad                        |
