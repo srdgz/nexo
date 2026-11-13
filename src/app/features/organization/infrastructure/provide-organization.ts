@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { TranslocoService } from '@jsverse/transloco';
 import { APP_MODE } from '@core/app-mode/app-mode';
+import { ASSISTANT_TOOLS } from '@core/assistant/assistant';
 import { DemoChannel } from '@core/realtime/demo-channel';
 import { REALTIME_LISTENERS, type RealtimeListener } from '@core/realtime/realtime';
 import { SupabaseClientProvider } from '@core/supabase/supabase-client';
@@ -15,6 +16,7 @@ import {
   type OrganizationGateway,
 } from '../application/organization-gateway';
 import { OrganizationService } from '../application/organization.service';
+import { organizationAssistantTools } from '../application/organization-assistant-tools';
 import { isOpen } from '../domain/task';
 
 function organizationGatewayLoader(): () => Promise<OrganizationGateway> {
@@ -65,5 +67,6 @@ export function provideOrganization(): EnvironmentProviders {
     { provide: ORGANIZATION_GATEWAY_LOADER, useFactory: organizationGatewayLoader },
     { provide: TASK_LOOKUP, useFactory: taskLookup },
     { provide: REALTIME_LISTENERS, multi: true, useFactory: realtimeListener },
+    { provide: ASSISTANT_TOOLS, multi: true, useFactory: organizationAssistantTools },
   ]);
 }

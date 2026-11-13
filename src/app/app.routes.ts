@@ -35,6 +35,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'assistant',
+        loadChildren: () =>
+          import('@features/assistant/presentation/assistant.routes').then(
+            (m) => m.ASSISTANT_ROUTES,
+          ),
+      },
+      {
         path: 'finances',
         loadChildren: () =>
           import('@features/finances/presentation/finances.routes').then((m) => m.FINANCES_ROUTES),

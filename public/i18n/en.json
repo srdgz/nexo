@@ -18,7 +18,8 @@
     "settings": "Settings",
     "profile": "Profile",
     "preferences": "Preferences",
-    "login": "Sign in"
+    "login": "Sign in",
+    "assistant": "Assistant"
   },
   "pages": {
     "login": "Sign in",
@@ -43,7 +44,8 @@
     "profile": "Profile",
     "preferences": "Preferences",
     "notFound": "Page not found",
-    "uiGallery": "Design system"
+    "uiGallery": "Design system",
+    "assistant": "Assistant"
   },
   "language": {
     "label": "Language",
@@ -78,7 +80,9 @@
     "task": "Task",
     "taskHint": "With an optional planned payment",
     "event": "Event",
-    "eventHint": "Appointment or reminder"
+    "eventHint": "Appointment or reminder",
+    "assistant": "Write with AI",
+    "assistantHint": "“Spent €12 at the supermarket”"
   },
   "ui": {
     "optional": "(optional)",
@@ -705,6 +709,67 @@
       "themeSystem": "System",
       "themeLight": "Light",
       "themeDark": "Dark"
+    }
+  },
+  "assistant": {
+    "modes": {
+      "label": "Assistant mode",
+      "capture": "Add",
+      "chat": "Ask"
+    },
+    "capture": {
+      "title": "Add something by writing it",
+      "text": "Write an expense, income, task or event the way you would tell someone. I will ask you to confirm before saving it.",
+      "placeholder": "For example: spent €23.40 at the supermarket"
+    },
+    "chat": {
+      "title": "Ask about your money and your schedule",
+      "text": "I look up your transactions, budgets, tasks and events. If you ask for a change, I show it to you before making it.",
+      "placeholder": "Type your question"
+    },
+    "examples": {
+      "expense": "Spent €23.40 at the supermarket",
+      "task": "Remind me to call the insurer tomorrow",
+      "event": "Dinner with Marta on Friday at 21:00",
+      "summary": "How much have I spent this month?",
+      "tasks": "Which tasks do I have pending?",
+      "budgets": "How are my budgets going?"
+    },
+    "newChat": "New conversation",
+    "send": "Send",
+    "thinking": "Thinking…",
+    "confirmTitle": "Save this?",
+    "confirm": "Save",
+    "cancel": "Cancel",
+    "done": "Saved",
+    "cancelled": "Cancelled",
+    "note": "The assistant uses Google Gemini: your messages and the data it looks up are sent to Google. Always check what it saves.",
+    "noteDemo": "Demo mode: answers are simulated in your browser, with no real AI.",
+    "actions": {
+      "addExpense": "Expense of {{amount}} in {{category}} on {{date}}",
+      "addIncome": "Income of {{amount}} in {{category}} on {{date}}",
+      "addTask": "New task: “{{title}}”",
+      "addTaskDue": "New task: “{{title}}”, due {{date}}",
+      "completeTask": "Mark as done: “{{title}}”",
+      "addEvent": "New event: “{{title}}”, on {{date}}"
+    },
+    "errors": {
+      "unavailable": "The assistant is not available right now.",
+      "rate_limited": "The assistant has reached its usage limit. Try again in a while.",
+      "blocked": "The assistant could not answer that. Try saying it another way.",
+      "network": "There is no connection to the server. Try again.",
+      "unknown": "Something went wrong. Try again."
+    },
+    "demo": {
+      "help": "In the demo I understand simple sentences such as “Spent €12 at the supermarket”, “Remind me to pay the rent tomorrow”, “How much have I spent this month?” or “Which tasks do I have pending?”.",
+      "expenseDone": "Done, I have recorded the expense of {{amount}}.",
+      "incomeDone": "Done, I have recorded the income of {{amount}}.",
+      "taskDone": "Done: I created the task “{{title}}”.",
+      "cancelled": "All right, I will not save anything.",
+      "failed": "I could not do it with that information. Try writing it another way.",
+      "summary": "This month you have {{income}} of income and {{expenses}} of expenses. Balance: {{balance}}.",
+      "tasks": "Pending tasks: {{count}}. The first ones:\n{{list}}",
+      "noTasks": "You have no pending tasks."
     }
   }
 }

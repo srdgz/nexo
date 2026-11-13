@@ -1,0 +1,110 @@
+<div class="toolbar">
+  <nx-segmented
+    [label]="'assistant.modes.label' | transloco"
+    [options]="modeOptions()"
+    [value]="current()"
+    (valueChange)="setMode($event)"
+  />
+  @if (current() === 'chat' && turns().length) {
+    <button nx-button variant="secondary" size="sm" type="button" (click)="reset()">
+      <svg nx-icon [icon]="icons.reset" size="16"></svg>
+      {{ 'assistant.newChat' | transloco }}
+    </button>
+  }
+</div>
+
+<nx-card class="panel">
+  <div #log class="log" role="log" aria-live="polite" [attr.aria-busy]="busy() ? 'true' : null">
+    @if (items().length === 0 && !busy()) {
+      <div class="intro">
+        <span class="intro-icon" aria-hidden="true">
+          <svg nx-icon [icon]="icons.spark" size="22"></svg>
+        </span>
+        <h2>{{ 'assistant.' + current() + '.title' | transloco }}</h2>
+        <p>{{ 'assistant.' + current() + '.text' | transloco }}</p>
+        <ul class="examples" role="list">
+          @for (example of examples(); track example) {
+            <li>
+              <button type="button" class="example" (click)="useExample(example)">
+                {{ example }}
+              </button>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+    @for (item of items(); track $index) {
+      @switch (item.kind) {
+        @case ('user') {
+          <p class="bubble user">{{ item.text }}</p>
+        }
+        @case ('assistant') {
+          <p class="bubble assistant">{{ item.text }}</p>
+        }
+        @case ('action') {
+          <p class="action" [class.cancelled]="item.status === 'cancelled'">
+            <svg
+              nx-icon
+              [icon]="item.status === 'done' ? icons.check : icons.cancel"
+              size="16"
+            ></svg>
+            <span>
+              {{ ('assistant.' + item.status | transloco) + ': ' + item.text }}
+            </span>
+          </p>
+        }
+      }
+    }
+    @if (pending(); as action) {
+      <div class="confirm" role="group" [attr.aria-label]="'assistant.confirmTitle' | transloco">
+        <p class="confirm-title">{{ 'assistant.confirmTitle' | transloco }}</p>
+        <p class="confirm-text">{{ action.summary }}</p>
+        <div class="confirm-actions">
+          <button nx-button variant="secondary" size="sm" type="button" (click)="answer(false)">
+            {{ 'assistant.cancel' | transloco }}
+          </button>
+          <button nx-button size="sm" type="button" (click)="answer(true)">
+            {{ 'assistant.confirm' | transloco }}
+          </button>
+        </div>
+      </div>
+    } @else if (busy()) {
+      <p class="thinking">
+        <span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
+        {{ 'assistant.thinking' | transloco }}
+      </p>
+    }
+  </div>
+
+  @if (errorKey(); as key) {
+    <nx-alert tone="danger">{{ key | transloco }}</nx-alert>
+  }
+
+  <form class="composer" (submit)="send($event)">
+    <label class="nx-visually-hidden" for="nx-assistant-input">
+      {{ 'assistant.' + current() + '.placeholder' | transloco }}
+    </label>
+    <textarea
+      #field
+      id="nx-assistant-input"
+      rows="1"
+      maxlength="2000"
+      [placeholder]="'assistant.' + current() + '.placeholder' | transloco"
+      [value]="draft()"
+      [disabled]="busy()"
+      (input)="draft.set($any($event.target).value)"
+      (keydown)="onKeydown($event)"
+    ></textarea>
+    <button
+      type="submit"
+      nx-icon-button
+      variant="filled"
+      [label]="'assistant.send' | transloco"
+      [disabled]="busy() || !draft().trim()"
+    >
+      <svg nx-icon [icon]="icons.send" size="18"></svg>
+    </button>
+  </form>
+</nx-card>
+
+<p class="note">{{ (demo ? 'assistant.noteDemo' : 'assistant.note') | transloco }}</p>

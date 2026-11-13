@@ -6,7 +6,7 @@ import { TranslocoPipe } from '@jsverse/transloco';
 import { NxAvatar } from '@shared/ui/avatar/avatar';
 import { NxLogo } from '@shared/ui/logo/logo';
 import type { CurrentUser } from '../../session/session';
-import { DASHBOARD, SETTINGS, SIDEBAR_SECTIONS } from '../navigation';
+import { ASSISTANT, DASHBOARD, SETTINGS, SIDEBAR_SECTIONS } from '../navigation';
 import { NxIcon } from '@shared/ui/icon/icon';
 
 @Component({
@@ -31,6 +31,7 @@ export class NxSidebar {
   readonly navigated = output();
 
   protected readonly dashboard = DASHBOARD;
+  protected readonly assistant = ASSISTANT;
   protected readonly sections = SIDEBAR_SECTIONS;
   protected readonly settings = SETTINGS;
   protected readonly tipIcon = Link2;

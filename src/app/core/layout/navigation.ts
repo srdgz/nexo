@@ -10,6 +10,7 @@ import {
   Receipt,
   Settings,
   SlidersHorizontal,
+  Sparkles,
   Tag,
   User,
   Wallet,
@@ -36,6 +37,12 @@ export const DASHBOARD: NavItem = {
   labelKey: 'nav.dashboard',
   path: '/app/dashboard',
   icon: House,
+};
+
+export const ASSISTANT: NavItem = {
+  labelKey: 'nav.assistant',
+  path: '/app/assistant',
+  icon: Sparkles,
 };
 
 export const FINANCES: NavSection = {
@@ -88,6 +95,13 @@ export function sectionFor(url: string): NavSection | null {
 }
 
 export const QUICK_ADD: readonly QuickAddItem[] = [
+  {
+    labelKey: 'quickAdd.assistant',
+    descriptionKey: 'quickAdd.assistantHint',
+    path: '/app/assistant',
+    queryParams: { mode: 'capture' },
+    icon: Sparkles,
+  },
   {
     labelKey: 'quickAdd.expense',
     descriptionKey: 'quickAdd.expenseHint',

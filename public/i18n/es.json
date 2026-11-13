@@ -18,7 +18,8 @@
     "settings": "Ajustes",
     "profile": "Perfil",
     "preferences": "Preferencias",
-    "login": "Acceso"
+    "login": "Acceso",
+    "assistant": "Asistente"
   },
   "pages": {
     "login": "Inicia sesión",
@@ -43,7 +44,8 @@
     "profile": "Perfil",
     "preferences": "Preferencias",
     "notFound": "Página no encontrada",
-    "uiGallery": "Sistema de diseño"
+    "uiGallery": "Sistema de diseño",
+    "assistant": "Asistente"
   },
   "language": {
     "label": "Idioma",
@@ -78,7 +80,9 @@
     "task": "Tarea",
     "taskHint": "Con pago previsto opcional",
     "event": "Evento",
-    "eventHint": "Cita o recordatorio"
+    "eventHint": "Cita o recordatorio",
+    "assistant": "Escribir con IA",
+    "assistantHint": "«Gasté 12 € en el súper»"
   },
   "ui": {
     "optional": "(opcional)",
@@ -705,6 +709,67 @@
       "themeSystem": "Sistema",
       "themeLight": "Claro",
       "themeDark": "Oscuro"
+    }
+  },
+  "assistant": {
+    "modes": {
+      "label": "Modo del asistente",
+      "capture": "Añadir",
+      "chat": "Preguntar"
+    },
+    "capture": {
+      "title": "Añade algo escribiéndolo",
+      "text": "Escribe un gasto, un ingreso, una tarea o un evento como se lo dirías a alguien. Te pediré confirmación antes de guardarlo.",
+      "placeholder": "Por ejemplo: gasté 23,40 € en el súper"
+    },
+    "chat": {
+      "title": "Pregunta por tus cuentas y tu agenda",
+      "text": "Consulto tus movimientos, presupuestos, tareas y eventos. Si me pides un cambio, te lo enseño antes de hacerlo.",
+      "placeholder": "Escribe tu pregunta"
+    },
+    "examples": {
+      "expense": "Gasté 23,40 € en el súper",
+      "task": "Recuérdame llamar al seguro mañana",
+      "event": "Cena con Marta el viernes a las 21:00",
+      "summary": "¿Cuánto he gastado este mes?",
+      "tasks": "¿Qué tareas tengo pendientes?",
+      "budgets": "¿Cómo voy con los presupuestos?"
+    },
+    "newChat": "Nueva conversación",
+    "send": "Enviar",
+    "thinking": "Pensando…",
+    "confirmTitle": "¿Lo guardo?",
+    "confirm": "Guardar",
+    "cancel": "Cancelar",
+    "done": "Guardado",
+    "cancelled": "Cancelado",
+    "note": "El asistente usa Google Gemini: tus mensajes y los datos que consulte se envían a Google. Revisa siempre lo que guarda.",
+    "noteDemo": "Modo demo: las respuestas son simuladas en tu navegador, sin IA real.",
+    "actions": {
+      "addExpense": "Gasto de {{amount}} en {{category}} el {{date}}",
+      "addIncome": "Ingreso de {{amount}} en {{category}} el {{date}}",
+      "addTask": "Nueva tarea: «{{title}}»",
+      "addTaskDue": "Nueva tarea: «{{title}}», para el {{date}}",
+      "completeTask": "Marcar como hecha: «{{title}}»",
+      "addEvent": "Nuevo evento: «{{title}}», el {{date}}"
+    },
+    "errors": {
+      "unavailable": "El asistente no está disponible ahora mismo.",
+      "rate_limited": "Se ha alcanzado el límite de uso del asistente. Prueba dentro de un rato.",
+      "blocked": "El asistente no ha podido responder a eso. Prueba a decirlo de otra forma.",
+      "network": "No hay conexión con el servidor. Inténtalo de nuevo.",
+      "unknown": "Algo ha fallado. Inténtalo de nuevo."
+    },
+    "demo": {
+      "help": "En la demo entiendo frases sencillas como «Gasté 12 € en el súper», «Recuérdame pagar el alquiler mañana», «¿Cuánto he gastado este mes?» o «¿Qué tareas tengo pendientes?».",
+      "expenseDone": "Listo, he apuntado el gasto de {{amount}}.",
+      "incomeDone": "Listo, he apuntado el ingreso de {{amount}}.",
+      "taskDone": "Hecho: he creado la tarea «{{title}}».",
+      "cancelled": "De acuerdo, no guardo nada.",
+      "failed": "No he podido hacerlo con esos datos. Prueba a escribirlo de otra forma.",
+      "summary": "Este mes llevas {{income}} de ingresos y {{expenses}} de gastos. Balance: {{balance}}.",
+      "tasks": "Tareas pendientes: {{count}}. Las primeras:\n{{list}}",
+      "noTasks": "No tienes tareas pendientes."
     }
   }
 }

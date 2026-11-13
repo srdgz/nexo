@@ -26,6 +26,9 @@
     <li>
       <ng-container *ngTemplateOutlet="link; context: { $implicit: dashboard }" />
     </li>
+    <li>
+      <ng-container *ngTemplateOutlet="link; context: { $implicit: assistant }" />
+    </li>
   </ul>
 
   @for (section of sections; track section.path) {
