@@ -6,6 +6,8 @@ import {
 } from '@angular/core';
 import { TranslocoService } from '@jsverse/transloco';
 import { APP_MODE } from '@core/app-mode/app-mode';
+import { DemoChannel } from '@core/realtime/demo-channel';
+import { REALTIME_LISTENERS, type RealtimeListener } from '@core/realtime/realtime';
 import { SupabaseClientProvider } from '@core/supabase/supabase-client';
 import { TASK_LOOKUP, type TaskLookup } from '@features/finances/application/task-lookup';
 import {
@@ -20,6 +22,7 @@ function organizationGatewayLoader(): () => Promise<OrganizationGateway> {
   const supabase = inject(SupabaseClientProvider);
   const transloco = inject(TranslocoService);
   const storage = inject(DOCUMENT).defaultView?.sessionStorage ?? null;
+  const sync = mode === 'demo' ? inject(DemoChannel) : undefined;
 
   return async () => {
     if (mode === 'demo') {
@@ -30,6 +33,7 @@ function organizationGatewayLoader(): () => Promise<OrganizationGateway> {
       const language = transloco.getActiveLang() === 'en' ? 'en' : 'es';
       return createDemoOrganizationGateway({
         storage,
+        sync,
         seed: () => createOrganizationSeed(new Date(), language),
       });
     }
@@ -39,6 +43,11 @@ function organizationGatewayLoader(): () => Promise<OrganizationGateway> {
     ]);
     return createSupabaseOrganizationGateway(client);
   };
+}
+
+function realtimeListener(): RealtimeListener {
+  const organization = inject(OrganizationService);
+  return { topic: 'organization', refresh: () => organization.refresh() };
 }
 
 function taskLookup(): TaskLookup {
@@ -55,5 +64,6 @@ export function provideOrganization(): EnvironmentProviders {
   return makeEnvironmentProviders([
     { provide: ORGANIZATION_GATEWAY_LOADER, useFactory: organizationGatewayLoader },
     { provide: TASK_LOOKUP, useFactory: taskLookup },
+    { provide: REALTIME_LISTENERS, multi: true, useFactory: realtimeListener },
   ]);
 }

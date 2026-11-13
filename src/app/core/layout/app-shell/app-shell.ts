@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   type ElementRef,
   computed,
   effect,
@@ -14,6 +15,7 @@ import { TranslocoPipe } from '@jsverse/transloco';
 import { filter, map } from 'rxjs';
 import { HEADING_IN_SHELL } from '@shared/ui/pending-page/pending-page';
 import { NxTab, NxTabNav } from '@shared/ui/tab-nav/tab-nav';
+import { RealtimeSync } from '../../realtime/realtime-sync';
 import { Session } from '../../session/session';
 import { NxDemoBanner } from '../demo-banner/demo-banner';
 import { NxAppHeader } from '../app-header/app-header';
@@ -78,6 +80,15 @@ export class AppShell {
   });
 
   constructor() {
+    const realtime = inject(RealtimeSync);
+    effect(() => {
+      if (this.user()) {
+        void realtime.start();
+      } else {
+        realtime.stop();
+      }
+    });
+    inject(DestroyRef).onDestroy(() => realtime.stop());
     effect(() => {
       this.url();
       this.mode();

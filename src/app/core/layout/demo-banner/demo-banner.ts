@@ -13,6 +13,7 @@ import { NxButton } from '@shared/ui/button/button';
 import { NxIcon } from '@shared/ui/icon/icon';
 import { NxMenu, NxMenuItem, NxMenuTrigger } from '@shared/ui/menu/menu';
 import { RELOAD, clearDemoData, leaveDemo } from '../../app-mode/app-mode';
+import { DemoChannel } from '../../realtime/demo-channel';
 
 @Component({
   selector: 'nx-demo-banner',
@@ -103,10 +104,12 @@ export class NxDemoBanner {
   private readonly document = inject(DOCUMENT);
   private readonly router = inject(Router);
   private readonly reload = inject(RELOAD);
+  private readonly demoChannel = inject(DemoChannel);
 
   protected readonly icons = { demo: FlaskConical, reset: RotateCcw, register: UserPlus };
 
   protected reset(): void {
+    this.demoChannel.reset();
     clearDemoData(this.document);
     this.reload(this.router.url);
   }

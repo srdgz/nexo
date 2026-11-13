@@ -6,6 +6,7 @@ import {
   withViewTransitions,
 } from '@angular/router';
 import { provideI18n } from '@core/i18n/provide-i18n';
+import { provideRealtime } from '@core/realtime/provide-realtime';
 import { provideAuth } from '@features/auth/infrastructure/provide-auth';
 import { provideFinances } from '@features/finances/infrastructure/provide-finances';
 import { provideOrganization } from '@features/organization/infrastructure/provide-organization';
@@ -21,6 +22,7 @@ export const appConfig: ApplicationConfig = {
       withViewTransitions(),
     ),
     provideI18n(),
+    provideRealtime(),
     provideAuth(),
     provideFinances(),
     provideOrganization(),

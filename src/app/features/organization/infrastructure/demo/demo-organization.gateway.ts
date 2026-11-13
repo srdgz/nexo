@@ -1,3 +1,4 @@
+import type { DemoSync } from '@core/realtime/realtime';
 import type {
   EventRepository,
   OrganizationGateway,
@@ -12,6 +13,7 @@ export const DEMO_ORGANIZATION_KEY = 'nexo.demo.organization';
 
 export interface DemoOrganizationOptions {
   readonly storage: Storage | null;
+  readonly sync?: DemoSync;
   readonly seed: () => OrganizationData;
   readonly latency?: readonly [number, number];
   readonly newId?: () => string;
@@ -20,6 +22,7 @@ export interface DemoOrganizationOptions {
 
 class DemoOrganizationDb {
   private data: OrganizationData;
+  private saved: string | null = null;
   private readonly latency: readonly [number, number];
   readonly newId: () => string;
   readonly now: () => Date;
@@ -30,6 +33,10 @@ class DemoOrganizationDb {
     this.now = options.now ?? (() => new Date());
     this.data = this.read() ?? options.seed();
     this.save();
+    options.sync?.listen(DEMO_ORGANIZATION_KEY, (data) => {
+      this.data = data as OrganizationData;
+      this.saved = JSON.stringify(data);
+    });
   }
 
   async run<T>(action: (data: OrganizationData) => T): Promise<T> {
@@ -52,10 +59,19 @@ class DemoOrganizationDb {
   }
 
   private save(): void {
+    const text = JSON.stringify(this.data);
+    if (text === this.saved) {
+      return;
+    }
+    const first = this.saved === null;
+    this.saved = text;
     try {
-      this.options.storage?.setItem(DEMO_ORGANIZATION_KEY, JSON.stringify(this.data));
+      this.options.storage?.setItem(DEMO_ORGANIZATION_KEY, text);
     } catch {
       return;
+    }
+    if (!first) {
+      this.options.sync?.publish(DEMO_ORGANIZATION_KEY, this.data);
     }
   }
 }

@@ -138,3 +138,38 @@ describe('demo finance gateway', () => {
     expect(trend.at(-1)!.income).toBeGreaterThan(0);
   });
 });
+
+describe('demo finance sync between tabs', () => {
+  it('shares its data after each change and takes the data other tabs send', async () => {
+    const published: unknown[] = [];
+    let apply: ((data: unknown) => void) | null = null;
+    const demo = createDemoFinanceGateway({
+      storage: null,
+      seed: () => createFinanceSeed(today, 'es'),
+      latency: [0, 0],
+      newId: () => 'shared-1',
+      sync: {
+        publish: (key, data) => published.push([key, data]),
+        listen: (_key, callback) => {
+          apply = callback;
+        },
+      },
+    });
+    const [category] = await demo.categories.list();
+
+    await demo.transactions.list({ month, type: null, categoryId: null, search: '', page: 1 });
+    expect(published).toEqual([]);
+
+    await demo.categories.update(category!.id, { archived: true });
+    expect(published).toHaveLength(1);
+    expect(published[0]).toEqual([
+      DEMO_FINANCE_KEY,
+      expect.objectContaining({ categories: expect.any(Array) }),
+    ]);
+
+    const other = createFinanceSeed(today, 'es');
+    apply!({ ...other, categories: other.categories.slice(0, 2) });
+    expect(await demo.categories.list()).toHaveLength(2);
+    expect(published).toHaveLength(1);
+  });
+});

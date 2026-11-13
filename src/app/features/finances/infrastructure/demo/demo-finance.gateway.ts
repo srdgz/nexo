@@ -1,3 +1,4 @@
+import type { DemoSync } from '@core/realtime/realtime';
 import type {
   BudgetRepository,
   CategoryRepository,
@@ -32,6 +33,7 @@ export const DEMO_FINANCE_KEY = 'nexo.demo.finances';
 
 export interface DemoOptions {
   readonly storage: Storage | null;
+  readonly sync?: DemoSync;
   readonly seed: () => FinanceData;
   readonly latency?: readonly [number, number];
   readonly newId?: () => string;
@@ -39,6 +41,7 @@ export interface DemoOptions {
 
 class DemoFinanceDb {
   private data: FinanceData;
+  private saved: string | null = null;
   private readonly latency: readonly [number, number];
   readonly newId: () => string;
 
@@ -47,6 +50,10 @@ class DemoFinanceDb {
     this.newId = options.newId ?? (() => crypto.randomUUID());
     this.data = this.read() ?? options.seed();
     this.save();
+    options.sync?.listen(DEMO_FINANCE_KEY, (data) => {
+      this.data = data as FinanceData;
+      this.saved = JSON.stringify(data);
+    });
   }
 
   async run<T>(action: (data: FinanceData) => T): Promise<T> {
@@ -69,10 +76,19 @@ class DemoFinanceDb {
   }
 
   private save(): void {
+    const text = JSON.stringify(this.data);
+    if (text === this.saved) {
+      return;
+    }
+    const first = this.saved === null;
+    this.saved = text;
     try {
-      this.options.storage?.setItem(DEMO_FINANCE_KEY, JSON.stringify(this.data));
+      this.options.storage?.setItem(DEMO_FINANCE_KEY, text);
     } catch {
       return;
+    }
+    if (!first) {
+      this.options.sync?.publish(DEMO_FINANCE_KEY, this.data);
     }
   }
 }

@@ -29,6 +29,10 @@ export class FinanceService {
 
   readonly version = this.revision.asReadonly();
 
+  refresh(): void {
+    this.revision.update((value) => value + 1);
+  }
+
   private gateway(): Promise<FinanceGateway> {
     this.gatewayPromise ??= this.loader();
     return this.gatewayPromise;

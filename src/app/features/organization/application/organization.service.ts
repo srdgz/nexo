@@ -36,6 +36,10 @@ export class OrganizationService {
 
   readonly version = this.revision.asReadonly();
 
+  refresh(): void {
+    this.revision.update((value) => value + 1);
+  }
+
   private gateway(): Promise<OrganizationGateway> {
     this.gatewayPromise ??= this.loader();
     return this.gatewayPromise;
