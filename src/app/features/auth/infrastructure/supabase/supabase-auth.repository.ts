@@ -119,7 +119,7 @@ export class SupabaseAuthRepository implements AuthRepository {
 
   async updateProfile(changes: ProfileChanges): Promise<AuthUser> {
     const current = await this.requireUser();
-    const values: Record<string, string | number> = {};
+    const values: Record<string, string | number | null> = {};
     if (changes.fullName !== undefined) {
       values['full_name'] = changes.fullName;
     }
@@ -132,11 +132,17 @@ export class SupabaseAuthRepository implements AuthRepository {
     if (changes.theme !== undefined) {
       values['theme'] = changes.theme;
     }
+    if (changes.avatarUrl !== undefined) {
+      values['avatar_url'] = changes.avatarUrl;
+    }
     const { error } = await this.client.from('profiles').update(values).eq('id', current.id);
     if (error) {
       throw mapAuthError(error);
     }
-    const { data, error: updateError } = await this.client.auth.updateUser({ data: values });
+    const { avatar_url: photo, ...metadata } = values;
+    const { data, error: updateError } = await this.client.auth.updateUser({
+      data: photo === undefined ? metadata : { ...metadata, photo_url: photo },
+    });
     if (updateError) {
       throw mapAuthError(updateError);
     }

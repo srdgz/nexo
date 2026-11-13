@@ -235,6 +235,7 @@ describe('password recovery', () => {
       locale: 'es',
       weekStartsOn: 1,
       theme: null,
+      avatarUrl: null,
       createdAt: null,
       hasPassword: true,
     });

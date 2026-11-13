@@ -10,6 +10,9 @@ export type AuthErrorCode =
   | 'cancelled'
   | 'rate_limited'
   | 'network'
+  | 'avatar_type'
+  | 'avatar_size'
+  | 'avatar_upload'
   | 'unavailable'
   | 'unknown';
 

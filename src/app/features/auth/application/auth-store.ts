@@ -8,6 +8,7 @@ import { ThemeService } from '@core/theme/theme.service';
 import { ToastService } from '@shared/ui/toast/toast';
 import { AuthError } from '../domain/auth-error';
 import type { AuthUser, ProfileChanges, SignUpData } from '../domain/auth-user';
+import { avatarFileError } from '../domain/avatar';
 import { safeReturnUrl } from '../domain/return-url';
 import {
   AUTH_REPOSITORY_LOADER,
@@ -15,12 +16,14 @@ import {
   type AuthRepository,
   type EmailLinkParams,
 } from './auth-repository';
+import { AVATAR_STORAGE_LOADER, type AvatarStorage } from './avatar-storage';
 
 export type AuthStatus = 'unknown' | 'authenticated' | 'anonymous';
 
 @Injectable({ providedIn: 'root' })
 export class AuthStore extends Session {
   private readonly loader = inject(AUTH_REPOSITORY_LOADER);
+  private readonly avatarLoader = inject(AVATAR_STORAGE_LOADER);
   private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
   private readonly transloco = inject(TranslocoService);
@@ -30,6 +33,7 @@ export class AuthStore extends Session {
   private readonly theme = inject(ThemeService);
 
   private repository: AuthRepository | null = null;
+  private avatarStorage: Promise<AvatarStorage> | null = null;
   private signingOut = false;
 
   private readonly state = signal<{ status: AuthStatus; user: AuthUser | null }>({
@@ -52,7 +56,7 @@ export class AuthStore extends Session {
       ? {
           displayName: user.displayName,
           email: user.email,
-          avatarUrl: null,
+          avatarUrl: user.avatarUrl,
           weekStartsOn: user.weekStartsOn,
         }
       : null;
@@ -111,6 +115,20 @@ export class AuthStore extends Session {
         ...(fullName !== undefined ? { fullName } : {}),
       }),
     );
+  }
+
+  async changeAvatar(image: File): Promise<void> {
+    const problem = avatarFileError(image);
+    if (problem) {
+      throw new AuthError(problem);
+    }
+    const url = await (await this.avatars()).upload(image);
+    await this.updateProfile({ avatarUrl: url });
+  }
+
+  async removeAvatar(): Promise<void> {
+    await (await this.avatars()).remove();
+    await this.updateProfile({ avatarUrl: null });
   }
 
   async updatePreferences(changes: PreferenceChanges): Promise<void> {
@@ -190,6 +208,14 @@ export class AuthStore extends Session {
     if (user.theme && user.theme !== this.theme.preference()) {
       this.theme.use(user.theme);
     }
+  }
+
+  private avatars(): Promise<AvatarStorage> {
+    this.avatarStorage ??= this.avatarLoader().catch((error: unknown) => {
+      this.avatarStorage = null;
+      throw error;
+    });
+    return this.avatarStorage;
   }
 
   private repo(): AuthRepository {

@@ -13,6 +13,45 @@ function json(body: Record<string, unknown>, status: number): Response {
   });
 }
 
+async function sign(params: Record<string, string>, secret: string): Promise<string> {
+  const payload = Object.keys(params)
+    .sort()
+    .map((key) => `${key}=${params[key]}`)
+    .join('&');
+  const digest = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(payload + secret));
+  return Array.from(new Uint8Array(digest))
+    .map((byte) => byte.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+async function removeAvatar(userId: string): Promise<void> {
+  const cloudName = Deno.env.get('CLOUDINARY_CLOUD_NAME');
+  const apiKey = Deno.env.get('CLOUDINARY_API_KEY');
+  const apiSecret = Deno.env.get('CLOUDINARY_API_SECRET');
+  if (!cloudName || !apiKey || !apiSecret) {
+    return;
+  }
+  const params = {
+    invalidate: 'true',
+    public_id: `nexo/avatars/${userId}`,
+    timestamp: String(Math.floor(Date.now() / 1000)),
+  };
+  const body = new FormData();
+  for (const [key, value] of Object.entries(params)) {
+    body.set(key, value);
+  }
+  body.set('api_key', apiKey);
+  body.set('signature', await sign(params, apiSecret));
+  try {
+    await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/destroy`, {
+      method: 'POST',
+      body,
+    });
+  } catch {
+    return;
+  }
+}
+
 Deno.serve(async (request) => {
   if (request.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -41,6 +80,8 @@ Deno.serve(async (request) => {
   if (error || !data.user) {
     return json({ error: 'unauthorized' }, 401);
   }
+
+  await removeAvatar(data.user.id);
 
   const { error: deleteError } = await admin.auth.admin.deleteUser(data.user.id);
   if (deleteError) {

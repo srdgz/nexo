@@ -50,6 +50,14 @@ export function mapAuthError(error: unknown): AuthError {
   return new AuthError('unknown');
 }
 
+function avatarOf(metadata: Record<string, unknown>): string | null {
+  if ('photo_url' in metadata) {
+    return typeof metadata['photo_url'] === 'string' ? metadata['photo_url'] : null;
+  }
+  const provided = metadata['avatar_url'] ?? metadata['picture'];
+  return typeof provided === 'string' && provided.startsWith('https://') ? provided : null;
+}
+
 export function mapUser(user: SupabaseUserLike): AuthUser {
   const metadata = user.user_metadata ?? {};
   const email = user.email ?? '';
@@ -68,6 +76,7 @@ export function mapUser(user: SupabaseUserLike): AuthUser {
     locale,
     weekStartsOn,
     theme,
+    avatarUrl: avatarOf(metadata),
     createdAt: user.created_at ?? null,
     hasPassword: Array.isArray(providers) ? providers.includes('email') : true,
   };

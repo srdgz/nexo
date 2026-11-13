@@ -44,6 +44,7 @@ describe('mapUser', () => {
       locale: 'en',
       weekStartsOn: 0,
       theme: 'dark',
+      avatarUrl: null,
       createdAt: '2026-11-02T10:00:00Z',
       hasPassword: true,
     });
@@ -64,8 +65,22 @@ describe('mapUser', () => {
       locale: null,
       weekStartsOn: 1,
       theme: null,
+      avatarUrl: null,
       createdAt: null,
       hasPassword: false,
     });
+  });
+
+  it('uses the Google photo until the user chooses or removes one', () => {
+    const google = 'https://lh3.googleusercontent.com/a/photo';
+    const own = 'https://res.cloudinary.com/nexo/image/upload/v1/nexo/avatars/u3';
+
+    expect(mapUser({ id: 'u3', user_metadata: { avatar_url: google } }).avatarUrl).toBe(google);
+    expect(
+      mapUser({ id: 'u3', user_metadata: { avatar_url: google, photo_url: own } }).avatarUrl,
+    ).toBe(own);
+    expect(
+      mapUser({ id: 'u3', user_metadata: { avatar_url: google, photo_url: null } }).avatarUrl,
+    ).toBeNull();
   });
 });

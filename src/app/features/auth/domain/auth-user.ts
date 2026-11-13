@@ -11,6 +11,7 @@ export interface AuthUser {
   readonly locale: UserLocale | null;
   readonly weekStartsOn: WeekStart;
   readonly theme: UserTheme | null;
+  readonly avatarUrl: string | null;
   readonly createdAt: string | null;
   readonly hasPassword: boolean;
 }
@@ -27,6 +28,7 @@ export interface ProfileChanges {
   readonly locale?: UserLocale;
   readonly weekStartsOn?: WeekStart;
   readonly theme?: UserTheme;
+  readonly avatarUrl?: string | null;
 }
 
 export const DELETE_CONFIRMATION: Readonly<Record<UserLocale, string>> = {

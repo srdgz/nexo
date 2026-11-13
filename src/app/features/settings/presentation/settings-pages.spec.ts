@@ -6,14 +6,17 @@ import { Session } from '@core/session/session';
 import { ThemeService } from '@core/theme/theme.service';
 import {
   FakeAuthRepository,
+  FakeAvatarStorage,
   TEST_USER,
   initTestAuth,
   provideTestAuth,
 } from '../../../../testing/auth';
+import { ToastService } from '@shared/ui/toast/toast';
 import { provideTestI18n } from '../../../../testing/i18n';
 import { SETTINGS_ROUTES } from './settings.routes';
 
 let repository: FakeAuthRepository;
+let avatars: FakeAvatarStorage;
 
 async function settle(harness: RouterTestingHarness): Promise<void> {
   for (let round = 0; round < 3; round += 1) {
@@ -31,6 +34,7 @@ async function open(url: string, user: FakeAuthRepository['user'] = TEST_USER) {
     this.dispatchEvent(new Event('close'));
   });
   repository = new FakeAuthRepository(user);
+  avatars = new FakeAvatarStorage();
   TestBed.configureTestingModule({
     imports: [provideTestI18n()],
     providers: [
@@ -41,7 +45,7 @@ async function open(url: string, user: FakeAuthRepository['user'] = TEST_USER) {
         ],
         withComponentInputBinding(),
       ),
-      provideTestAuth(repository),
+      provideTestAuth(repository, avatars),
     ],
   });
   await initTestAuth();
@@ -127,6 +131,57 @@ describe('profile page', () => {
 
     expect(root.querySelector('nx-password-input')).toBeNull();
     expect(root.textContent).toContain('Entras con Google');
+  });
+
+  it('uploads a new photo and shows it', async () => {
+    const { harness, root } = await open('/app/settings/profile');
+    const input = root.querySelector<HTMLInputElement>('.photo-actions input[type=file]')!;
+    const photo = new File(['x'], 'me.png', { type: 'image/png' });
+    Object.defineProperty(input, 'files', { value: [photo], configurable: true });
+
+    input.dispatchEvent(new Event('change'));
+    await settle(harness);
+
+    expect(avatars.uploads).toEqual([photo]);
+    expect(root.querySelector<HTMLImageElement>('.identity img')?.src).toContain(
+      'res.cloudinary.com',
+    );
+    expect(TestBed.inject(Session).user()?.avatarUrl).toContain('res.cloudinary.com');
+    expect(root.textContent).toContain('Cambiar foto');
+  });
+
+  it('rejects a photo in another format without uploading it', async () => {
+    const { harness, root } = await open('/app/settings/profile');
+    const input = root.querySelector<HTMLInputElement>('.photo-actions input[type=file]')!;
+    Object.defineProperty(input, 'files', {
+      value: [new File(['x'], 'me.gif', { type: 'image/gif' })],
+      configurable: true,
+    });
+
+    input.dispatchEvent(new Event('change'));
+    await settle(harness);
+
+    expect(avatars.uploads).toEqual([]);
+    expect(TestBed.inject(ToastService).toasts().at(-1)?.message).toBe(
+      'La foto debe ser JPG, PNG o WebP.',
+    );
+  });
+
+  it('removes the photo', async () => {
+    const { harness, root } = await open('/app/settings/profile', {
+      ...TEST_USER,
+      avatarUrl: 'https://res.cloudinary.com/test/image/upload/v1/avatar',
+    });
+    const remove = Array.from(
+      root.querySelectorAll<HTMLButtonElement>('.photo-actions button'),
+    ).find((button) => button.textContent?.includes('Quitar'))!;
+
+    remove.click();
+    await settle(harness);
+
+    expect(avatars.removed).toBe(1);
+    expect(root.querySelector('.identity img')).toBeNull();
+    expect(root.textContent).toContain('Añadir foto');
   });
 
   it('deletes the account only after typing the confirmation word', async () => {

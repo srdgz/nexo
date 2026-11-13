@@ -9,6 +9,10 @@ import {
   type EmailLinkParams,
 } from '@features/auth/application/auth-repository';
 import { AuthStore } from '@features/auth/application/auth-store';
+import {
+  AVATAR_STORAGE_LOADER,
+  type AvatarStorage,
+} from '@features/auth/application/avatar-storage';
 import { AuthError, type AuthErrorCode } from '@features/auth/domain/auth-error';
 import type { AuthUser, ProfileChanges, SignUpData } from '@features/auth/domain/auth-user';
 
@@ -19,6 +23,7 @@ export const TEST_USER: AuthUser = {
   locale: 'es',
   weekStartsOn: 1,
   theme: null,
+  avatarUrl: null,
   createdAt: '2026-11-02T10:00:00.000Z',
   hasPassword: true,
 };
@@ -82,6 +87,7 @@ export class FakeAuthRepository implements AuthRepository {
         ...(changes.locale !== undefined ? { locale: changes.locale } : {}),
         ...(changes.weekStartsOn !== undefined ? { weekStartsOn: changes.weekStartsOn } : {}),
         ...(changes.theme !== undefined ? { theme: changes.theme } : {}),
+        ...(changes.avatarUrl !== undefined ? { avatarUrl: changes.avatarUrl } : {}),
       };
       return this.user;
     });
@@ -106,11 +112,37 @@ export class FakeAuthRepository implements AuthRepository {
   }
 }
 
+export class FakeAvatarStorage implements AvatarStorage {
+  failWith: AuthErrorCode | null = null;
+  readonly uploads: Blob[] = [];
+  removed = 0;
+
+  upload(image: Blob): Promise<string> {
+    if (this.failWith) {
+      return Promise.reject(new AuthError(this.failWith));
+    }
+    this.uploads.push(image);
+    return Promise.resolve(
+      `https://res.cloudinary.com/test/image/upload/v${this.uploads.length}/avatar`,
+    );
+  }
+
+  remove(): Promise<void> {
+    if (this.failWith) {
+      return Promise.reject(new AuthError(this.failWith));
+    }
+    this.removed += 1;
+    return Promise.resolve();
+  }
+}
+
 export function provideTestAuth(
   repository: FakeAuthRepository = new FakeAuthRepository(TEST_USER),
+  avatars: FakeAvatarStorage = new FakeAvatarStorage(),
 ): EnvironmentProviders {
   return makeEnvironmentProviders([
     { provide: AUTH_REPOSITORY_LOADER, useValue: () => Promise.resolve(repository) },
+    { provide: AVATAR_STORAGE_LOADER, useValue: () => Promise.resolve(avatars) },
     { provide: Session, useExisting: AuthStore },
     { provide: RELOAD, useValue: () => undefined },
   ]);

@@ -5,6 +5,7 @@ import { APP_MODE, RELOAD } from '@core/app-mode/app-mode';
 import { LanguageService } from '@core/i18n/language.service';
 import { ThemeService } from '@core/theme/theme.service';
 import { ToastService } from '@shared/ui/toast/toast';
+import { AuthError } from '../domain/auth-error';
 import { FakeAuthRepository, TEST_USER, provideTestAuth } from '../../../../testing/auth';
 import { provideTestI18n } from '../../../../testing/i18n';
 import { AuthStore } from './auth-store';
@@ -177,6 +178,30 @@ describe('AuthStore', () => {
       args: [{ theme: 'light' }],
     });
     TestBed.inject(ThemeService).use('system');
+  });
+
+  it('saves the uploaded photo in the profile', async () => {
+    setup();
+    await store.init();
+
+    await store.changeAvatar(new File(['x'], 'me.webp', { type: 'image/webp' }));
+
+    expect(store.user()?.avatarUrl).toBe('https://res.cloudinary.com/test/image/upload/v1/avatar');
+    expect(repository.calls.at(-1)).toEqual({
+      method: 'updateProfile',
+      args: [{ avatarUrl: 'https://res.cloudinary.com/test/image/upload/v1/avatar' }],
+    });
+  });
+
+  it('refuses photos over 5 MB before uploading', async () => {
+    setup();
+    await store.init();
+    const large = new File([new Uint8Array(5 * 1024 * 1024 + 1)], 'big.jpg', {
+      type: 'image/jpeg',
+    });
+
+    await expect(store.changeAvatar(large)).rejects.toEqual(new AuthError('avatar_size'));
+    expect(repository.calls).toEqual([]);
   });
 
   it('signs out quietly after deleting the account', async () => {

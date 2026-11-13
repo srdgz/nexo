@@ -47,6 +47,9 @@ export function initialsOf(name: string): string {
     :host(.lg) {
       --size: 56px;
     }
+    :host(.xl) {
+      --size: 80px;
+    }
     img {
       width: 100%;
       height: 100%;
@@ -64,7 +67,7 @@ export function initialsOf(name: string): string {
 export class NxAvatar {
   readonly name = input('');
   readonly src = input<string | null>(null);
-  readonly size = input<'sm' | 'md' | 'lg'>('md');
+  readonly size = input<'sm' | 'md' | 'lg' | 'xl'>('md');
 
   protected readonly initials = computed(() => initialsOf(this.name()));
   protected readonly fallbackIcon = User;

@@ -12,6 +12,9 @@ const MESSAGE_KEYS: Readonly<Record<AuthErrorCode, string>> = {
   cancelled: 'auth.errors.cancelled',
   rate_limited: 'auth.errors.rateLimited',
   network: 'auth.errors.network',
+  avatar_type: 'auth.errors.avatarType',
+  avatar_size: 'auth.errors.avatarSize',
+  avatar_upload: 'auth.errors.avatarUpload',
   unavailable: 'auth.errors.unavailable',
   unknown: 'auth.errors.unknown',
 };

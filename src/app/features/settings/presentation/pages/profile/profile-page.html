@@ -2,13 +2,53 @@
   <div class="layout">
     <div class="column">
       <nx-card class="identity">
-        <nx-avatar size="lg" [name]="current.displayName" />
+        <nx-avatar size="xl" [name]="current.displayName" [src]="current.avatarUrl" />
         <div class="identity-text">
           <h2>{{ current.displayName }}</h2>
           <p class="muted">{{ current.email }}</p>
           @if (since(); as date) {
             <p class="muted">{{ 'settings.profile.since' | transloco: { date } }}</p>
           }
+          <div class="photo-actions">
+            <input
+              #photoInput
+              class="file"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              tabindex="-1"
+              aria-hidden="true"
+              (change)="uploadPhoto($event)"
+            />
+            <button
+              type="button"
+              nx-button
+              variant="secondary"
+              size="sm"
+              [loading]="photoBusy() === 'upload'"
+              [disabled]="photoBusy() !== null"
+              (click)="photoInput.click()"
+            >
+              <svg nx-icon [icon]="icons.camera" size="16"></svg>
+              {{
+                (current.avatarUrl ? 'settings.profile.photoChange' : 'settings.profile.photoAdd')
+                  | transloco
+              }}
+            </button>
+            @if (current.avatarUrl) {
+              <button
+                type="button"
+                nx-button
+                variant="ghost"
+                size="sm"
+                [loading]="photoBusy() === 'remove'"
+                [disabled]="photoBusy() !== null"
+                (click)="removePhoto()"
+              >
+                {{ 'settings.profile.photoRemove' | transloco }}
+              </button>
+            }
+          </div>
+          <p class="hint">{{ 'settings.profile.photoHint' | transloco }}</p>
         </div>
       </nx-card>
 

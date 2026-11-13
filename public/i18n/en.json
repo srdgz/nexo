@@ -195,7 +195,10 @@
       "unknown": "Something went wrong. Please try again.",
       "cancelled": "You cancelled the sign in. You can try again whenever you like.",
       "wrongPassword": "Your current password is not correct.",
-      "invalidEmail": "That email address is not valid."
+      "invalidEmail": "That email address is not valid.",
+      "avatarType": "The photo must be a JPG, PNG or WebP.",
+      "avatarSize": "The photo cannot be larger than 5 MB.",
+      "avatarUpload": "The photo could not be uploaded. Please try again."
     },
     "showcase": {
       "label": "NEXO features",
@@ -618,7 +621,13 @@
       "deleteText": "Your transactions, budgets, tasks and events will be erased. This cannot be undone.",
       "deleteConfirm": "Type {{word}} to confirm",
       "deleteAction": "Delete account",
-      "deleted": "Your account has been deleted"
+      "deleted": "Your account has been deleted",
+      "photoAdd": "Add photo",
+      "photoChange": "Change photo",
+      "photoRemove": "Remove",
+      "photoHint": "JPG, PNG or WebP, up to 5 MB. It is cropped to a square centred on the face.",
+      "photoSaved": "Profile photo updated",
+      "photoRemoved": "Profile photo removed"
     },
     "preferences": {
       "language": "Language",

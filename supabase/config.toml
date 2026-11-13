@@ -16,3 +16,6 @@ secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET)"
 
 [functions.delete-account]
 verify_jwt = true
+
+[functions.avatar]
+verify_jwt = true

@@ -17,7 +17,7 @@ import {
   validate,
 } from '@angular/forms/signals';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
-import { LogOut, Trash2 } from 'lucide';
+import { Camera, LogOut, Trash2 } from 'lucide';
 import { AuthStore } from '@features/auth/application/auth-store';
 import { type AuthErrorCode, toAuthError } from '@features/auth/domain/auth-error';
 import { isSameEmail } from '@features/auth/domain/auth-user';
@@ -62,11 +62,12 @@ export class ProfilePage {
   private readonly transloco = inject(TranslocoService);
   private readonly language = injectActiveLanguage();
 
-  protected readonly icons = { signOut: LogOut, trash: Trash2 };
+  protected readonly icons = { camera: Camera, signOut: LogOut, trash: Trash2 };
   protected readonly demo = this.store.mode === 'demo';
   protected readonly user = this.store.authUser;
   protected readonly messageKey = authMessageKey;
   protected readonly deleting = signal(false);
+  protected readonly photoBusy = signal<'upload' | 'remove' | null>(null);
 
   protected readonly since = computed(() => {
     const created = this.user()?.createdAt;
@@ -183,6 +184,44 @@ export class ProfilePage {
       }
       return undefined;
     });
+  }
+
+  protected async uploadPhoto(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = '';
+    if (!file) {
+      return;
+    }
+    await this.photoTask(
+      'upload',
+      () => this.store.changeAvatar(file),
+      'settings.profile.photoSaved',
+    );
+  }
+
+  protected removePhoto(): Promise<void> {
+    return this.photoTask(
+      'remove',
+      () => this.store.removeAvatar(),
+      'settings.profile.photoRemoved',
+    );
+  }
+
+  private async photoTask(
+    kind: 'upload' | 'remove',
+    task: () => Promise<void>,
+    successKey: string,
+  ): Promise<void> {
+    this.photoBusy.set(kind);
+    try {
+      await task();
+      this.toast.success(this.transloco.translate(successKey));
+    } catch (error) {
+      this.toast.error(this.transloco.translate(authMessageKey(toAuthError(error).code)));
+    } finally {
+      this.photoBusy.set(null);
+    }
   }
 
   protected signOut(): void {

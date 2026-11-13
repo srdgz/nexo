@@ -20,6 +20,15 @@
   flex-direction: row;
   align-items: center;
   gap: var(--nx-space-4);
+
+  @include below(tablet) {
+    flex-direction: column;
+    text-align: center;
+
+    .photo-actions {
+      justify-content: center;
+    }
+  }
 }
 
 .identity-text {
@@ -35,6 +44,23 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+}
+
+.photo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--nx-space-2);
+  margin-top: var(--nx-space-3);
+}
+
+.file {
+  display: none;
+}
+
+.hint {
+  margin-top: var(--nx-space-1);
+  color: var(--nx-text-muted);
+  font-size: var(--nx-text-xs);
 }
 
 .muted {
