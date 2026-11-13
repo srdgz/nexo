@@ -3,7 +3,13 @@ import type { Budget, BudgetDraft } from '../domain/budget';
 import type { Category, CategoryDraft } from '../domain/category';
 import type { CategoryTotal, DailyTotal, MonthTotals, PeriodSummary } from '../domain/insights';
 import type { MonthKey } from '../domain/month';
-import type { Page, Transaction, TransactionDraft, TransactionQuery } from '../domain/transaction';
+import type {
+  Page,
+  Transaction,
+  TransactionDraft,
+  TransactionFilter,
+  TransactionQuery,
+} from '../domain/transaction';
 
 export interface CategoryRepository {
   list(): Promise<Category[]>;
@@ -14,8 +20,10 @@ export interface CategoryRepository {
 
 export interface TransactionRepository {
   list(query: TransactionQuery): Promise<Page<Transaction>>;
+  listAll(filter: TransactionFilter): Promise<Transaction[]>;
   get(id: string): Promise<Transaction>;
   create(draft: TransactionDraft): Promise<Transaction>;
+  createMany(drafts: readonly TransactionDraft[]): Promise<number>;
   update(id: string, draft: TransactionDraft): Promise<Transaction>;
   remove(id: string): Promise<void>;
   countByCategory(month: MonthKey): Promise<Record<string, number>>;

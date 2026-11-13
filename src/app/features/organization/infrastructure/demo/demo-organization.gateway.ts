@@ -158,8 +158,21 @@ class DemoEvents implements EventRepository {
     );
   }
 
+  all(): Promise<CalendarEvent[]> {
+    return this.db.run((data) =>
+      [...data.events].sort((a, b) => a.startsAt.localeCompare(b.startsAt)),
+    );
+  }
+
   get(id: string): Promise<CalendarEvent> {
     return this.db.run((data) => find(data.events, id));
+  }
+
+  createMany(drafts: readonly EventDraft[]): Promise<number> {
+    return this.db.run((data) => {
+      data.events.push(...drafts.map((draft) => ({ ...draft, id: this.db.newId() })));
+      return drafts.length;
+    });
   }
 
   create(draft: EventDraft): Promise<CalendarEvent> {

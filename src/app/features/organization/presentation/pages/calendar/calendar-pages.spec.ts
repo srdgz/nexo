@@ -136,3 +136,74 @@ describe('event form', () => {
     );
   });
 });
+
+describe('calendar import and export', () => {
+  function menuItem(root: HTMLElement, text: string): HTMLButtonElement {
+    return Array.from(root.querySelectorAll<HTMLButtonElement>('[nx-menu-item]')).find((item) =>
+      item.textContent?.includes(text),
+    )!;
+  }
+
+  it('exports every event as an .ics file and imports it back without duplicates', async () => {
+    HTMLDialogElement.prototype.showModal = vi.fn(function (this: HTMLDialogElement) {
+      this.setAttribute('open', '');
+    });
+    HTMLDialogElement.prototype.close = vi.fn(function (this: HTMLDialogElement) {
+      this.removeAttribute('open');
+      this.dispatchEvent(new Event('close'));
+    });
+    const { harness, root } = await open('/app/organization/calendar');
+    let blob: Blob | undefined;
+    URL.createObjectURL = vi.fn((value: Blob) => {
+      blob = value;
+      return 'blob:nexo';
+    });
+    URL.revokeObjectURL = vi.fn();
+    const click = vi
+      .spyOn(HTMLAnchorElement.prototype, 'click')
+      .mockImplementation(() => undefined);
+    const events = await organization.events.all();
+
+    menuItem(root(), 'Exportar .ics').click();
+    await settle(harness);
+    const ics = await blob!.text();
+
+    expect(click).toHaveBeenCalled();
+    expect(ics.match(/BEGIN:VEVENT/g)).toHaveLength(events.length);
+    click.mockRestore();
+
+    menuItem(root(), 'Importar .ics').click();
+    await settle(harness);
+    const input = root().querySelector<HTMLInputElement>(
+      'nx-import-events-dialog input[type=file]',
+    )!;
+    const extra = [
+      'BEGIN:VEVENT',
+      'DTSTART;VALUE=DATE:20270105',
+      'SUMMARY:Reyes en familia',
+      'END:VEVENT',
+      'END:VCALENDAR',
+    ].join('\r\n');
+    Object.defineProperty(input, 'files', {
+      value: [new File([ics.replace('END:VCALENDAR\r\n', extra)], 'agenda.ics')],
+      configurable: true,
+    });
+    input.dispatchEvent(new Event('change'));
+    await settle(harness);
+
+    const dialog = root().querySelector('nx-import-events-dialog')!;
+    expect(dialog.textContent).toContain('Eventos nuevos para importar: 1');
+    expect(dialog.textContent).toContain(
+      `Ya están en tu calendario y no se duplican: ${events.length}.`,
+    );
+    expect(dialog.textContent).toContain('Reyes en familia');
+
+    Array.from(dialog.querySelectorAll<HTMLButtonElement>('button'))
+      .find((button) => button.textContent?.includes('Importar 1'))!
+      .click();
+    await settle(harness);
+
+    expect(await organization.events.all()).toHaveLength(events.length + 1);
+    expect(TestBed.inject(ToastService).toasts().at(-1)?.message).toBe('Eventos importados: 1.');
+  });
+});

@@ -13,8 +13,10 @@ export interface TaskRepository {
 
 export interface EventRepository {
   between(from: Date, to: Date): Promise<CalendarEvent[]>;
+  all(): Promise<CalendarEvent[]>;
   get(id: string): Promise<CalendarEvent>;
   create(draft: EventDraft): Promise<CalendarEvent>;
+  createMany(drafts: readonly EventDraft[]): Promise<number>;
   update(id: string, draft: EventDraft): Promise<CalendarEvent>;
   remove(id: string): Promise<void>;
 }

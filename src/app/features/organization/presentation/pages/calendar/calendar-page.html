@@ -9,6 +9,27 @@
       <button nx-button variant="secondary" size="sm" type="button" (click)="goToday()">
         {{ 'organization.calendar.today' | transloco }}
       </button>
+      <button
+        type="button"
+        nx-icon-button
+        size="sm"
+        variant="outline"
+        class="io"
+        [label]="'organization.io.menu' | transloco"
+        [nxMenuTrigger]="ioMenu"
+      >
+        <svg nx-icon [icon]="icons.io" size="16"></svg>
+      </button>
+      <nx-menu #ioMenu [label]="'organization.io.menu' | transloco">
+        <button type="button" nx-menu-item [disabled]="exporting()" (click)="exportIcs()">
+          <svg nx-icon [icon]="icons.download" size="18"></svg>
+          {{ 'organization.io.export' | transloco }}
+        </button>
+        <button type="button" nx-menu-item (click)="importOpen.set(true)">
+          <svg nx-icon [icon]="icons.upload" size="18"></svg>
+          {{ 'organization.io.import' | transloco }}
+        </button>
+      </nx-menu>
       <a
         nx-button
         size="sm"
@@ -138,3 +159,5 @@
 </div>
 
 <nx-task-payment-prompt />
+
+<nx-import-events-dialog [(open)]="importOpen" />

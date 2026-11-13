@@ -9,6 +9,7 @@ import {
   type Page,
   type Transaction,
   type TransactionDraft,
+  type TransactionFilter,
   type TransactionQuery,
   isValidAmount,
   normalizeDescription,
@@ -87,6 +88,21 @@ export class FinanceService {
     return this.mutate((gateway) =>
       id ? gateway.transactions.update(id, clean) : gateway.transactions.create(clean),
     );
+  }
+
+  async allTransactions(filter: TransactionFilter): Promise<Transaction[]> {
+    return (await this.gateway()).transactions.listAll(filter);
+  }
+
+  importTransactions(drafts: readonly TransactionDraft[]): Promise<number> {
+    if (drafts.length === 0 || drafts.some((draft) => !isValidAmount(draft.amount))) {
+      return Promise.reject(new FinanceError('invalid'));
+    }
+    const clean = drafts.map((draft) => ({
+      ...draft,
+      description: normalizeDescription(draft.description),
+    }));
+    return this.mutate((gateway) => gateway.transactions.createMany(clean));
   }
 
   removeTransaction(id: string): Promise<void> {

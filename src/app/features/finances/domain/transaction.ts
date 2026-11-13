@@ -25,6 +25,8 @@ export interface TransactionQuery {
   readonly page: number;
 }
 
+export type TransactionFilter = Omit<TransactionQuery, 'page'>;
+
 export interface Page<T> {
   readonly items: readonly T[];
   readonly total: number;
@@ -49,7 +51,7 @@ export function normalizeDescription(value: string | null | undefined): string |
   return text ? text.slice(0, DESCRIPTION_MAX) : null;
 }
 
-export function matchesQuery(transaction: Transaction, query: TransactionQuery): boolean {
+export function matchesQuery(transaction: Transaction, query: TransactionFilter): boolean {
   if (!transaction.date.startsWith(query.month)) {
     return false;
   }

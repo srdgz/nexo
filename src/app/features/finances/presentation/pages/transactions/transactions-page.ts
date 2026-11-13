@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DOCUMENT,
   DestroyRef,
   type OnInit,
   computed,
@@ -11,7 +12,16 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
-import { ArrowLeftRight, Ellipsis, Pencil, Plus, Trash2 } from 'lucide';
+import {
+  ArrowLeftRight,
+  Download,
+  Ellipsis,
+  FileSpreadsheet,
+  Pencil,
+  Plus,
+  Trash2,
+  Upload,
+} from 'lucide';
 import { injectMediaQuery } from '@core/layout/media-query';
 import { NxAlert } from '@shared/ui/alert/alert';
 import { NxButton } from '@shared/ui/button/button';
@@ -27,13 +37,17 @@ import { NxSegmented, type SegmentedOption } from '@shared/ui/segmented/segmente
 import { NxSkeleton } from '@shared/ui/skeleton/skeleton';
 import { ToastService } from '@shared/ui/toast/toast';
 import { injectActiveLanguage } from '@shared/util/active-language';
+import { toCsv } from '@shared/util/csv';
+import { downloadFile } from '@shared/util/download';
 import { CategoriesStore } from '../../../application/categories.store';
 import { FinanceService } from '../../../application/finance.service';
 import type { EntryType } from '../../../domain/category';
 import { type FinanceErrorCode, toFinanceError } from '../../../domain/finance-error';
 import { toMonthKey } from '../../../domain/month';
 import { PAGE_SIZE, type Transaction, type TransactionQuery } from '../../../domain/transaction';
+import { transactionsToRows } from '../../../domain/transaction-csv';
 import { NxCategoryTile } from '../../components/category-tile';
+import { NxImportTransactionsDialog } from '../../components/import-transactions-dialog';
 import { dayKind, groupByDay, shortDate, signedMoney } from '../../finance-format';
 import { financeMessageKey } from '../../finance-messages';
 
@@ -51,6 +65,7 @@ type TypeFilter = EntryType | 'all';
     NxErrorState,
     NxIcon,
     NxIconButton,
+    NxImportTransactionsDialog,
     NxInput,
     NxMenu,
     NxMenuItem,
@@ -79,6 +94,7 @@ export class TransactionsPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly toast = inject(ToastService);
   private readonly transloco = inject(TranslocoService);
+  private readonly document = inject(DOCUMENT);
   protected readonly language = injectActiveLanguage();
   protected readonly compact = injectMediaQuery('(max-width: 767.98px)');
 
@@ -88,6 +104,9 @@ export class TransactionsPage implements OnInit {
     edit: Pencil,
     remove: Trash2,
     empty: ArrowLeftRight,
+    io: FileSpreadsheet,
+    download: Download,
+    upload: Upload,
   };
   protected readonly pageSize = PAGE_SIZE;
   protected readonly messageKey = financeMessageKey;
@@ -138,6 +157,8 @@ export class TransactionsPage implements OnInit {
   protected readonly removeError = signal<FinanceErrorCode | null>(null);
   protected readonly busy = signal(false);
   protected readonly searchText = signal('');
+  protected readonly importOpen = signal(false);
+  protected readonly exporting = signal(false);
 
   private searchTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -217,6 +238,53 @@ export class TransactionsPage implements OnInit {
       this.removeError.set(toFinanceError(error).code);
     } finally {
       this.busy.set(false);
+    }
+  }
+
+  protected async exportCsv(): Promise<void> {
+    if (this.exporting()) {
+      return;
+    }
+    this.exporting.set(true);
+    const { month, type, categoryId, search } = this.query();
+    const filter = { month, type, categoryId, search };
+    try {
+      const [transactions, categories] = await Promise.all([
+        this.finance.allTransactions(filter),
+        this.finance.categories(),
+      ]);
+      if (transactions.length === 0) {
+        this.toast.info(this.transloco.translate('finances.io.nothingToExport'));
+        return;
+      }
+      const t = (key: string) => this.transloco.translate(key);
+      const rows = transactionsToRows(transactions, categories, {
+        headers: {
+          date: t('finances.transactions.date'),
+          type: t('finances.io.type'),
+          category: t('finances.transactions.category'),
+          description: t('finances.transactions.description'),
+          amount: t('finances.transactions.amount'),
+        },
+        types: {
+          income: t('finances.typeSingular.income'),
+          expense: t('finances.typeSingular.expense'),
+        },
+        decimal: this.language() === 'en' ? '.' : ',',
+      });
+      downloadFile(
+        this.document,
+        `${t('finances.io.fileName')}-${filter.month}.csv`,
+        toCsv(rows),
+        'text/csv;charset=utf-8',
+      );
+      this.toast.success(
+        this.transloco.translate('finances.io.exported', { count: transactions.length }),
+      );
+    } catch (error) {
+      this.toast.error(this.transloco.translate(financeMessageKey(toFinanceError(error).code)));
+    } finally {
+      this.exporting.set(false);
     }
   }
 

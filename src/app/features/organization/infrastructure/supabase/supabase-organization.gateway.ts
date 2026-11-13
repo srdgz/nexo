@@ -204,6 +204,21 @@ class SupabaseEvents implements EventRepository {
     return rows.map(mapEvent);
   }
 
+  async all(): Promise<CalendarEvent[]> {
+    const rows = await run<EventRow[]>(
+      this.client.from('events').select(EVENT_COLUMNS).order('starts_at'),
+    );
+    return rows.map(mapEvent);
+  }
+
+  async createMany(drafts: readonly EventDraft[]): Promise<number> {
+    if (drafts.length === 0) {
+      return 0;
+    }
+    await run(this.client.from('events').insert(drafts.map(eventRow)));
+    return drafts.length;
+  }
+
   async get(id: string): Promise<CalendarEvent> {
     return mapEvent(
       await run<EventRow>(this.client.from('events').select(EVENT_COLUMNS).eq('id', id).single()),

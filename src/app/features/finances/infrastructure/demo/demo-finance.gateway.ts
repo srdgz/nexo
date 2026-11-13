@@ -21,6 +21,7 @@ import {
   type Page,
   type Transaction,
   type TransactionDraft,
+  type TransactionFilter,
   type TransactionQuery,
   compareByDateDesc,
   matchesQuery,
@@ -167,8 +168,26 @@ class DemoTransactions implements TransactionRepository {
     });
   }
 
+  listAll(filter: TransactionFilter): Promise<Transaction[]> {
+    return this.db.run((data) =>
+      data.transactions
+        .filter((transaction) => matchesQuery(transaction, filter))
+        .sort(compareByDateDesc),
+    );
+  }
+
   get(id: string): Promise<Transaction> {
     return this.db.run((data) => find(data.transactions, id));
+  }
+
+  createMany(drafts: readonly TransactionDraft[]): Promise<number> {
+    return this.db.run((data) => {
+      for (const draft of drafts) {
+        assertCategoryType(data, draft);
+      }
+      data.transactions.push(...drafts.map((draft) => ({ id: this.db.newId(), ...draft })));
+      return drafts.length;
+    });
   }
 
   create(draft: TransactionDraft): Promise<Transaction> {

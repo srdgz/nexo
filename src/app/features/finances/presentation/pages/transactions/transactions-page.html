@@ -28,6 +28,26 @@
     [value]="searchText()"
     (input)="onSearch($any($event.target).value)"
   />
+  <button
+    type="button"
+    nx-icon-button
+    variant="outline"
+    class="io"
+    [label]="'finances.io.menu' | transloco"
+    [nxMenuTrigger]="ioMenu"
+  >
+    <svg nx-icon [icon]="icons.io" size="18"></svg>
+  </button>
+  <nx-menu #ioMenu [label]="'finances.io.menu' | transloco">
+    <button type="button" nx-menu-item [disabled]="exporting()" (click)="exportCsv()">
+      <svg nx-icon [icon]="icons.download" size="18"></svg>
+      {{ 'finances.io.export' | transloco }}
+    </button>
+    <button type="button" nx-menu-item (click)="importOpen.set(true)">
+      <svg nx-icon [icon]="icons.upload" size="18"></svg>
+      {{ 'finances.io.import' | transloco }}
+    </button>
+  </nx-menu>
   <a
     nx-button
     class="new"
@@ -220,3 +240,5 @@
     {{ 'finances.delete' | transloco }}
   </button>
 </nx-dialog>
+
+<nx-import-transactions-dialog [(open)]="importOpen" />

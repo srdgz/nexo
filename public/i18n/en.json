@@ -421,6 +421,39 @@
       "noExpenses": "No expenses this month",
       "largest": "Largest expenses this month",
       "seeTransactions": "See transactions"
+    },
+    "io": {
+      "menu": "Import or export transactions",
+      "export": "Export CSV",
+      "import": "Import CSV",
+      "type": "Type",
+      "fileName": "nexo-transactions",
+      "exported": "CSV downloaded. Transactions: {{count}}.",
+      "nothingToExport": "There are no transactions to export with these filters.",
+      "importTitle": "Import transactions",
+      "importIntro": "Upload a CSV with the columns Date, Type, Category, Description and Amount, like the one NEXO exports. Categories must already exist with the same name.",
+      "choose": "Choose CSV file",
+      "chooseOther": "Choose another file",
+      "summary": "Ready to import: {{valid}} · With errors: {{invalid}}",
+      "invalidHint": "Rows with errors will not be imported. Fix them in the file and load it again if you need them.",
+      "line": "Row {{line}}",
+      "preview": "Preview",
+      "more": "and {{count}} more",
+      "submit": "Import {{count}}",
+      "imported": "Transactions imported: {{count}}.",
+      "problems": {
+        "date": "invalid date",
+        "type": "unknown type",
+        "category": "no category called “{{name}}”",
+        "amount": "invalid amount"
+      },
+      "errors": {
+        "empty": "The file has no transactions.",
+        "columns": "Could not find the Date, Category and Amount columns.",
+        "tooMany": "The file has more than 1000 rows. Split it into several.",
+        "tooBig": "The file is larger than 2 MB.",
+        "read": "The file could not be read."
+      }
     }
   },
   "organization": {
@@ -546,6 +579,32 @@
       "noOthers": "No other events.",
       "deleteTitle": "Delete “{{title}}”?",
       "deleteText": "This can’t be undone."
+    },
+    "io": {
+      "menu": "Import or export calendar",
+      "export": "Export .ics",
+      "import": "Import .ics",
+      "fileName": "nexo-calendar",
+      "exported": "Calendar downloaded. Events: {{count}}.",
+      "nothingToExport": "You have no events to export yet.",
+      "importTitle": "Import events",
+      "importIntro": "Upload an .ics file exported from Google Calendar, Apple Calendar, Outlook or NEXO. Events you already have are not duplicated.",
+      "choose": "Choose .ics file",
+      "chooseOther": "Choose another file",
+      "summary": "New events to import: {{count}}",
+      "skipped": "Skipped for having no valid date, being cancelled or being exceptions of a series: {{count}}.",
+      "recurring": "Repeating events (only the first date is imported): {{count}}.",
+      "preview": "Preview",
+      "more": "and {{count}} more",
+      "submit": "Import {{count}}",
+      "imported": "Events imported: {{count}}.",
+      "duplicates": "Already in your calendar and not duplicated: {{count}}.",
+      "errors": {
+        "empty": "The file has no events.",
+        "tooMany": "The file has more than 1000 events.",
+        "tooBig": "The file is larger than 2 MB.",
+        "read": "The file could not be read."
+      }
     }
   },
   "dashboard": {

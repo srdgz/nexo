@@ -198,3 +198,95 @@ describe('transaction form', () => {
     expect(root().textContent).toContain('Eliminar');
   });
 });
+
+describe('transactions import and export', () => {
+  function menuItem(root: HTMLElement, text: string): HTMLButtonElement {
+    return Array.from(root.querySelectorAll<HTMLButtonElement>('[nx-menu-item]')).find((item) =>
+      item.textContent?.includes(text),
+    )!;
+  }
+
+  it('downloads the filtered month as a CSV for Excel', async () => {
+    const { harness, root } = await open('/app/finances/transactions?type=income');
+    let blob: Blob | undefined;
+    URL.createObjectURL = vi.fn((value: Blob) => {
+      blob = value;
+      return 'blob:nexo';
+    });
+    URL.revokeObjectURL = vi.fn();
+    const click = vi
+      .spyOn(HTMLAnchorElement.prototype, 'click')
+      .mockImplementation(() => undefined);
+
+    menuItem(root(), 'Exportar CSV').click();
+    await settle(harness);
+
+    const lines = (await blob!.text()).split('\r\n').filter(Boolean);
+    const incomes = await gateway.transactions.listAll({
+      month,
+      type: 'income',
+      categoryId: null,
+      search: '',
+    });
+    expect(click).toHaveBeenCalled();
+    expect(Array.from(new Uint8Array(await blob!.arrayBuffer()).slice(0, 3))).toEqual([
+      0xef, 0xbb, 0xbf,
+    ]);
+    expect(lines[0]).toBe('Fecha;Tipo;Categoría;Descripción;Importe');
+    expect(lines.length).toBe(incomes.length + 1);
+    expect(lines.slice(1).every((line) => line.includes(';Ingreso;'))).toBe(true);
+    expect(TestBed.inject(ToastService).toasts().at(-1)?.message).toBe(
+      `CSV descargado. Movimientos: ${incomes.length}.`,
+    );
+    click.mockRestore();
+  });
+
+  it('previews a CSV, reports bad rows and imports the valid ones', async () => {
+    const { harness, root } = await open('/app/finances/transactions');
+    const category = (await gateway.categories.list()).find((item) => item.type === 'expense')!;
+    const before = (
+      await gateway.transactions.listAll({ month, type: null, categoryId: null, search: '' })
+    ).length;
+    menuItem(root(), 'Importar CSV').click();
+    await settle(harness);
+    const input = root().querySelector<HTMLInputElement>(
+      'nx-import-transactions-dialog input[type=file]',
+    )!;
+    const csv = [
+      'Fecha;Tipo;Categoría;Descripción;Importe',
+      `${isoDate(new Date())};Gasto;${category.name};Importado;12,50`,
+      `${isoDate(new Date())};Gasto;Inventada;Mal;3`,
+    ].join('\n');
+    Object.defineProperty(input, 'files', {
+      value: [new File([csv], 'movimientos.csv', { type: 'text/csv' })],
+      configurable: true,
+    });
+
+    input.dispatchEvent(new Event('change'));
+    await settle(harness);
+
+    const dialog = root().querySelector('nx-import-transactions-dialog')!;
+    expect(dialog.textContent).toContain('Listos para importar: 1 · Con errores: 1');
+    expect(dialog.textContent).toContain('Fila 3');
+    expect(dialog.textContent).toContain('no existe la categoría «Inventada»');
+
+    Array.from(dialog.querySelectorAll<HTMLButtonElement>('button'))
+      .find((button) => button.textContent?.includes('Importar 1'))!
+      .click();
+    await settle(harness);
+
+    const after = await gateway.transactions.listAll({
+      month,
+      type: null,
+      categoryId: null,
+      search: '',
+    });
+    expect(after.length).toBe(before + 1);
+    expect(after.some((item) => item.description === 'Importado' && item.amount === 1250)).toBe(
+      true,
+    );
+    expect(TestBed.inject(ToastService).toasts().at(-1)?.message).toBe(
+      'Movimientos importados: 1.',
+    );
+  });
+});

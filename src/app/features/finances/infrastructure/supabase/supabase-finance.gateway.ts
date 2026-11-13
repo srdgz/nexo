@@ -21,6 +21,7 @@ import {
   type Page,
   type Transaction,
   type TransactionDraft,
+  type TransactionFilter,
   type TransactionQuery,
 } from '../../domain/transaction';
 import {
@@ -125,6 +126,38 @@ class SupabaseTransactions implements TransactionRepository {
     }
     const rows = (response.data ?? []) as TransactionRow[];
     return { items: rows.map(mapTransaction), total: response.count ?? rows.length };
+  }
+
+  async listAll(filter: TransactionFilter): Promise<Transaction[]> {
+    const { from, to } = monthRange(filter.month);
+    let request = this.client
+      .from('transactions')
+      .select(TRANSACTION_COLUMNS)
+      .gte('transaction_date', from)
+      .lte('transaction_date', to);
+    if (filter.type) {
+      request = request.eq('type', filter.type);
+    }
+    if (filter.categoryId) {
+      request = request.eq('category_id', filter.categoryId);
+    }
+    if (filter.search.trim()) {
+      request = request.ilike('description', `%${escapeLike(filter.search.trim())}%`);
+    }
+    const rows = await run<TransactionRow[]>(
+      request
+        .order('transaction_date', { ascending: false })
+        .order('created_at', { ascending: false }),
+    );
+    return rows.map(mapTransaction);
+  }
+
+  async createMany(drafts: readonly TransactionDraft[]): Promise<number> {
+    if (drafts.length === 0) {
+      return 0;
+    }
+    await run(this.client.from('transactions').insert(drafts.map(toRow)));
+    return drafts.length;
   }
 
   async get(id: string): Promise<Transaction> {

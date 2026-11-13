@@ -1,23 +1,29 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DOCUMENT,
   computed,
   inject,
   input,
   resource,
+  signal,
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { TranslocoPipe } from '@jsverse/transloco';
-import { MapPin, Plus } from 'lucide';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { CalendarArrowDown, Download, MapPin, Plus, Upload } from 'lucide';
 import { injectMediaQuery } from '@core/layout/media-query';
 import { Session } from '@core/session/session';
 import { NxButton } from '@shared/ui/button/button';
 import { NxCard, NxCardHeader } from '@shared/ui/card/card';
 import { NxErrorState } from '@shared/ui/feedback-state/feedback-state';
 import { NxIcon } from '@shared/ui/icon/icon';
+import { NxIconButton } from '@shared/ui/icon-button/icon-button';
+import { NxMenu, NxMenuItem, NxMenuTrigger } from '@shared/ui/menu/menu';
 import { NxMonthPicker } from '@shared/ui/month-picker/month-picker';
 import { NxSkeleton } from '@shared/ui/skeleton/skeleton';
+import { ToastService } from '@shared/ui/toast/toast';
 import { injectActiveLanguage, localeFor } from '@shared/util/active-language';
+import { downloadFile } from '@shared/util/download';
 import { OrganizationService } from '../../../application/organization.service';
 import {
   type CalendarEvent,
@@ -28,7 +34,10 @@ import {
   monthGrid,
   parseDay,
 } from '../../../domain/calendar';
+import { eventsToIcs } from '../../../domain/ics';
+import { toOrganizationError } from '../../../domain/organization-error';
 import { type Task, compareTasks } from '../../../domain/task';
+import { NxImportEventsDialog } from '../../components/import-events-dialog';
 import { NxTaskCheck, NxTaskPaymentPrompt } from '../../components/task-check';
 import { longDay, timeRange } from '../../organization-format';
 
@@ -48,6 +57,11 @@ type DayItem =
     NxCardHeader,
     NxErrorState,
     NxIcon,
+    NxIconButton,
+    NxImportEventsDialog,
+    NxMenu,
+    NxMenuItem,
+    NxMenuTrigger,
     NxMonthPicker,
     NxSkeleton,
     NxTaskCheck,
@@ -68,9 +82,20 @@ export class CalendarPage {
   private readonly route = inject(ActivatedRoute);
   private readonly language = injectActiveLanguage();
   private readonly session = inject(Session);
+  private readonly toast = inject(ToastService);
+  private readonly transloco = inject(TranslocoService);
+  private readonly document = inject(DOCUMENT);
   protected readonly compact = injectMediaQuery('(max-width: 767.98px)');
 
-  protected readonly icons = { plus: Plus, location: MapPin };
+  protected readonly icons = {
+    plus: Plus,
+    location: MapPin,
+    io: CalendarArrowDown,
+    download: Download,
+    upload: Upload,
+  };
+  protected readonly importOpen = signal(false);
+  protected readonly exporting = signal(false);
   protected readonly today = localDay(new Date());
   protected readonly visibleItems = VISIBLE_ITEMS;
 
@@ -165,6 +190,35 @@ export class CalendarPage {
 
   protected goToday(): void {
     this.navigate({ month: null, day: null });
+  }
+
+  protected async exportIcs(): Promise<void> {
+    if (this.exporting()) {
+      return;
+    }
+    this.exporting.set(true);
+    try {
+      const events = await this.organization.allEvents();
+      if (events.length === 0) {
+        this.toast.info(this.transloco.translate('organization.io.nothingToExport'));
+        return;
+      }
+      downloadFile(
+        this.document,
+        `${this.transloco.translate('organization.io.fileName')}.ics`,
+        eventsToIcs(events, new Date()),
+        'text/calendar;charset=utf-8',
+      );
+      this.toast.success(
+        this.transloco.translate('organization.io.exported', { count: events.length }),
+      );
+    } catch (error) {
+      this.toast.error(
+        this.transloco.translate(`organization.errors.${toOrganizationError(error).code}`),
+      );
+    } finally {
+      this.exporting.set(false);
+    }
   }
 
   private navigate(params: Record<string, string | null>): void {

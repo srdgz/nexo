@@ -421,6 +421,39 @@
       "noExpenses": "Sin gastos este mes",
       "largest": "Mayores gastos del mes",
       "seeTransactions": "Ver movimientos"
+    },
+    "io": {
+      "menu": "Importar o exportar movimientos",
+      "export": "Exportar CSV",
+      "import": "Importar CSV",
+      "type": "Tipo",
+      "fileName": "nexo-movimientos",
+      "exported": "CSV descargado. Movimientos: {{count}}.",
+      "nothingToExport": "No hay movimientos que exportar con estos filtros.",
+      "importTitle": "Importar movimientos",
+      "importIntro": "Sube un CSV con las columnas Fecha, Tipo, Categoría, Descripción e Importe, como el que exporta NEXO. Las categorías deben existir con el mismo nombre.",
+      "choose": "Elegir archivo CSV",
+      "chooseOther": "Elegir otro archivo",
+      "summary": "Listos para importar: {{valid}} · Con errores: {{invalid}}",
+      "invalidHint": "Las filas con errores no se importarán. Corrígelas en el archivo y vuelve a cargarlo si las necesitas.",
+      "line": "Fila {{line}}",
+      "preview": "Vista previa",
+      "more": "y {{count}} más",
+      "submit": "Importar {{count}}",
+      "imported": "Movimientos importados: {{count}}.",
+      "problems": {
+        "date": "fecha no válida",
+        "type": "tipo desconocido",
+        "category": "no existe la categoría «{{name}}»",
+        "amount": "importe no válido"
+      },
+      "errors": {
+        "empty": "El archivo no tiene movimientos.",
+        "columns": "No encuentro las columnas Fecha, Categoría e Importe.",
+        "tooMany": "El archivo tiene más de 1000 filas. Divídelo en varios.",
+        "tooBig": "El archivo pesa más de 2 MB.",
+        "read": "No se ha podido leer el archivo."
+      }
     }
   },
   "organization": {
@@ -546,6 +579,32 @@
       "noOthers": "No hay otros eventos.",
       "deleteTitle": "¿Eliminar «{{title}}»?",
       "deleteText": "Esta acción no se puede deshacer."
+    },
+    "io": {
+      "menu": "Importar o exportar calendario",
+      "export": "Exportar .ics",
+      "import": "Importar .ics",
+      "fileName": "nexo-calendario",
+      "exported": "Calendario descargado. Eventos: {{count}}.",
+      "nothingToExport": "Aún no tienes eventos que exportar.",
+      "importTitle": "Importar eventos",
+      "importIntro": "Sube un archivo .ics exportado de Google Calendar, Apple Calendar, Outlook o NEXO. Los eventos que ya tengas no se duplican.",
+      "choose": "Elegir archivo .ics",
+      "chooseOther": "Elegir otro archivo",
+      "summary": "Eventos nuevos para importar: {{count}}",
+      "skipped": "Omitidos por no tener fecha válida, estar cancelados o ser excepciones de una serie: {{count}}.",
+      "recurring": "Eventos que se repiten (solo se importa la primera fecha): {{count}}.",
+      "preview": "Vista previa",
+      "more": "y {{count}} más",
+      "submit": "Importar {{count}}",
+      "imported": "Eventos importados: {{count}}.",
+      "duplicates": "Ya están en tu calendario y no se duplican: {{count}}.",
+      "errors": {
+        "empty": "El archivo no tiene eventos.",
+        "tooMany": "El archivo tiene más de 1000 eventos.",
+        "tooBig": "El archivo pesa más de 2 MB.",
+        "read": "No se ha podido leer el archivo."
+      }
     }
   },
   "dashboard": {
