@@ -39,7 +39,7 @@
   }
 
   &.active {
-    color: var(--nx-navy-900);
+    color: var(--nx-text);
     font-weight: 700;
   }
 }
@@ -51,9 +51,9 @@
   height: 52px;
   margin-top: -26px;
   border-radius: 50%;
-  background: var(--nx-navy-900);
-  color: var(--nx-text-inverse);
-  box-shadow: 0 8px 20px rgb(24 43 53 / 0.28);
+  background: var(--nx-primary);
+  color: var(--nx-on-primary);
+  box-shadow: 0 8px 20px rgb(var(--nx-shadow-color) / 0.28);
   transition: transform var(--nx-duration) var(--nx-ease);
 
   &:active {
@@ -89,7 +89,7 @@
   height: 40px;
   margin-bottom: 4px;
   border-radius: 14px;
-  background: var(--nx-sand-100);
+  background: var(--nx-highlight);
 }
 
 .quick-label {

@@ -71,7 +71,7 @@
   }
 
   tbody tr:hover {
-    background: rgb(241 239 233 / 0.5);
+    background: color-mix(in srgb, var(--nx-surface-muted) 50%, transparent);
   }
 
   .numeric {

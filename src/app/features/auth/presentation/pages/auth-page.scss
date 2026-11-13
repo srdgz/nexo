@@ -25,7 +25,7 @@
 }
 
 .link {
-  color: var(--nx-sage-700);
+  color: var(--nx-accent-strong);
   font-weight: 600;
   text-decoration: none;
 
@@ -66,13 +66,13 @@
   width: 64px;
   height: 64px;
   border-radius: 20px;
-  background: var(--nx-sand-100);
-  color: var(--nx-navy-900);
+  background: var(--nx-highlight);
+  color: var(--nx-text);
 }
 
 .inline-button {
   padding: 0;
-  color: var(--nx-sage-700);
+  color: var(--nx-accent-strong);
   font-weight: 600;
   text-decoration: underline;
 }

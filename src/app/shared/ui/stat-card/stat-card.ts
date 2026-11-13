@@ -83,7 +83,7 @@ export interface StatTrend {
       color: var(--nx-text-muted);
     }
     nx-card.highlight .trend {
-      color: var(--nx-sage-500);
+      color: var(--nx-accent);
     }
     .value-skeleton {
       width: 60%;
@@ -98,13 +98,13 @@ export interface StatTrend {
       gap: 4px;
       margin-top: auto;
       padding-top: var(--nx-space-2);
-      color: var(--nx-sage-700);
+      color: var(--nx-accent-strong);
       font-size: var(--nx-text-sm);
       font-weight: 600;
       text-decoration: none;
     }
     nx-card.highlight .link {
-      color: var(--nx-sage-500);
+      color: var(--nx-accent);
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

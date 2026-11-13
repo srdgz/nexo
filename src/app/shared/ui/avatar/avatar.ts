@@ -35,8 +35,8 @@ export function initialsOf(name: string): string {
       height: var(--size);
       overflow: hidden;
       border-radius: 50%;
-      background: var(--nx-sand-300);
-      color: var(--nx-navy-900);
+      background: var(--nx-highlight-strong);
+      color: var(--nx-text);
       font-family: var(--nx-font-heading);
       font-size: calc(var(--size) * 0.36);
       font-weight: 700;

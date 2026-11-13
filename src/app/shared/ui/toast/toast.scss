@@ -5,9 +5,9 @@
   width: min(420px, 100%);
   padding: 10px 8px 10px 12px;
   border-radius: 16px;
-  background: var(--nx-navy-900);
-  color: var(--nx-text-inverse);
-  box-shadow: 0 10px 24px rgb(24 43 53 / 0.2);
+  background: var(--nx-inverse);
+  color: var(--nx-on-inverse);
+  box-shadow: 0 10px 24px rgb(var(--nx-shadow-color) / 0.2);
   font-size: var(--nx-text-md);
   pointer-events: auto;
   animation: enter 220ms var(--nx-ease);
@@ -20,18 +20,18 @@
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: var(--nx-navy-700);
-  color: var(--nx-text-inverse);
+  background: var(--nx-inverse-raised);
+  color: var(--nx-on-inverse);
 }
 
 :host(.success) .icon {
-  background: var(--nx-sage-500);
-  color: var(--nx-navy-900);
+  background: var(--nx-accent);
+  color: var(--nx-on-accent);
 }
 
 :host(.error) .icon {
-  background: var(--nx-danger);
-  color: #fff;
+  background: var(--nx-danger-solid);
+  color: var(--nx-on-danger);
 }
 
 .message {
@@ -39,10 +39,10 @@
 }
 
 .dismiss {
-  color: var(--nx-text-inverse);
+  color: var(--nx-on-inverse);
 
   &:hover {
-    background: var(--nx-navy-700);
+    background: var(--nx-inverse-raised);
   }
 }
 

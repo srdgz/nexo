@@ -1,6 +1,7 @@
 import type { Signal } from '@angular/core';
 import type { AppMode } from '../app-mode/app-mode';
 import type { Language } from '../i18n/language';
+import type { ThemePreference } from '../theme/theme';
 
 export type WeekStart = 0 | 1;
 
@@ -14,6 +15,7 @@ export interface CurrentUser {
 export interface PreferenceChanges {
   readonly locale?: Language;
   readonly weekStartsOn?: WeekStart;
+  readonly theme?: ThemePreference;
 }
 
 export abstract class Session {

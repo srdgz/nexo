@@ -23,8 +23,8 @@ const STATE_STYLES = `
     height: 56px;
     margin-bottom: var(--nx-space-2);
     border-radius: 18px;
-    background: var(--nx-sand-100);
-    color: var(--nx-navy-900);
+    background: var(--nx-highlight);
+    color: var(--nx-text);
   }
   :host(.card) .icon {
     width: 44px;

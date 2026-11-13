@@ -4,6 +4,7 @@ import { TranslocoService } from '@jsverse/transloco';
 import { APP_MODE, RELOAD, leaveDemo } from '@core/app-mode/app-mode';
 import { LanguageService } from '@core/i18n/language.service';
 import { type CurrentUser, type PreferenceChanges, Session } from '@core/session/session';
+import { ThemeService } from '@core/theme/theme.service';
 import { ToastService } from '@shared/ui/toast/toast';
 import { AuthError } from '../domain/auth-error';
 import type { AuthUser, ProfileChanges, SignUpData } from '../domain/auth-user';
@@ -26,6 +27,7 @@ export class AuthStore extends Session {
   private readonly document = inject(DOCUMENT);
   private readonly reload = inject(RELOAD);
   private readonly language = inject(LanguageService);
+  private readonly theme = inject(ThemeService);
 
   private repository: AuthRepository | null = null;
   private signingOut = false;
@@ -115,6 +117,9 @@ export class AuthStore extends Session {
     if (changes.locale) {
       await this.language.use(changes.locale);
     }
+    if (changes.theme) {
+      this.theme.use(changes.theme);
+    }
     if (this.isAuthenticated()) {
       await this.updateProfile(changes);
     }
@@ -176,8 +181,14 @@ export class AuthStore extends Session {
   private setUser(user: AuthUser | null): void {
     const previous = this.state().user;
     this.state.set({ status: user ? 'authenticated' : 'anonymous', user });
-    if (user?.locale && user.id !== previous?.id && user.locale !== this.language.current()) {
+    if (!user || user.id === previous?.id) {
+      return;
+    }
+    if (user.locale && user.locale !== this.language.current()) {
       void this.language.use(user.locale);
+    }
+    if (user.theme && user.theme !== this.theme.preference()) {
+      this.theme.use(user.theme);
     }
   }
 

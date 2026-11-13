@@ -631,7 +631,12 @@
       "euro": "Euro (€)",
       "currencyHint": "En esta versión NEXO trabaja solo con euros.",
       "preview": "Vista previa del formato",
-      "saved": "Preferencias guardadas"
+      "saved": "Preferencias guardadas",
+      "theme": "Tema",
+      "themeHint": "«Sistema» sigue el modo claro u oscuro de tu dispositivo.",
+      "themeSystem": "Sistema",
+      "themeLight": "Claro",
+      "themeDark": "Oscuro"
     }
   }
 }

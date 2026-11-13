@@ -40,11 +40,11 @@ export type IconButtonVariant = 'ghost' | 'filled' | 'outline';
       background: var(--nx-surface-muted);
     }
     :host(.filled) {
-      background: var(--nx-navy-900);
-      color: var(--nx-text-inverse);
+      background: var(--nx-primary);
+      color: var(--nx-on-primary);
     }
     :host(.filled:hover:not([disabled])) {
-      background: var(--nx-navy-700);
+      background: var(--nx-primary-hover);
     }
     :host(.outline) {
       background: var(--nx-surface);

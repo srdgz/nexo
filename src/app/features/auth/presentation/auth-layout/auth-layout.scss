@@ -24,9 +24,13 @@
     padding: var(--nx-space-8) var(--nx-space-10);
     border-radius: var(--nx-radius-xl);
     background:
-      radial-gradient(circle at 90% 8%, rgb(145 169 149 / 0.28), transparent 42%),
-      var(--nx-navy-900);
-    color: var(--nx-text-inverse);
+      radial-gradient(
+        circle at 90% 8%,
+        color-mix(in srgb, var(--nx-accent) 28%, transparent),
+        transparent 42%
+      ),
+      var(--nx-inverse);
+    color: var(--nx-on-inverse);
   }
 }
 

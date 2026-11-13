@@ -32,7 +32,7 @@ const PICKER_STYLES = `
       background-color var(--nx-duration) var(--nx-ease);
   }
   .option:has(:checked) {
-    border-color: var(--nx-navy-900);
+    border-color: var(--nx-text);
   }
   .option:has(:focus-visible) {
     outline: var(--nx-focus-ring);
@@ -75,7 +75,7 @@ const PICKER_STYLES = `
       background: var(--nx-surface-muted);
     }
     .option:hover {
-      background: var(--nx-sand-100);
+      background: var(--nx-highlight);
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

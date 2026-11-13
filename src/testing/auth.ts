@@ -18,6 +18,7 @@ export const TEST_USER: AuthUser = {
   displayName: 'Laura Martín',
   locale: 'es',
   weekStartsOn: 1,
+  theme: null,
   createdAt: '2026-11-02T10:00:00.000Z',
   hasPassword: true,
 };
@@ -80,6 +81,7 @@ export class FakeAuthRepository implements AuthRepository {
         ...(changes.fullName !== undefined ? { displayName: changes.fullName } : {}),
         ...(changes.locale !== undefined ? { locale: changes.locale } : {}),
         ...(changes.weekStartsOn !== undefined ? { weekStartsOn: changes.weekStartsOn } : {}),
+        ...(changes.theme !== undefined ? { theme: changes.theme } : {}),
       };
       return this.user;
     });

@@ -65,7 +65,7 @@
 
 .archived {
   .row {
-    border-color: rgb(24 43 53 / 0.06);
+    border-color: rgb(var(--nx-shadow-color) / 0.06);
   }
 }
 

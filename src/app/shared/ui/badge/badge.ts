@@ -45,8 +45,8 @@ export type BadgeAppearance = 'soft' | 'solid' | 'dot' | 'outline';
       --tone-bg: var(--nx-info-bg);
     }
     :host(.navy) {
-      --tone: var(--nx-navy-900);
-      --tone-bg: var(--nx-navy-100);
+      --tone: var(--nx-primary);
+      --tone-bg: var(--nx-primary-soft);
     }
     :host(.soft) {
       background: var(--tone-bg);
@@ -54,7 +54,7 @@ export type BadgeAppearance = 'soft' | 'solid' | 'dot' | 'outline';
     }
     :host(.solid) {
       background: var(--tone);
-      color: var(--nx-text-inverse);
+      color: var(--nx-surface);
     }
     :host(.neutral.solid) {
       background: var(--nx-text-muted);

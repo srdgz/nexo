@@ -208,7 +208,7 @@ export class NxMenuTrigger {
     }
     .check {
       margin-left: auto;
-      color: var(--nx-sage-700);
+      color: var(--nx-accent-strong);
       font-weight: 700;
     }
   `,

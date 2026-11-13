@@ -2,7 +2,7 @@
   width: 100%;
   min-height: 42px;
   padding: 0 12px;
-  border: 1px solid var(--nx-border-strong);
+  border: 1px solid var(--nx-control-border);
   border-radius: var(--nx-radius-md);
   background: var(--nx-surface);
   color: var(--nx-text);
@@ -21,8 +21,8 @@
 
   &:focus-visible {
     outline: none;
-    border-color: var(--nx-navy-900);
-    box-shadow: 0 0 0 3px var(--nx-navy-100);
+    border-color: var(--nx-text);
+    box-shadow: 0 0 0 3px var(--nx-primary-soft);
   }
 
   &[aria-invalid='true'] {
@@ -115,7 +115,7 @@ input[type='search'].nx-input {
   width: 20px;
   height: 20px;
   margin: 0;
-  border: 1.8px solid #b9b3a5;
+  border: 1.8px solid var(--nx-control-border);
   border-radius: 6px;
   background: var(--nx-surface);
   cursor: inherit;
@@ -135,8 +135,8 @@ input[type='search'].nx-input {
 
   &:checked,
   &:indeterminate {
-    border-color: var(--nx-sage-700);
-    background: var(--nx-sage-700);
+    border-color: var(--nx-accent-strong);
+    background: var(--nx-accent-strong);
   }
 
   &:checked::before {
@@ -154,7 +154,7 @@ input[type='search'].nx-input {
   }
 
   &:hover:not(:disabled, :checked) {
-    border-color: var(--nx-sage-700);
+    border-color: var(--nx-accent-strong);
   }
 }
 
@@ -184,7 +184,7 @@ input[type='search'].nx-input {
   }
 
   &:checked {
-    background: var(--nx-sage-700);
+    background: var(--nx-accent-strong);
 
     &::after {
       transform: translateX(16px);

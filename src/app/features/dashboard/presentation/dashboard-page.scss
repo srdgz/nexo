@@ -84,8 +84,8 @@
 .hero-badge {
   padding: 3px 10px;
   border-radius: var(--nx-radius-pill);
-  background: var(--nx-navy-700);
-  color: var(--nx-sage-100);
+  background: var(--nx-inverse-raised);
+  color: var(--nx-on-inverse-soft);
   font-size: var(--nx-text-xs);
   font-weight: 600;
   white-space: nowrap;
@@ -111,12 +111,12 @@
   min-width: 0;
   padding: 12px 14px;
   border-radius: 18px;
-  background: #22394a;
+  background: var(--nx-inverse-raised-2);
   color: inherit;
   text-decoration: none;
 
   &:hover {
-    background: var(--nx-navy-700);
+    background: var(--nx-inverse-raised);
   }
 
   span:last-child {
@@ -149,14 +149,14 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  color: var(--nx-navy-900);
+  color: var(--nx-on-accent);
 
   &.income {
-    background: var(--nx-sage-500);
+    background: var(--nx-accent);
   }
 
   &.expense {
-    background: var(--nx-sand-300);
+    background: var(--nx-chart-3);
   }
 }
 
@@ -173,7 +173,7 @@
 }
 
 .hero-progress {
-  background: var(--nx-navy-700);
+  background: var(--nx-inverse-raised);
 }
 
 .spend-body {
@@ -234,7 +234,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  color: var(--nx-sage-700);
+  color: var(--nx-accent-strong);
   font-size: var(--nx-text-sm);
   font-weight: 600;
   text-decoration: none;
@@ -312,7 +312,7 @@
   gap: var(--nx-space-2);
   padding: 10px 12px;
   border-radius: 14px;
-  background: var(--nx-sand-100);
+  background: var(--nx-highlight);
   color: var(--nx-text-muted);
   font-size: var(--nx-text-xs);
 
@@ -336,7 +336,7 @@
   width: 46px;
   padding: 6px 0;
   border-radius: 14px;
-  background: var(--nx-sand-100);
+  background: var(--nx-highlight);
   line-height: 1.1;
 
   small {

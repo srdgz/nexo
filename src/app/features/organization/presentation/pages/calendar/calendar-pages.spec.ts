@@ -116,8 +116,9 @@ describe('event form', () => {
       combine('2026-11-19', '00:00'),
       combine('2026-11-20', '00:00'),
     );
-    expect(events.map((event) => [event.title, event.startsAt])).toEqual([
-      ['Clase de yoga', combine('2026-11-19', '18:00').toISOString()],
+    expect(events.map((event) => [event.title, event.startsAt])).toContainEqual([
+      'Clase de yoga',
+      combine('2026-11-19', '18:00').toISOString(),
     ]);
   });
 

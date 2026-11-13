@@ -32,8 +32,8 @@ import { TranslocoPipe } from '@jsverse/transloco';
       margin-top: var(--nx-space-3);
       padding: var(--nx-space-3) var(--nx-space-6);
       border-radius: var(--nx-radius-pill);
-      background: var(--nx-navy-900);
-      color: var(--nx-text-inverse);
+      background: var(--nx-primary);
+      color: var(--nx-on-primary);
       font-weight: 600;
       text-decoration: none;
     }

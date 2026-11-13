@@ -16,14 +16,14 @@
 
   path {
     fill: none;
-    stroke: rgb(145 169 149 / 0.22);
+    stroke: color-mix(in srgb, var(--nx-accent) 22%, transparent);
     stroke-width: 1.5;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
 
   circle {
-    fill: rgb(145 169 149 / 0.35);
+    fill: color-mix(in srgb, var(--nx-accent) 35%, transparent);
   }
 }
 
@@ -67,7 +67,7 @@
 
 .caption-text {
   max-width: 38ch;
-  color: #c3c8cb;
+  color: var(--nx-on-inverse-muted);
   font-size: var(--nx-text-base);
 }
 
@@ -79,7 +79,7 @@
 
 .dots {
   display: flex;
-  gap: var(--nx-space-2);
+  gap: 14px;
 }
 
 .dot {
@@ -88,13 +88,13 @@
   height: 10px;
   overflow: hidden;
   border-radius: var(--nx-radius-pill);
-  background: rgb(247 246 242 / 0.25);
+  background: color-mix(in srgb, var(--nx-on-inverse) 25%, transparent);
   transition:
     width 300ms var(--nx-ease),
     background-color 300ms var(--nx-ease);
 
   &:hover {
-    background: rgb(247 246 242 / 0.45);
+    background: color-mix(in srgb, var(--nx-on-inverse) 45%, transparent);
   }
 
   &.active {
@@ -102,7 +102,7 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--nx-sage-500);
+    outline: 2px solid var(--nx-accent);
     outline-offset: 3px;
   }
 }
@@ -111,7 +111,7 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: var(--nx-sage-500);
+  background: var(--nx-accent);
   transform-origin: left;
   animation: progress var(--scene-duration) linear both;
 }
@@ -163,8 +163,8 @@
 
 @keyframes check {
   to {
-    border-color: var(--nx-sage-700);
-    background: var(--nx-sage-700);
+    border-color: var(--nx-accent-strong);
+    background: var(--nx-accent-strong);
   }
 }
 

@@ -50,7 +50,7 @@ export class NxTabNav {
     }
     :host([aria-current='page']) {
       font-weight: 600;
-      box-shadow: inset 0 -2px var(--nx-navy-900);
+      box-shadow: inset 0 -2px var(--nx-primary);
     }
     :host(.pill) {
       padding: 6px 14px;

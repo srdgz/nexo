@@ -31,7 +31,7 @@ export function progressStatus(value: number, max: number): ProgressStatus {
       display: block;
       height: 100%;
       border-radius: inherit;
-      background: var(--nx-sage-500);
+      background: var(--nx-accent);
       transition: width 400ms var(--nx-ease);
     }
     :host(.warning) .bar {

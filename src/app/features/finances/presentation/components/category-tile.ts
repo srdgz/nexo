@@ -76,7 +76,7 @@ export function categoryIcon(name: string | null | undefined): IconNode {
       height: 36px;
       border-radius: 12px;
       background: var(--tile, var(--nx-cat-sand));
-      color: var(--nx-navy-900);
+      color: var(--nx-text);
     }
     :host(.sm) {
       width: 30px;

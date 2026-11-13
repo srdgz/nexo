@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { Lock } from 'lucide';
+import type { ThemePreference } from '@core/theme/theme';
+import { ThemeService } from '@core/theme/theme.service';
 import { AuthStore } from '@features/auth/application/auth-store';
 import { type AuthErrorCode, toAuthError } from '@features/auth/domain/auth-error';
 import type { UserLocale, WeekStart } from '@features/auth/domain/auth-user';
@@ -23,6 +25,19 @@ const SAMPLE_CENTS = 184230;
       @if (error(); as code) {
         <nx-alert tone="danger">{{ messageKey(code) | transloco }}</nx-alert>
       }
+
+      <nx-card>
+        <nx-card-header [heading]="'settings.preferences.theme' | transloco" />
+        <nx-segmented
+          size="md"
+          [label]="'settings.preferences.theme' | transloco"
+          [options]="themes()"
+          [value]="theme()"
+          [disabled]="saving()"
+          (valueChange)="changeTheme($event)"
+        />
+        <p class="muted">{{ 'settings.preferences.themeHint' | transloco }}</p>
+      </nx-card>
 
       <nx-card>
         <nx-card-header [heading]="'settings.preferences.language' | transloco" />
@@ -129,6 +144,17 @@ export class PreferencesPage {
     ];
   });
 
+  protected readonly themes = computed<readonly SegmentedOption<ThemePreference>[]>(() => {
+    this.language();
+    return [
+      { value: 'system', label: this.transloco.translate('settings.preferences.themeSystem') },
+      { value: 'light', label: this.transloco.translate('settings.preferences.themeLight') },
+      { value: 'dark', label: this.transloco.translate('settings.preferences.themeDark') },
+    ];
+  });
+
+  protected readonly theme = inject(ThemeService).preference;
+
   protected readonly weekStartsOn = computed(() => this.store.authUser()?.weekStartsOn ?? 1);
 
   protected readonly sampleAmount = computed(() => formatMoney(SAMPLE_CENTS, this.language()));
@@ -145,11 +171,19 @@ export class PreferencesPage {
     return this.save({ locale });
   }
 
+  protected changeTheme(theme: ThemePreference): Promise<void> {
+    return this.save({ theme });
+  }
+
   protected changeWeekStart(weekStartsOn: WeekStart): Promise<void> {
     return this.save({ weekStartsOn });
   }
 
-  private async save(changes: { locale?: UserLocale; weekStartsOn?: WeekStart }): Promise<void> {
+  private async save(changes: {
+    locale?: UserLocale;
+    weekStartsOn?: WeekStart;
+    theme?: ThemePreference;
+  }): Promise<void> {
     this.error.set(null);
     this.saving.set(true);
     try {

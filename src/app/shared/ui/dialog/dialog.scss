@@ -34,7 +34,7 @@ dialog {
   }
 
   &::backdrop {
-    background: rgb(24 43 53 / 0);
+    background: transparent;
     transition:
       background-color 200ms var(--nx-ease),
       overlay 200ms allow-discrete,
@@ -42,10 +42,10 @@ dialog {
   }
 
   &[open]::backdrop {
-    background: rgb(24 43 53 / 0.42);
+    background: var(--nx-overlay);
 
     @starting-style {
-      background: rgb(24 43 53 / 0);
+      background: transparent;
     }
   }
 

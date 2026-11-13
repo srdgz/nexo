@@ -129,6 +129,9 @@ export class SupabaseAuthRepository implements AuthRepository {
     if (changes.weekStartsOn !== undefined) {
       values['week_starts_on'] = changes.weekStartsOn;
     }
+    if (changes.theme !== undefined) {
+      values['theme'] = changes.theme;
+    }
     const { error } = await this.client.from('profiles').update(values).eq('id', current.id);
     if (error) {
       throw mapAuthError(error);

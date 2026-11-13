@@ -3,6 +3,7 @@ import { Router, provideRouter, withComponentInputBinding } from '@angular/route
 import { RouterTestingHarness } from '@angular/router/testing';
 import { LanguageService } from '@core/i18n/language.service';
 import { Session } from '@core/session/session';
+import { ThemeService } from '@core/theme/theme.service';
 import {
   FakeAuthRepository,
   TEST_USER,
@@ -151,7 +152,7 @@ describe('profile page', () => {
 describe('preferences page', () => {
   it('changes the language and saves it to the profile', async () => {
     const { harness, root } = await open('/app/settings/preferences');
-    const english = Array.from(root.querySelectorAll<HTMLInputElement>('nx-segmented input'))[1]!;
+    const english = Array.from(root.querySelectorAll<HTMLInputElement>('nx-segmented input'))[4]!;
 
     english.click();
     await settle(harness);
@@ -161,9 +162,21 @@ describe('preferences page', () => {
     expect(root.textContent).toContain('First day of the week');
   });
 
+  it('switches to the dark theme and saves it to the profile', async () => {
+    const { harness, root } = await open('/app/settings/preferences');
+    const dark = Array.from(root.querySelectorAll<HTMLInputElement>('nx-segmented input'))[2]!;
+
+    dark.click();
+    await settle(harness);
+
+    expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+    expect(repository.calls).toContainEqual({ method: 'updateProfile', args: [{ theme: 'dark' }] });
+    TestBed.inject(ThemeService).use('system');
+  });
+
   it('saves the first day of the week', async () => {
     const { harness, root } = await open('/app/settings/preferences');
-    const sunday = Array.from(root.querySelectorAll<HTMLInputElement>('nx-segmented input'))[3]!;
+    const sunday = Array.from(root.querySelectorAll<HTMLInputElement>('nx-segmented input'))[6]!;
 
     sunday.click();
     await settle(harness);

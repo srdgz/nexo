@@ -34,7 +34,7 @@ describe('mapUser', () => {
         id: 'u1',
         email: 'ben@example.com',
         created_at: '2026-11-02T10:00:00Z',
-        user_metadata: { full_name: ' Ben Smith ', locale: 'en', week_starts_on: 0 },
+        user_metadata: { full_name: ' Ben Smith ', locale: 'en', week_starts_on: 0, theme: 'dark' },
         app_metadata: { providers: ['email'] },
       }),
     ).toEqual({
@@ -43,6 +43,7 @@ describe('mapUser', () => {
       displayName: 'Ben Smith',
       locale: 'en',
       weekStartsOn: 0,
+      theme: 'dark',
       createdAt: '2026-11-02T10:00:00Z',
       hasPassword: true,
     });
@@ -62,6 +63,7 @@ describe('mapUser', () => {
       displayName: 'carla',
       locale: null,
       weekStartsOn: 1,
+      theme: null,
       createdAt: null,
       hasPassword: false,
     });

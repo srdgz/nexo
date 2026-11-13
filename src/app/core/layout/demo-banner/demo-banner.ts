@@ -60,7 +60,7 @@ import { RELOAD, clearDemoData, leaveDemo } from '../../app-mode/app-mode';
       gap: var(--nx-space-3);
       padding: 10px 12px 10px 14px;
       border-radius: 18px;
-      background: var(--nx-sand-100);
+      background: var(--nx-highlight);
     }
     :host(.compact) {
       margin: 0 var(--nx-space-4);

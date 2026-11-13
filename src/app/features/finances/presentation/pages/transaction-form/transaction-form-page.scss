@@ -63,7 +63,7 @@
 }
 
 .link {
-  color: var(--nx-sage-700);
+  color: var(--nx-accent-strong);
   font-size: var(--nx-text-sm);
   font-weight: 600;
   text-decoration: none;
@@ -77,6 +77,6 @@
 
   svg {
     flex: none;
-    color: var(--nx-navy-900);
+    color: var(--nx-text);
   }
 }

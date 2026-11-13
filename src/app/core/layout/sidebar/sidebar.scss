@@ -101,11 +101,11 @@ ul {
   }
 
   &.active {
-    background: var(--nx-navy-900);
-    color: var(--nx-text-inverse);
+    background: var(--nx-primary);
+    color: var(--nx-on-primary);
 
     svg {
-      color: var(--nx-sage-500);
+      color: var(--nx-on-primary-accent);
     }
   }
 }
@@ -116,7 +116,7 @@ ul {
   margin-bottom: var(--nx-space-2);
   padding: 16px;
   border-radius: 20px;
-  background: var(--nx-sand-100);
+  background: var(--nx-highlight);
 }
 
 .tip-icon {

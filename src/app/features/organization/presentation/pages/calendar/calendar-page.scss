@@ -73,11 +73,11 @@
   }
 
   &.outside .number {
-    color: #b5babd;
+    color: var(--nx-text-subtle);
   }
 
   &.selected {
-    background: var(--nx-sand-100);
+    background: var(--nx-highlight);
   }
 
   .compact & {
@@ -88,15 +88,15 @@
     border-radius: 12px;
 
     &.selected {
-      background: var(--nx-navy-900);
-      color: var(--nx-text-inverse);
+      background: var(--nx-primary);
+      color: var(--nx-on-primary);
 
       .number {
         color: inherit;
       }
 
       .dot {
-        background: var(--nx-sage-500);
+        background: var(--nx-on-primary-accent);
       }
     }
   }
@@ -113,13 +113,13 @@
   font-variant-numeric: tabular-nums;
 
   .today & {
-    background: var(--nx-navy-900);
-    color: var(--nx-text-inverse);
+    background: var(--nx-primary);
+    color: var(--nx-on-primary);
   }
 
   .compact .today:not(.selected) & {
-    background: var(--nx-sand-300);
-    color: var(--nx-navy-900);
+    background: var(--nx-highlight-strong);
+    color: var(--nx-text);
   }
 }
 
@@ -127,7 +127,7 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: var(--nx-navy-900);
+  background: var(--nx-primary);
 }
 
 .chip {
@@ -140,7 +140,7 @@
   white-space: nowrap;
 
   &.event {
-    background: var(--nx-navy-100);
+    background: var(--nx-primary-soft);
   }
 
   &.task {
@@ -188,7 +188,7 @@
   width: 4px;
   flex: none;
   border-radius: 2px;
-  background: var(--nx-navy-900);
+  background: var(--nx-primary);
 }
 
 .text {

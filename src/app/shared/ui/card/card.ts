@@ -20,12 +20,12 @@ export type CardVariant = 'default' | 'muted' | 'highlight';
     }
     :host(.muted) {
       border-color: transparent;
-      background: var(--nx-sand-100);
+      background: var(--nx-highlight);
     }
     :host(.highlight) {
-      border-color: var(--nx-navy-900);
-      background: var(--nx-navy-900);
-      color: var(--nx-text-inverse);
+      border-color: var(--nx-inverse);
+      background: var(--nx-inverse);
+      color: var(--nx-on-inverse);
     }
     :host(a) {
       transition:

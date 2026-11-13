@@ -12,6 +12,7 @@ export const DEMO_USER: AuthUser = {
   displayName: 'Laura Martín',
   locale: null,
   weekStartsOn: 1,
+  theme: null,
   createdAt: null,
   hasPassword: true,
 };
@@ -61,6 +62,7 @@ export class DemoAuthRepository implements AuthRepository {
       ...(changes.fullName !== undefined ? { displayName: changes.fullName } : {}),
       ...(changes.locale !== undefined ? { locale: changes.locale } : {}),
       ...(changes.weekStartsOn !== undefined ? { weekStartsOn: changes.weekStartsOn } : {}),
+      ...(changes.theme !== undefined ? { theme: changes.theme } : {}),
     };
     this.write();
     return Promise.resolve(this.user);
@@ -79,6 +81,9 @@ export class DemoAuthRepository implements AuthRepository {
         ...(stored.weekStartsOn === 0 || stored.weekStartsOn === 1
           ? { weekStartsOn: stored.weekStartsOn }
           : {}),
+        ...(stored.theme === 'system' || stored.theme === 'light' || stored.theme === 'dark'
+          ? { theme: stored.theme }
+          : {}),
       };
     } catch {
       return {};
@@ -87,10 +92,10 @@ export class DemoAuthRepository implements AuthRepository {
 
   private write(): void {
     try {
-      const { displayName, locale, weekStartsOn } = this.user;
+      const { displayName, locale, weekStartsOn, theme } = this.user;
       this.storage?.setItem(
         DEMO_PROFILE_KEY,
-        JSON.stringify({ displayName, locale, weekStartsOn }),
+        JSON.stringify({ displayName, locale, weekStartsOn, theme }),
       );
     } catch {
       return;

@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { APP_MODE, RELOAD } from '@core/app-mode/app-mode';
 import { LanguageService } from '@core/i18n/language.service';
+import { ThemeService } from '@core/theme/theme.service';
 import { ToastService } from '@shared/ui/toast/toast';
 import { FakeAuthRepository, TEST_USER, provideTestAuth } from '../../../../testing/auth';
 import { provideTestI18n } from '../../../../testing/i18n';
@@ -153,6 +154,29 @@ describe('AuthStore', () => {
 
     expect(TestBed.inject(LanguageService).current()).toBe('en');
     expect(repository.calls).toEqual([]);
+  });
+
+  it('applies the theme saved in the profile when the user signs in', async () => {
+    setup({ ...TEST_USER, theme: 'dark' });
+    await store.init();
+
+    expect(TestBed.inject(ThemeService).preference()).toBe('dark');
+    expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+    TestBed.inject(ThemeService).use('system');
+  });
+
+  it('applies and saves a new theme', async () => {
+    setup();
+    await store.init();
+
+    await store.updatePreferences({ theme: 'light' });
+
+    expect(document.documentElement.getAttribute('data-theme')).toBe('light');
+    expect(repository.calls).toContainEqual({
+      method: 'updateProfile',
+      args: [{ theme: 'light' }],
+    });
+    TestBed.inject(ThemeService).use('system');
   });
 
   it('signs out quietly after deleting the account', async () => {

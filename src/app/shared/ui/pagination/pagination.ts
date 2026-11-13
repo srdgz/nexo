@@ -102,8 +102,8 @@ export function visiblePages(current: number, count: number): (number | null)[] 
       background: var(--nx-surface-muted);
     }
     .page.current {
-      background: var(--nx-navy-900);
-      color: var(--nx-text-inverse);
+      background: var(--nx-primary);
+      color: var(--nx-on-primary);
     }
     .gap {
       padding: 0 4px;

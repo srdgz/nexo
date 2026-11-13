@@ -123,7 +123,7 @@ const TICKS = 3;
       overflow: visible;
     }
     .grid {
-      stroke: #ece8df;
+      stroke: var(--nx-chart-grid);
       stroke-dasharray: 3 4;
     }
     .grid.base {
@@ -135,14 +135,14 @@ const TICKS = 3;
       font-variant-numeric: tabular-nums;
     }
     .axis.strong {
-      fill: var(--nx-navy-900);
+      fill: var(--nx-chart-1);
       font-weight: 700;
     }
     .future {
-      fill: #d9d4c8;
+      fill: var(--nx-chart-muted);
     }
     .stick {
-      stroke: #c9d5cb;
+      stroke: var(--nx-chart-soft);
       stroke-width: 2.5;
       stroke-linecap: round;
       transform-box: fill-box;
@@ -150,22 +150,22 @@ const TICKS = 3;
       animation: grow 500ms var(--nx-ease) both;
     }
     .stick.highlight {
-      stroke: var(--nx-navy-900);
+      stroke: var(--nx-chart-1);
     }
     .head {
-      fill: var(--nx-sage-500);
-      stroke: #fff;
+      fill: var(--nx-accent);
+      stroke: var(--nx-surface);
       stroke-width: 2;
       animation: pop 400ms var(--nx-ease) both;
     }
     .head.highlight {
-      fill: var(--nx-navy-900);
+      fill: var(--nx-chart-1);
     }
     .badge rect {
-      fill: var(--nx-navy-900);
+      fill: var(--nx-chart-1);
     }
     .badge text {
-      fill: var(--nx-text-inverse);
+      fill: var(--nx-on-chart-1);
       font-size: 12px;
       font-weight: 600;
     }

@@ -10,6 +10,14 @@
       content="NEXO conecta tus finanzas, tareas y calendario en un solo lugar."
     />
     <meta name="theme-color" content="#f7f6f2" />
+    <script>
+      try {
+        var nexoTheme = localStorage.getItem('nexo.theme');
+        if (nexoTheme === 'light' || nexoTheme === 'dark') {
+          document.documentElement.setAttribute('data-theme', nexoTheme);
+        }
+      } catch (error) {}
+    </script>
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   </head>
   <body>

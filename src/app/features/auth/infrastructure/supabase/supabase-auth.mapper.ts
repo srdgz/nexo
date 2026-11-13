@@ -1,5 +1,5 @@
 import { AuthError, type AuthErrorCode } from '../../domain/auth-error';
-import type { AuthUser, UserLocale, WeekStart } from '../../domain/auth-user';
+import type { AuthUser, UserLocale, UserTheme, WeekStart } from '../../domain/auth-user';
 
 export interface SupabaseUserLike {
   readonly id: string;
@@ -57,6 +57,9 @@ export function mapUser(user: SupabaseUserLike): AuthUser {
   const locale: UserLocale | null =
     metadata['locale'] === 'en' || metadata['locale'] === 'es' ? metadata['locale'] : null;
   const weekStartsOn: WeekStart = metadata['week_starts_on'] === 0 ? 0 : 1;
+  const rawTheme = metadata['theme'];
+  const theme: UserTheme | null =
+    rawTheme === 'system' || rawTheme === 'light' || rawTheme === 'dark' ? rawTheme : null;
   const providers = user.app_metadata?.['providers'];
   return {
     id: user.id,
@@ -64,6 +67,7 @@ export function mapUser(user: SupabaseUserLike): AuthUser {
     displayName: fullName || email.split('@')[0] || email,
     locale,
     weekStartsOn,
+    theme,
     createdAt: user.created_at ?? null,
     hasPassword: Array.isArray(providers) ? providers.includes('email') : true,
   };

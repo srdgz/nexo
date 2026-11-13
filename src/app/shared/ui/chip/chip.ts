@@ -29,9 +29,9 @@ import { ChangeDetectionStrategy, Component, booleanAttribute, input } from '@an
       background: var(--nx-surface-muted);
     }
     :host([aria-pressed='true']) {
-      background: var(--nx-navy-900);
-      border-color: var(--nx-navy-900);
-      color: var(--nx-text-inverse);
+      background: var(--nx-primary);
+      border-color: var(--nx-primary);
+      color: var(--nx-on-primary);
     }
     .count {
       padding: 0 6px;
@@ -42,8 +42,8 @@ import { ChangeDetectionStrategy, Component, booleanAttribute, input } from '@an
       font-variant-numeric: tabular-nums;
     }
     :host([aria-pressed='true']) .count {
-      background: var(--nx-navy-700);
-      color: var(--nx-text-inverse);
+      background: var(--nx-primary-hover);
+      color: var(--nx-on-primary);
     }
   `,
   host: {

@@ -135,21 +135,21 @@ export class TaskCompletion {
     .check {
       display: grid;
       place-items: center;
-      width: 22px;
-      height: 22px;
-      border: 1.8px solid #b9b3a5;
+      width: 24px;
+      height: 24px;
+      border: 1.8px solid var(--nx-control-border);
       border-radius: 50%;
-      color: #fff;
+      color: var(--nx-on-accent-strong);
       transition:
         background-color var(--nx-duration) var(--nx-ease),
         border-color var(--nx-duration) var(--nx-ease);
     }
     .check:hover:not(:disabled) {
-      border-color: var(--nx-sage-700);
+      border-color: var(--nx-accent-strong);
     }
     .check.done {
-      border-color: var(--nx-sage-700);
-      background: var(--nx-sage-700);
+      border-color: var(--nx-accent-strong);
+      background: var(--nx-accent-strong);
     }
     .check.busy {
       border-top-color: transparent;

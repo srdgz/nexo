@@ -56,11 +56,11 @@
 }
 
 :host(.primary) {
-  background: var(--nx-navy-900);
-  color: var(--nx-text-inverse);
+  background: var(--nx-primary);
+  color: var(--nx-on-primary);
 
   &:hover:not([disabled], [aria-disabled='true']) {
-    background: var(--nx-navy-700);
+    background: var(--nx-primary-hover);
   }
 }
 
@@ -84,11 +84,11 @@
 }
 
 :host(.danger) {
-  background: var(--nx-danger);
-  color: #fff;
+  background: var(--nx-danger-solid);
+  color: var(--nx-on-danger);
 
   &:hover:not([disabled], [aria-disabled='true']) {
-    background: color-mix(in srgb, var(--nx-danger) 86%, black);
+    background: var(--nx-danger-solid-hover);
   }
 }
 
