@@ -39,11 +39,31 @@ Wordmark: «nexo» en minúsculas, Manrope 700, tracking −2 %. Zona de respeto
 | `--nx-text`            | `#182B35`             | Texto principal                               |
 | `--nx-text-muted`      | `#5F6B70`             | Texto secundario (5,1:1 sobre ivory)          |
 | `--nx-success` / `-bg` | `#3D7650` / `#E2EFE5` |                                               |
-| `--nx-warning` / `-bg` | `#9A6212` / `#FAEFD8` |                                               |
+| `--nx-warning` / `-bg` | `#8F5B0F` / `#FAEFD8` |                                               |
 | `--nx-danger` / `-bg`  | `#B0402D` / `#F8E2DC` | Gastos que superan presupuesto, borrar        |
 | `--nx-info` / `-bg`    | `#2E6489` / `#E1EBF3` |                                               |
 
 Pasteles de categoría (siempre con nombre e icono): `sage #DCE6DD` · `sand #EFE6D6` · `mist #DCE6EC` · `blush #F3DAD3` · `butter #F4E9BE` · `lavender #E0DCEE` · `peach #F6E0CC` · `mint #D7EBDD`.
+
+### Tokens semánticos y tema oscuro
+
+Los componentes no usan la paleta directamente, sino estos tokens (D-26). Valores en claro / oscuro:
+
+| Token                                  | Claro                 | Oscuro                    | Uso                                                   |
+| -------------------------------------- | --------------------- | ------------------------- | ----------------------------------------------------- |
+| `--nx-bg`                              | `#F7F6F2`             | `#0F1A20`                 | Fondo de la app                                       |
+| `--nx-surface` / `-muted`              | `#FFFFFF` / `#F1EFE9` | `#16242C` / `#1D2E37`     | Tarjetas e inputs                                     |
+| `--nx-text` / `-muted`                 | `#182B35` / `#5F6B70` | `#ECE9E2` / `#A3AEB3`     | Texto                                                 |
+| `--nx-primary` / `--nx-on-primary`     | `#182B35` / `#F7F6F2` | `#A8C1AC` / `#0F1A20`     | Botón primario, selección, elemento activo            |
+| `--nx-inverse` / `--nx-on-inverse`     | `#182B35` / `#F7F6F2` | `#1F3A48` / `#F3F1EC`     | Superficies destacadas: hero, panel de acceso, toasts |
+| `--nx-accent` / `-strong`              | `#91A995` / `#5B7660` | `#91A995` / `#A8C1AC`     | Ingresos, progreso, enlaces                           |
+| `--nx-highlight` / `-strong`           | `#F3EDE3` / `#E8DDCB` | `#1F2F37` / `#4A4436`     | Fondos cálidos suaves                                 |
+| `--nx-control-border`                  | `#868174`             | `#6A828E`                 | Borde de inputs y casillas (3:1)                      |
+| `--nx-danger-solid` / `--nx-on-danger` | `#B0402D` / `#FFFFFF` | `#C4513C` / `#FFFFFF`     | Botón de borrar                                       |
+| `--nx-cat-*` / `--nx-on-cat`           | pasteles / `#182B35`  | tonos oscuros / `#ECE9E2` | Categorías                                            |
+| `--nx-focus`                           | `#182B35`             | `#C9DCCB`                 | Anillo de foco                                        |
+
+Los estados (`success`, `warning`, `danger`, `info`) tienen su par en oscuro con texto claro sobre fondo oscuro. Todos los pares de texto cumplen 4,5:1 y los de controles 3:1 en los dos temas.
 
 ### Tipografía
 
@@ -61,7 +81,7 @@ Pasteles de categoría (siempre con nombre e icono): `sage #DCE6DD` · `sand #EF
 | Espaciado   | base 4 px: 4 · 8 · 12 · 16 · 20 · 24 · 32 · 40 · 56                                                                                                                  |
 | Sombras     | `--nx-shadow-sm 0 1px 2px rgb(24 43 53 / .06)` · `--nx-shadow-md 0 8px 24px rgb(24 43 53 / .08)`                                                                     |
 | Breakpoints | `768px` tablet · `1024px` escritorio · `1280px` escritorio amplio                                                                                                    |
-| Foco        | `outline: 2px solid var(--nx-navy-900); outline-offset: 2px`                                                                                                         |
+| Foco        | `outline: 2px solid var(--nx-focus); outline-offset: 2px`                                                                                                            |
 
 ### SCSS
 

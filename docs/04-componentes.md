@@ -77,6 +77,14 @@ Vista previa de cada variante en [`design/nexo-diseno.html`](design/nexo-diseno.
 - Las cuentas que solo entran con Google no tienen contraseña: la tarjeta lo explica en lugar de mostrar el formulario.
 - Ajustes muestra sus pestañas Perfil / Preferencias también en escritorio (`tabsOnDesktop`), porque no tiene submenú en la barra lateral.
 
+### Estado tras la Fase 6 (tema y accesibilidad)
+
+- Los componentes solo usan tokens semánticos (D-26). La paleta se define una vez en `_tokens.scss` y el tema oscuro redefine los tokens semánticos en un `@mixin dark`, que se aplica con `[data-theme='dark']` o con `prefers-color-scheme: dark` cuando la preferencia es «Sistema».
+- `ThemeService` en `core/theme`: guarda la preferencia en `localStorage` (`nexo.theme`), marca `<html data-theme>`, sigue los cambios del sistema y actualiza `<meta name="theme-color">`. Un script mínimo en `index.html` aplica el tema antes de que arranque Angular, sin parpadeo.
+- El tema se guarda también en `profiles.theme` y en los metadatos del usuario, y se aplica al iniciar sesión, igual que el idioma.
+- `nx-logo` pinta el azulejo y el trazo con tokens, así se adapta a los dos temas.
+- Accesibilidad: los controles de formulario usan `--nx-control-border` (3:1 sobre la superficie), el aviso y el peligro sólido cumplen 4,5:1 en los dos temas, `nx-task-check` mide 24 px y los puntos del carrusel de acceso dejan 24 px entre centros (WCAG 2.5.8). Los bordes de tarjeta (`--nx-border`, `--nx-border-strong`) son decorativos y las series de los gráficos siempre van acompañadas de su valor en texto, por eso no necesitan 3:1.
+
 ## Gráficos (`shared/charts`, SVG propio)
 
 | Componente          | Uso                                                        | Accesibilidad                        |
