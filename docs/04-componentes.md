@@ -108,7 +108,13 @@ Vista previa de cada variante en [`design/nexo-diseno.html`](design/nexo-diseno.
 - Demo: `DemoChannel` usa `BroadcastChannel`. Cada base de datos de la demo publica su estado completo cuando cambia y aplica el que llega de otra pestaña; una pestaña nueva pide los datos al entrar (`hello`) y adopta la primera respuesta. «Restablecer datos» reinicia todas las pestañas.
 - Los cambios propios también vuelven por el canal: es una recarga extra que se absorbe en la agrupación, a cambio de no tener que distinguir el origen.
 
-## Gráficos (`shared/charts`, SVG propio)
+### Estado tras la Fase 10 (asistente de IA)
+
+- `core/assistant` es la capa común. Una herramienta (`AssistantTool`) tiene nombre, descripción, esquema JSON, si escribe datos, `run` (el caso de uso) y, si escribe, `describe`, que valida la entrada y devuelve el texto que el usuario confirma. Cada feature registra las suyas con el token múltiple `ASSISTANT_TOOLS` desde su `provide*`; `core` no conoce ninguna.
+- Herramientas de finanzas: `list_categories`, `add_transaction`, `list_transactions`, `month_summary`, `budget_status`. De organización: `list_tasks`, `add_task`, `complete_task`, `list_events`, `add_event`. Los importes viajan en euros y las fechas en `AAAA-MM-DD`; los errores de entrada (`ToolInputError`) vuelven al modelo con un mensaje que puede corregir, por ejemplo la lista de categorías que sí existen.
+- `AssistantService.run` hace el bucle: pide respuesta al modelo, ejecuta las llamadas, pide confirmación antes de las que escriben (si el usuario cancela, el modelo recibe `declined`) y repite hasta que el modelo contesta con texto o se llega a 6 vueltas. Las herramientas se ejecutan en el navegador con la sesión del usuario, así que RLS sigue protegiendo los datos.
+- El puerto `AssistantModel` se carga según el modo: `SupabaseAssistantModel` llama a la Edge Function `assistant`, que valida la petición, comprueba el usuario, añade las instrucciones del sistema y llama a Gemini (`generateContent` con `parametersJsonSchema`). Devuelve el contenido del modelo tal cual (`raw`) para reenviarlo en la siguiente vuelta con sus firmas de pensamiento. `DemoAssistantModel` reconoce frases sencillas (gastos, ingresos, tareas, resumen del mes, tareas pendientes) y usa las mismas herramientas.
+- Página `/app/assistant` con dos modos: **Añadir** (alta en lenguaje natural: cada mensaje empieza de cero) y **Preguntar** (chat con historial). Se llega desde la barra lateral y desde «Escribir con IA» en el menú de añadir. Las acciones pendientes se muestran como una tarjeta con Guardar y Cancelar, y su resultado queda en la conversación.
 
 | Componente          | Uso                                                        | Accesibilidad                        |
 | ------------------- | ---------------------------------------------------------- | ------------------------------------ |
