@@ -21,60 +21,63 @@ const SAMPLE_CENTS = 184230;
   selector: 'nx-preferences-page',
   imports: [NxAlert, NxCard, NxCardHeader, NxIcon, NxSegmented, TranslocoPipe],
   template: `
-    <div class="stack">
-      @if (error(); as code) {
-        <nx-alert tone="danger">{{ messageKey(code) | transloco }}</nx-alert>
-      }
+    @if (error(); as code) {
+      <nx-alert class="error" tone="danger">{{ messageKey(code) | transloco }}</nx-alert>
+    }
+    <div class="layout">
+      <div class="column">
+        <nx-card>
+          <nx-card-header [heading]="'settings.preferences.theme' | transloco" />
+          <nx-segmented
+            size="md"
+            [label]="'settings.preferences.theme' | transloco"
+            [options]="themes()"
+            [value]="theme()"
+            [disabled]="saving()"
+            (valueChange)="changeTheme($event)"
+          />
+          <p class="muted">{{ 'settings.preferences.themeHint' | transloco }}</p>
+        </nx-card>
 
-      <nx-card>
-        <nx-card-header [heading]="'settings.preferences.theme' | transloco" />
-        <nx-segmented
-          size="md"
-          [label]="'settings.preferences.theme' | transloco"
-          [options]="themes()"
-          [value]="theme()"
-          [disabled]="saving()"
-          (valueChange)="changeTheme($event)"
-        />
-        <p class="muted">{{ 'settings.preferences.themeHint' | transloco }}</p>
-      </nx-card>
+        <nx-card>
+          <nx-card-header [heading]="'settings.preferences.language' | transloco" />
+          <nx-segmented
+            size="md"
+            [label]="'settings.preferences.language' | transloco"
+            [options]="languages"
+            [value]="language()"
+            [disabled]="saving()"
+            (valueChange)="changeLanguage($event)"
+          />
+          <p class="muted">{{ 'settings.preferences.languageHint' | transloco }}</p>
+        </nx-card>
+      </div>
 
-      <nx-card>
-        <nx-card-header [heading]="'settings.preferences.language' | transloco" />
-        <nx-segmented
-          size="md"
-          [label]="'settings.preferences.language' | transloco"
-          [options]="languages"
-          [value]="language()"
-          [disabled]="saving()"
-          (valueChange)="changeLanguage($event)"
-        />
-        <p class="muted">{{ 'settings.preferences.languageHint' | transloco }}</p>
-      </nx-card>
+      <div class="column">
+        <nx-card>
+          <nx-card-header [heading]="'settings.preferences.weekStart' | transloco" />
+          <nx-segmented
+            size="md"
+            [label]="'settings.preferences.weekStart' | transloco"
+            [options]="weekStarts()"
+            [value]="weekStartsOn()"
+            [disabled]="saving()"
+            (valueChange)="changeWeekStart($event)"
+          />
+          <p class="muted">{{ 'settings.preferences.weekStartHint' | transloco }}</p>
+        </nx-card>
 
-      <nx-card>
-        <nx-card-header [heading]="'settings.preferences.weekStart' | transloco" />
-        <nx-segmented
-          size="md"
-          [label]="'settings.preferences.weekStart' | transloco"
-          [options]="weekStarts()"
-          [value]="weekStartsOn()"
-          [disabled]="saving()"
-          (valueChange)="changeWeekStart($event)"
-        />
-        <p class="muted">{{ 'settings.preferences.weekStartHint' | transloco }}</p>
-      </nx-card>
+        <nx-card>
+          <nx-card-header [heading]="'settings.preferences.currency' | transloco" />
+          <p class="locked">
+            <span>{{ 'settings.preferences.euro' | transloco }}</span>
+            <svg nx-icon [icon]="lockIcon" size="16"></svg>
+          </p>
+          <p class="muted">{{ 'settings.preferences.currencyHint' | transloco }}</p>
+        </nx-card>
+      </div>
 
-      <nx-card>
-        <nx-card-header [heading]="'settings.preferences.currency' | transloco" />
-        <p class="locked">
-          <span>{{ 'settings.preferences.euro' | transloco }}</span>
-          <svg nx-icon [icon]="lockIcon" size="16"></svg>
-        </p>
-        <p class="muted">{{ 'settings.preferences.currencyHint' | transloco }}</p>
-      </nx-card>
-
-      <nx-card variant="muted">
+      <nx-card class="wide" variant="muted">
         <nx-card-header [heading]="'settings.preferences.preview' | transloco" />
         <p class="preview">
           <b class="nx-num">{{ sampleAmount() }}</b>
@@ -84,10 +87,27 @@ const SAMPLE_CENTS = 184230;
     </div>
   `,
   styles: `
-    .stack {
+    @use 'mixins' as *;
+
+    .error {
+      margin-bottom: var(--nx-space-4);
+    }
+    .layout {
       display: grid;
       gap: var(--nx-space-4);
-      max-width: 560px;
+      align-items: start;
+
+      @include bp(desktop) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    .wide {
+      grid-column: 1 / -1;
+    }
+    .column {
+      display: grid;
+      gap: var(--nx-space-4);
+      min-width: 0;
     }
     .muted {
       color: var(--nx-text-muted);
