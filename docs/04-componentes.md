@@ -85,6 +85,13 @@ Vista previa de cada variante en [`design/nexo-diseno.html`](design/nexo-diseno.
 - `nx-logo` pinta el azulejo y el trazo con tokens, así se adapta a los dos temas.
 - Accesibilidad: los controles de formulario usan `--nx-control-border` (3:1 sobre la superficie), el aviso y el peligro sólido cumplen 4,5:1 en los dos temas, `nx-task-check` mide 24 px y los puntos del carrusel de acceso dejan 24 px entre centros (WCAG 2.5.8). Los bordes de tarjeta (`--nx-border`, `--nx-border-strong`) son decorativos y las series de los gráficos siempre van acompañadas de su valor en texto, por eso no necesitan 3:1.
 
+### Estado tras la Fase 7 (foto de perfil)
+
+- Puerto `AvatarStorage` (`upload`, `remove`) en `features/auth/application`, cargado según el modo como el repositorio de auth: `CloudinaryAvatarStorage` (pide la firma a la Edge Function `avatar` y sube el archivo a Cloudinary), `DemoAvatarStorage` (recorta a 256 px en un `canvas` y devuelve un `data:` URL) y `OfflineAvatarStorage`.
+- `AuthStore.changeAvatar` valida formato (JPG, PNG, WebP) y tamaño (5 MB) antes de subir y guarda la URL con `updateProfile({ avatarUrl })`. La URL ya lleva la transformación de entrega (`c_fill,g_face,h_256,w_256/f_auto/q_auto`) y la versión, así que cada foto nueva invalida la caché.
+- La foto se guarda en `profiles.avatar_url` y en los metadatos como `photo_url`; sin `photo_url` se usa la foto de Google si la hay, y `photo_url: null` significa que el usuario la quitó.
+- `nx-avatar` gana el tamaño `xl` (80 px) para la tarjeta de identidad del perfil, que en móvil se centra en columna.
+
 ## Gráficos (`shared/charts`, SVG propio)
 
 | Componente          | Uso                                                        | Accesibilidad                        |

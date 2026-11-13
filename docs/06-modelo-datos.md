@@ -22,6 +22,8 @@ erDiagram
     text locale "es | en"
     char currency "EUR"
     smallint week_starts_on "1 lunes | 0 domingo"
+    text theme "system | light | dark"
+    text avatar_url "https, nullable"
     text timezone
   }
   CATEGORIES {
@@ -102,6 +104,8 @@ create table public.profiles (
   locale          text not null default 'es' check (locale in ('es', 'en')),
   currency        char(3) not null default 'EUR' check (currency = 'EUR'),
   week_starts_on  smallint not null default 1 check (week_starts_on in (0, 1)),
+  theme           text not null default 'system' check (theme in ('system', 'light', 'dark')),
+  avatar_url      text check (avatar_url is null or (avatar_url ~ '^https://' and length(avatar_url) <= 500)),
   timezone        text not null default 'Europe/Madrid',
   created_at      timestamptz not null default now(),
   updated_at      timestamptz not null default now()
