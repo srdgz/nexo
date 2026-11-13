@@ -90,7 +90,15 @@ Vista previa de cada variante en [`design/nexo-diseno.html`](design/nexo-diseno.
 - Puerto `AvatarStorage` (`upload`, `remove`) en `features/auth/application`, cargado según el modo como el repositorio de auth: `CloudinaryAvatarStorage` (pide la firma a la Edge Function `avatar` y sube el archivo a Cloudinary), `DemoAvatarStorage` (recorta a 256 px en un `canvas` y devuelve un `data:` URL) y `OfflineAvatarStorage`.
 - `AuthStore.changeAvatar` valida formato (JPG, PNG, WebP) y tamaño (5 MB) antes de subir y guarda la URL con `updateProfile({ avatarUrl })`. La URL ya lleva la transformación de entrega (`c_fill,g_face,h_256,w_256/f_auto/q_auto`) y la versión, así que cada foto nueva invalida la caché.
 - La foto se guarda en `profiles.avatar_url` y en los metadatos como `photo_url`; sin `photo_url` se usa la foto de Google si la hay, y `photo_url: null` significa que el usuario la quitó.
-- `nx-avatar` gana el tamaño `xl` (80 px) para la tarjeta de identidad del perfil, que en móvil se centra en columna.
+- `nx-avatar` gana el tamaño `xl` (80 px) para la tarjeta de identidad del perfil, que en móvil se centra en columna. Las fotos se piden con `referrerpolicy="no-referrer"` (Google rechaza algunas peticiones con referrer) y, si una no carga, se muestran las iniciales.
+
+### Estado tras la Fase 8 (exportar e importar)
+
+- `shared/util/csv.ts`: `toCsv` escribe UTF-8 con BOM, `;` y CRLF, entrecomilla solo cuando hace falta y neutraliza las celdas que empiezan por `=`, `+`, `-` o `@` (inyección de fórmulas) salvo los números negativos. `parseCsv` detecta `;`, `,` o tabulador por la cabecera y admite comillas y saltos de línea dentro de una celda. `shared/util/download.ts` descarga un texto como archivo.
+- Movimientos (`domain/transaction-csv.ts`): columnas Fecha, Tipo, Categoría, Descripción e Importe con las cabeceras y el separador decimal del idioma activo. La importación reconoce las cabeceras en español o inglés y en cualquier orden, fechas `aaaa-mm-dd` o `dd/mm/aaaa`, importes con o sin miles y con signo (si no hay columna Tipo, el signo decide), y busca la categoría por nombre y tipo. Cada fila guarda sus problemas (`date`, `type`, `category`, `amount`) y solo se importan las válidas. Límites: 1000 filas y 2 MB.
+- Calendario (`domain/ics.ts`): `eventsToIcs` genera RFC 5545 (UID estable `<id>@nexo`, horas en UTC, eventos de todo el día con `VALUE=DATE`, texto escapado y líneas plegadas a 75 bytes). `parseIcs` despliega las líneas, convierte `TZID` con `Intl`, calcula el fin con `DURATION` o una hora por defecto, ignora alarmas, cancelados y excepciones (`RECURRENCE-ID`) e importa solo la primera fecha de los eventos con `RRULE`.
+- Puertos: `TransactionRepository` gana `listAll(filter)` y `createMany`; `EventRepository` gana `all()` y `createMany`. `OrganizationService.newEvents` descarta los eventos que ya existen (mismo título, inicio y fin) para que reimportar no duplique.
+- UI: un botón con menú junto a «Nuevo movimiento» y «Nuevo» en el calendario. Exportar descarga lo que se ve (mes y filtros) en movimientos y todo el calendario en eventos; importar abre un diálogo con vista previa, filas con errores y el número exacto que se va a crear.
 
 ## Gráficos (`shared/charts`, SVG propio)
 
